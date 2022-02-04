@@ -1,17 +1,20 @@
 ﻿namespace EKOLidl.Services.Data
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     using EKOLidl.Data.Models;
 
     public interface ISignalService
     {
-        public ICollection<Signal> GetAll();
+        Task<IEnumerable<Signal>> GetSignalsAsync(string query);
 
-        public Signal AddAsync(Signal signalToAdd);
+        Task<Event> GetSignalAsync(string id);
 
-        public Signal UpdateAsync(Signal signalToAdd);
+        Task AddSignalAsync(Signal ev);
 
-        public bool RemoveAsync(Signal signalToRemove);
+        Task UpdateSignalAsync(string id, Signal ev);
+
+        Task DeleteSignalAsync(string id);
     }
 }

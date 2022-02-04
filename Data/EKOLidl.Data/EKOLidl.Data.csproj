@@ -44,4 +44,11 @@
     <ProjectReference Include="..\EKOLidl.Data.Models\EKOLidl.Data.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Configurations\" />
+    <Folder Include="Migrations\" />
+    <Folder Include="Repositories\" />
+    <Folder Include="Seeding\" />
+  </ItemGroup>
+
 </Project>

@@ -31,9 +31,12 @@
     <ProjectReference Include="..\..\Data\EKOLidl.Data\EKOLidl.Data.csproj" />
     <ProjectReference Include="..\..\Services\EKOLidl.Services.Data\EKOLidl.Services.Data.csproj" />
     <ProjectReference Include="..\..\Services\EKOLidl.Services.Mapping\EKOLidl.Services.Mapping.csproj" />
-    <ProjectReference Include="..\..\Services\EKOLidl.Services.Messaging\EKOLidl.Services.Messaging.csproj" />
     <ProjectReference Include="..\..\Services\EKOLidl.Services\EKOLidl.Services.csproj" />
     <ProjectReference Include="..\EKOLidl.Web.Infrastructure\EKOLidl.Web.Infrastructure.csproj" />
     <ProjectReference Include="..\EKOLidl.Web.ViewModels\EKOLidl.Web.ViewModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Administration\Controllers\" />
   </ItemGroup>
 </Project>

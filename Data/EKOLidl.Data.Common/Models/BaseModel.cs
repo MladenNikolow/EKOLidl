@@ -1,15 +1,18 @@
 ﻿namespace EKOLidl.Data.Common.Models
 {
     using System;
-    using System.ComponentModel.DataAnnotations;
+
+    using Newtonsoft.Json;
 
     public abstract class BaseModel<TKey> : IAuditInfo
     {
-        [Key]
+        [JsonProperty(PropertyName = "id")]
         public TKey Id { get; set; }
 
+        [JsonProperty(PropertyName = "_ts")]
         public DateTime CreatedOn { get; set; }
 
+        [JsonProperty(PropertyName = "modified_dt")]
         public DateTime? ModifiedOn { get; set; }
     }
 }

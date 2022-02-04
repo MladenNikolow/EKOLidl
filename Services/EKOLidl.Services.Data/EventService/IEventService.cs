@@ -1,18 +1,20 @@
-﻿
-namespace EKOLidl.Services.Data.EventService
+﻿namespace LidlProject.Services.Data
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     using EKOLidl.Data.Models;
 
     public interface IEventService
     {
-        public ICollection<Event> GetAllEvents();
+        Task<IEnumerable<Event>> GetEventsAsync(string query);
 
-        public Event AddEventAsync(Event eventToAdd);
+        Task<Event> GetEventAsync(string id);
 
-        public Event UpdateEventAsync(Event eventToAdd);
+        Task AddEventAsync(Event ev);
 
-        public bool RemoveEventAsync(Event eventToRemove);
+        Task UpdateEventAsync(string id, Event ev);
+
+        Task DeleteEventAsync(string id);
     }
 }

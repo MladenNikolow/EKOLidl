@@ -1,20 +1,23 @@
 ﻿namespace EKOLidl.Data.Models
 {
+    using EKOLidl.Data.Common.Models;
     using Newtonsoft.Json;
 
-    public class Event
+    public class Event : BaseModel<string>
     {
-        [JsonProperty(PropertyName = "id")]
-        public string Id { get; set; }
-
+        [JsonProperty(PropertyName = "short_description")]
         public string ShortDescription { get; set; }
 
+        [JsonProperty(PropertyName = "long_description")]
         public string LongDescription { get; set; }
 
-        public Album? Album { get; set; }
+        [JsonProperty(PropertyName = "album")]
+        public Album Album { get; set; }
 
-        public Result? Result { get; set; }
+        [JsonProperty(PropertyName = "result")]
+        public Result Result { get; set; }
 
+        [JsonProperty(PropertyName = "blog")]
         public string BlogId { get; set; }
 
         public override string ToString()

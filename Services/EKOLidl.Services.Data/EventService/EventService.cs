@@ -1,29 +1,63 @@
-﻿namespace EKOLidl.Services.Data.EventService
+﻿namespace LidlProject.Services.Data
 {
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     using EKOLidl.Data.Models;
+    using Microsoft.Azure.Cosmos;
 
-    internal class EventService : IEventService
+    public class EventService : IEventService
     {
-        public Event AddEventAsync(Event eventToAdd)
+        private Microsoft.Azure.Cosmos.Container container;
+
+        public EventService(
+          CosmosClient dbClient,
+          string databaseName,
+          string containerName)
         {
-            throw new System.NotImplementedException();
+            this.container = dbClient.GetContainer(databaseName, containerName);
         }
 
-        public ICollection<Event> GetAllEvents()
+        public async Task AddEventAsync(Event ev)
         {
-            throw new System.NotImplementedException();
+            await this.container.CreateItemAsync<Event>(ev, new PartitionKey(ev.Id));
         }
 
-        public bool RemoveEventAsync(Event eventToRemove)
+        public async Task DeleteEventAsync(string id)
         {
-            throw new System.NotImplementedException();
+            await this.container.DeleteItemAsync<Event>(id, new PartitionKey(id));
         }
 
-        public Event UpdateEventAsync(Event eventToAdd)
+        public async Task<Event> GetEventAsync(string id)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                ItemResponse<Event> response = await this.container.ReadItemAsync<Event>(id, new PartitionKey(id));
+                return response.Resource;
+            }
+            catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+        }
+
+        public async Task<IEnumerable<Event>> GetEventsAsync(string queryString)
+        {
+            var query = this.container.GetItemQueryIterator<Event>(new QueryDefinition(queryString));
+            List<Event> results = new List<Event>();
+            while (query.HasMoreResults)
+            {
+                var response = await query.ReadNextAsync();
+                results.AddRange(response.ToList());
+            }
+
+            return results;
+        }
+
+        public async Task UpdateEventAsync(string id, Event ev)
+        {
+            await this.container.UpsertItemAsync<Event>(ev, new PartitionKey(id));
         }
     }
 }

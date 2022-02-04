@@ -5,21 +5,9 @@
     using System.IO;
     using System.Threading.Tasks;
 
-    using EKOLidl.Data;
-    using EKOLidl.Data.Common;
-    using EKOLidl.Data.Common.Repositories;
-    using EKOLidl.Data.Models;
-    using EKOLidl.Data.Repositories;
-    using EKOLidl.Data.Seeding;
-    using EKOLidl.Services.Data;
-    using EKOLidl.Services.Messaging;
-
     using CommandLine;
-
-    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
 
     public static class Program
     {
@@ -29,14 +17,6 @@
             var serviceCollection = new ServiceCollection();
             ConfigureServices(serviceCollection);
             IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider(true);
-
-            // Seed data on application startup
-            using (var serviceScope = serviceProvider.CreateScope())
-            {
-                var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                dbContext.Database.Migrate();
-                new ApplicationDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
-            }
 
             using (var serviceScope = serviceProvider.CreateScope())
             {
@@ -52,9 +32,6 @@
         {
             var sw = Stopwatch.StartNew();
 
-            var settingsService = serviceProvider.GetService<ISettingsService>();
-            Console.WriteLine($"Count of settings: {settingsService.GetCount()}");
-
             Console.WriteLine(sw.Elapsed);
             return await Task.FromResult(0);
         }
@@ -67,21 +44,6 @@
                 .Build();
 
             services.AddSingleton<IConfiguration>(configuration);
-
-            services.AddDbContext<ApplicationDbContext>(
-                options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"))
-                    .UseLoggerFactory(new LoggerFactory()));
-
-            services.AddDefaultIdentity<ApplicationUser>(IdentityOptionsProvider.GetIdentityOptions)
-                .AddRoles<ApplicationRole>().AddEntityFrameworkStores<ApplicationDbContext>();
-
-            services.AddScoped(typeof(IDeletableEntityRepository<>), typeof(EfDeletableEntityRepository<>));
-            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
-            services.AddScoped<IDbQueryRunner, DbQueryRunner>();
-
-            // Application services
-            services.AddTransient<IEmailSender, NullMessageSender>();
-            services.AddTransient<ISettingsService, SettingsService>();
         }
     }
 }
