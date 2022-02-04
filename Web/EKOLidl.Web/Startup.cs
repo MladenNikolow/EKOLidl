@@ -2,9 +2,6 @@
 {
     using System.Reflection;
     using System.Threading.Tasks;
-
-    using EKOLidl.Data.Common;
-    using EKOLidl.Data.Common.Repositories;
     using EKOLidl.Services.Mapping;
     using EKOLidl.Web.ViewModels;
     using LidlProject.Services.Data;
@@ -14,7 +11,6 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Cosmos;
     using Microsoft.Azure.Cosmos.Fluent;
-    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
