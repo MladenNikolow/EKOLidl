@@ -9,11 +9,11 @@
     {
         Task<IEnumerable<Signal>> GetSignalsAsync(string query);
 
-        Task<Event> GetSignalAsync(string id);
+        Task<Signal> GetSignalAsync(string id);
 
-        Task AddSignalAsync(Signal ev);
+        Task AddSignalAsync(Signal signal);
 
-        Task UpdateSignalAsync(string id, Signal ev);
+        Task UpdateSignalAsync(string id, Signal signal);
 
         Task DeleteSignalAsync(string id);
     }
