@@ -2,6 +2,9 @@
 {
     using System.Reflection;
     using System.Threading.Tasks;
+
+    using EKOLidl.Services.Data;
+    using EKOLidl.Services.Data.SignalService;
     using EKOLidl.Services.Mapping;
     using EKOLidl.Web.ViewModels;
     using LidlProject.Services.Data;
@@ -28,6 +31,7 @@
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IEventService>(InitializeEventClientInstanceAsync(this.configuration.GetSection("CosmoDb")).GetAwaiter().GetResult());
+            services.AddSingleton<ISignalService>(InitializeSignalClientInstanceAsync(this.configuration.GetSection("CosmoDb")).GetAwaiter().GetResult());
 
             services.Configure<CookiePolicyOptions>(
                 options =>
@@ -95,6 +99,22 @@
             DatabaseResponse database = await client.CreateDatabaseIfNotExistsAsync(databaseName);
             await database.Database.CreateContainerIfNotExistsAsync(containerName, "/id");
             return eventService;
+        }
+
+        private static async Task<SignalService> InitializeSignalClientInstanceAsync(IConfigurationSection configurationSection)
+        {
+            string databaseName = configurationSection.GetSection("DatabaseName").Value;
+            string containerName = "Signals";
+            string account = configurationSection.GetSection("Endpoint").Value;
+            string key = configurationSection.GetSection("Key").Value;
+            CosmosClientBuilder clientBuilder = new CosmosClientBuilder(account, key);
+            CosmosClient client = clientBuilder
+                                .WithConnectionModeDirect()
+                                .Build();
+            SignalService signalService = new SignalService(client, databaseName, containerName);
+            DatabaseResponse database = await client.CreateDatabaseIfNotExistsAsync(databaseName);
+            await database.Database.CreateContainerIfNotExistsAsync(containerName, "/id");
+            return signalService;
         }
     }
 }
