@@ -1,25 +1,24 @@
 ﻿namespace EKOLidl.Data.Models
 {
-    using System;
-
+    using EKOLidl.Data.Common.Models;
     using EKOLidl.Data.Models.Enums;
     using Newtonsoft.Json;
 
-    public class Signal
+    public class Signal : BaseModel
     {
-        [JsonProperty(PropertyName = "id")]
-        public string Id { get; set; }
-
+        [JsonProperty(PropertyName = "album")]
         public Album Album { get; set; }
 
+        [JsonProperty(PropertyName = "location")]
         public string Location { get; set; }
 
+        [JsonProperty(PropertyName = "description")]
         public string Description { get; set; }
 
-        public TrashType TrashType { get; set; }  
+        [JsonProperty(PropertyName = "trash_type")]
+        public TrashType TrashType { get; set; }
 
+        [JsonProperty(PropertyName = "other_trash_type")]
         public string OtherTrashType { get; set; }
-
-        public DateTime DateCreate { get; set; }
     }
 }

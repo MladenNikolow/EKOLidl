@@ -3,7 +3,7 @@
     using EKOLidl.Data.Common.Models;
     using Newtonsoft.Json;
 
-    public class Event : BaseModel<string>
+    public class Event : BaseModel
     {
         [JsonProperty(PropertyName = "short_description")]
         public string ShortDescription { get; set; }
@@ -19,10 +19,5 @@
 
         [JsonProperty(PropertyName = "blog")]
         public string BlogId { get; set; }
-
-        public override string ToString()
-        {
-            return JsonConvert.SerializeObject(this);
-        }
     }
 }

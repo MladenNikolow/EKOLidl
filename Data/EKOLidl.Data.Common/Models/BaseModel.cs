@@ -4,15 +4,26 @@
 
     using Newtonsoft.Json;
 
-    public abstract class BaseModel<TKey> : IAuditInfo
+    public abstract class BaseModel : IAuditInfo
     {
-        [JsonProperty(PropertyName = "id")]
-        public TKey Id { get; set; }
+        public BaseModel()
+        {
+            this.Id = Guid.NewGuid().ToString();
+            this.CreatedOn = DateTime.Now;
+        }
 
-        [JsonProperty(PropertyName = "_ts")]
+        [JsonProperty(PropertyName = "id")]
+        public string Id { get; set; }
+
+        [JsonProperty(PropertyName = "created_on")]
         public DateTime CreatedOn { get; set; }
 
         [JsonProperty(PropertyName = "modified_dt")]
         public DateTime? ModifiedOn { get; set; }
+
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }

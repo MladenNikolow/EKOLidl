@@ -6,9 +6,7 @@
 
     public class Album
     {
-        [JsonProperty(PropertyName = "id")]
-        public string Id { get; set; }
-
+        [JsonProperty(PropertyName = "links")]
         public List<string> Links { get; set; }
     }
 }
