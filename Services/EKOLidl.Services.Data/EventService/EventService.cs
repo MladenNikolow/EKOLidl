@@ -59,5 +59,17 @@
         {
             await this.container.UpsertItemAsync<Event>(ev, new PartitionKey(id));
         }
+
+        public Task<IEnumerable<Event>> GetEventsByPage(int page)
+        {
+            const int pageSize = 9;
+            int offset = pageSize * page;
+
+            string query = @$"select * from events e
+                            order by e.created_on
+                            offset {offset} limit {pageSize}";
+
+            return this.GetEventsAsync(query);
+        }
     }
 }

@@ -16,5 +16,7 @@
         Task UpdateEventAsync(string id, Event ev);
 
         Task DeleteEventAsync(string id);
+
+        Task<IEnumerable<Event>> GetEventsByPage(int page);
     }
 }
