@@ -4,7 +4,7 @@
     ViewData["Title"] = @Model.ShortDescription;
 }
 
-<div class="single-event-layout1">
+<div class="single-recipe-layout1">
     <div class="ctg-name">Събитие</div>
     <h2 class="item-title">@this.ViewData["Title"]</h2>
     <div class="row mb-4">
@@ -18,9 +18,9 @@
         </div>
     </div>
     <div class="item-figure">
-        <img class="img-fluid w-100" src="@Model.Album.Links.FirstOrDefault()" alt="@Model.ShortDescription" />
+        <img src="@Model.Album.Links.FirstOrDefault()" alt="@Model.ShortDescription" />
     </div>
-    <div class="col-md-6">
+  @*  <div class="col-md-6">
                 <div class="album-wrap">
                     <ul>
                     @foreach (var pictureUrl in Model.Album.Links)
@@ -31,7 +31,7 @@
                     }
                     </ul>
                 </div>
-            </div>
+            </div>*@
     <div class="item-feature">
         <ul>
             <li>
