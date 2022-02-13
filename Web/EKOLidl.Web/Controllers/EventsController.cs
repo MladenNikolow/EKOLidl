@@ -14,13 +14,14 @@
             this.eventService = eventService;
         }
 
+        [ActionName("Index")]
         public async Task<IActionResult> Index()
         {
             return this.View(await this.eventService.GetEventsAsync("SELECT * FROM c"));
         }
 
         [ActionName("Details")]
-        public async Task<ActionResult> DetailsAsync(string id)
+        public async Task<IActionResult> DetailsAsync(string id)
         {
             return this.View(await this.eventService.GetEventAsync(id));
         }

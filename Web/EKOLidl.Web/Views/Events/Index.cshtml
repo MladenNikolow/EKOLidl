@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<EKOLidl.Data.Models.Event>
 
 @{
-    ViewData["Title"] = "List of Events";
+    ViewData["Title"] = @Model.FirstOrDefault().ShortDescription;
 }
 <h1>@ViewData["Title"]</h1>
 

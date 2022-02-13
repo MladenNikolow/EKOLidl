@@ -20,5 +20,8 @@
 
         [JsonProperty(PropertyName = "other_trash_type")]
         public string OtherTrashType { get; set; }
+
+        [JsonProperty(PropertyName = "result")]
+        public Result Result { get; set; }
     }
 }

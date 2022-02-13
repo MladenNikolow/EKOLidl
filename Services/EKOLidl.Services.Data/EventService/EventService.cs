@@ -9,7 +9,7 @@
 
     public class EventService : IEventService
     {
-        private Microsoft.Azure.Cosmos.Container container;
+        private readonly Microsoft.Azure.Cosmos.Container container;
 
         public EventService(
           CosmosClient dbClient,
@@ -45,7 +45,7 @@
         public async Task<IEnumerable<Event>> GetEventsAsync(string queryString)
         {
             var query = this.container.GetItemQueryIterator<Event>(new QueryDefinition(queryString));
-            List<Event> results = new List<Event>();
+            List<Event> results = new();
             while (query.HasMoreResults)
             {
                 var response = await query.ReadNextAsync();
