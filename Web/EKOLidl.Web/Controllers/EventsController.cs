@@ -1,7 +1,9 @@
 ﻿namespace EKOLidl.Web.Controllers
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
+    using EKOLidl.Data.Models;
     using LidlProject.Services.Data;
     using Microsoft.AspNetCore.Mvc;
 
@@ -14,10 +16,10 @@
             this.eventService = eventService;
         }
 
-        [ActionName("Index")]
-        public async Task<IActionResult> Index()
+        [Route("Events/{page}")]
+        public async Task<IActionResult> Events(int page = 0)
         {
-            return this.View(await this.eventService.GetEventsAsync("SELECT * FROM c"));
+            return this.View(await this.eventService.GetEventsByPage(page));
         }
 
         [ActionName("Details")]
