@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using EKOLidl.Data.Models;
+    using EKOLidl.Web.ViewModels.Events;
     using LidlProject.Services.Data;
     using Microsoft.AspNetCore.Mvc;
 
@@ -16,10 +17,21 @@
             this.eventService = eventService;
         }
 
-        [Route("Events/{page}")]
-        public async Task<IActionResult> Events(int page = 0)
+        public async Task<IActionResult> Events(int page = 1)
         {
-            return this.View(await this.eventService.GetEventsByPage(page));
+            const int eventsPerPage = 9;
+            List<Event> events = new List<Event>(this.eventService.GetEventsByPageAsync(page, eventsPerPage).GetAwaiter().GetResult());
+            int eventsCount = await this.eventService.GetCountAsync();
+
+            EventsViewModel eventsViewModel = new EventsViewModel
+            {
+                Events = events,
+                Page = page,
+                Count = eventsCount,
+                EventsPerPage = eventsPerPage,
+            };
+
+            return this.View(eventsViewModel);
         }
 
         [ActionName("Details")]

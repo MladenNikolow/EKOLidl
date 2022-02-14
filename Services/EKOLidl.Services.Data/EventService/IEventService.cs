@@ -17,6 +17,8 @@
 
         Task DeleteEventAsync(string id);
 
-        Task<IEnumerable<Event>> GetEventsByPage(int page);
+        Task<int> GetCountAsync();
+
+        Task<IEnumerable<Event>> GetEventsByPageAsync(int page, int eventsPerPage = 9);
     }
 }

@@ -59,5 +59,17 @@
         {
             await this.container.UpsertItemAsync<Signal>(signal, new PartitionKey(id));
         }
+
+        public async Task<IEnumerable<Signal>> GetSignalsByPage(int page)
+        {
+            const int pageSize = 9;
+            int offset = pageSize * (page - 1);
+
+            string query = @$"select * from signals s
+                            order by s.created_on
+                            offset {offset} limit {pageSize}";
+
+            return await this.GetSignalsAsync(query);
+        }
     }
 }
