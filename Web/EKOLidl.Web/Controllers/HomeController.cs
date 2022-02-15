@@ -1,15 +1,32 @@
 ﻿namespace EKOLidl.Web.Controllers
 {
+    using System.Collections.Generic;
     using System.Diagnostics;
-
+    using System.Threading.Tasks;
+    using EKOLidl.Data.Models;
     using EKOLidl.Web.ViewModels;
-
+    using EKOLidl.Web.ViewModels.Home;
+    using LidlProject.Services.Data;
     using Microsoft.AspNetCore.Mvc;
 
     public class HomeController : BaseController
     {
-        public IActionResult Index()
+        private readonly IEventService eventService;
+
+        public HomeController(IEventService eventService)
         {
+            this.eventService = eventService;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var events = await this.eventService.GetNewestEvents();
+
+            HomeViewModel viewModel = new HomeViewModel()
+            {
+                Events = events,
+            };
+
             return this.View();
         }
 

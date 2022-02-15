@@ -8,19 +8,39 @@
 <div class="row">
     @foreach (var ev in Model.Events)
     {
-        <div class="media col-md-4">
-          <img class="mr-3" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/899674.png" width="100">
+        <div class="card col-md-4" style="width: 18rem;">
+            <img class="card-img-top" src="https://www.timeoutdubai.com/cloud/timeoutdubai/2021/09/11/udHvbKwV-IMG-Dubai-UAE-1.jpg" alt="@ev.ShortDescription">
+            <div class="card-body">
+                <h5 class="card-title">@ev.ShortDescription</h5>
+                 <div class="row mb-4">
+                    <div class="col-xl-9 col-12">
+                        <ul class="entry-meta">
+                            <li class="single-meta">
+                                <i class="far fa-calendar-alt"></i>
+                                @ev.CreatedOn.ToShortDateString()
+                                <i class="far fa-solid fa-clock" style="padding-left:25px;"></i>
+                                @ev.CreatedOn.ToShortTimeString()
+                            </li>
+                        </ul>
+                    </div>
+                   </div>
+                <p class="card-text">@ev.LongDescription</p>
+                @Html.ActionLink("Details", "Details", new { id=ev.Id }, new { @class = "btn btn-primary btn-sm" })
+            </div>
+        </div>
+        @*<div class="media col-md-4">
+          <img class="align-self-center" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/899674.png" height="" width="100">
           <div class="media-body">
             <h5 class="mt-0">@ev.ShortDescription</h5>                                                                         
             @Html.ActionLink("Details", "Details", new { id=ev.Id }, new { @class = "btn btn-primary btn-sm" })
             <hr/>
           </div>
-        </div>
+        </div>*@
     }
 </div>
 <hr/>
 <nav aria-label="...">
-  <ul class="pagination">
+  <ul class="pagination justify-content-center">
     <li class="page-item @if(!@Model.HasPreviousPage) { <text>disabled</text> }">
       <a class="page-link" asp-action="Events" asp-route-page="@Model.PreviousPageNumber">Previous</a>
     </li>

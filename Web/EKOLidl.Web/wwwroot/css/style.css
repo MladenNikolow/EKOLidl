@@ -11845,3 +11845,15 @@ footer.ranna-bg-dark {
 .footer-menu ul li:last-child:after {
 	display: none;
 }
+
+.carousel .carousel-item {
+	height: 500px;
+}
+
+.carousel-item img {
+	position: absolute;
+	object-fit: cover;
+	top: 0;
+	left: 0;
+	min-height: 500px;
+}

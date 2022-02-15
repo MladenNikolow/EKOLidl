@@ -79,5 +79,14 @@
 
             return await this.GetEventsAsync(query);
         }
+
+        public async Task<IEnumerable<Event>> GetNewestEvents(int count = 4)
+        {
+            string query = $@"SELECT * FROM EVENTS E
+                              ORDER BY E.created_on
+                              OFFSET 0 LIMIT {count}";
+
+            return await this.GetEventsAsync(query);
+        }
     }
 }

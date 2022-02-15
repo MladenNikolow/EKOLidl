@@ -20,7 +20,7 @@
         public async Task<IActionResult> Events(int page = 1)
         {
             const int eventsPerPage = 9;
-            List<Event> events = new List<Event>(this.eventService.GetEventsByPageAsync(page, eventsPerPage).GetAwaiter().GetResult());
+            IEnumerable<Event> events = await this.eventService.GetEventsByPageAsync(page, eventsPerPage);
             int eventsCount = await this.eventService.GetCountAsync();
 
             EventsViewModel eventsViewModel = new EventsViewModel
