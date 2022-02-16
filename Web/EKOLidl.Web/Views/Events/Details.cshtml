@@ -4,71 +4,80 @@
     ViewData["Title"] = @Model.ShortDescription;
 }
 
-<div class="single-recipe-layout1">
-    <div class="ctg-name">Събитие</div>
-    <h2 class="item-title">@this.ViewData["Title"]</h2>
-    <div class="row mb-4">
-        <div class="col-xl-9 col-12">
-            <ul class="entry-meta">
-                <li class="single-meta">
-                    <i class="far fa-calendar-alt"></i>
-                    @Model.CreatedOn.ToShortDateString()
-                </li>
-            </ul>
-        </div>
-    </div>
-    <div class="item-figure">
-        <img src="@Model.Album.Links.FirstOrDefault()" alt="@Model.ShortDescription" />
-    </div>
-  @*  <div class="col-md-6">
-                <div class="album-wrap">
-                    <ul>
-                    @foreach (var pictureUrl in Model.Album.Links)
-                    {
-                       <li>
-                           <img class="img-fluid w-100" src="@pictureUrl" />
-                       </li>
-                    }
-                    </ul>
-                </div>
-            </div>*@
-    <div class="item-feature">
-        <ul>
-            <li>
-                <div class="feature-wrap">
-                    <div class="media">
-                        <div class="feature-icon">
-                            <i class="far fa-clock"></i>
-                        </div>
-                        <div class="media-body space-sm">
-                            <div class="feature-title">ДАТА НА СЪБИТИЕТО</div>
-                            <div class="feature-sub-title">@Model.EventDate.ToShortDateString()</div>
+<section class="single-recipe-wrap-layout1">
+    <div class="container">
+        <div class="row gutters-60">
+            <div class="col">
+                Събитие
+                <h2 class="item-title">@this.ViewData["Title"]</h2>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="single-event-layout1">
+                        <img id=featured src="@Model.Album.Links[0]">
+            
+            	        <div id="slide-wrapper" >
+            	         <img id="slideLeft" class="arrow" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/arrow-left.png">
+            
+            	         <div id="slider">
+                                <img class="thumbnail active" src="@Model.Album.Links[0]">
+                                @{
+                                    for(int index = 1; index < Model.Album.Links.Count; index++)
+                                    {
+                                        <img class="thumbnail" src="@Model.Album.Links[index]">
+                                    }
+                                }
+            	        </div>
+            
+            	         <img id="slideRight" class="arrow" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/arrow-right.png">
+            	        </div>
+                        <div class="item-feature">
+                            <ul>
+                                <li>
+                                    <div class="feature-wrap">
+                                        <div class="row">
+                                            <div class="feature-icon">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </div>
+                                            <div class="media-body space-sm">
+                                                <div class="feature-title">ДАТА НА СЪБИТИЕТО</div>
+                                                <div class="feature-sub-title">@Model.EventDate.ToShortDateString()</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li></li>
+                                <li>
+                                    <div class="feature-wrap">
+                                        <div class="feature-icon">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <div class="media-body space-sm">
+                                            <div class="feature-title">ПРОДЪЛЖИТЕЛНОСТ</div>
+                                            <div class="feature-sub-title">@Model.Duration Часа </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
-            </li>
-            <li>
-                <div class="feature-wrap">
-                    <div class="media">
-                        <div class="feature-icon">
-                            <i class="fas fa-utensils"></i>
-                        </div>
-                        <div class="media-body space-sm">
-                            <div class="feature-title">ПРОДЪЛЖИТЕЛНОСТ</div>
-                            <div class="feature-sub-title">@Model.Duration Часа </div>
-                        </div>
-                    </div>
+                <div class="col-lg-4">
+                    <p>Описание :</p>
+                    <p class="item-description">@Model.LongDescription</p>
                 </div>
-            </li>
-        </ul>
-    </div>
-    <div class="making-elements-wrap">
-        <div class="row">
-            <div class="col-md-6">
-                <p class="item-description">
-                    @Model.LongDescription
-                </p>
+            </div>
+            <div class="col">
+                <div class="result-wrap-layout1">
+                    <div class="section-heading heading-blue">
+                        <h2 class="item-heading">РЕЗУЛТАТИ</h2>
+                    </div>
+                    <p class="section-paragraph">Salamander lied porpoise much over tightly circa horse
+                        taped so innocuously side crudey mightily rigorous plot life. New homes in
+                        particular are subject. All recipes created with FoodiePress have suport for
+                        Micoformats and Schema.org is a collaboration byo improve convallis.</p>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</section>
