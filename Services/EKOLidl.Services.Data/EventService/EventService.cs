@@ -6,6 +6,7 @@
 
     using EKOLidl.Data.Models;
     using Microsoft.Azure.Cosmos;
+    using Microsoft.Azure.Cosmos.Linq;
 
     public class EventService : IEventService
     {
@@ -42,6 +43,14 @@
             }
         }
 
+        public async Task<int> GetCountAsync()
+        {
+            IOrderedQueryable<Event> linqQueryable = this.container.GetItemLinqQueryable<Event>();
+            int count = await linqQueryable.CountAsync();
+
+            return count;
+        }
+
         public async Task<IEnumerable<Event>> GetEventsAsync(string queryString)
         {
             var query = this.container.GetItemQueryIterator<Event>(new QueryDefinition(queryString));
@@ -60,16 +69,24 @@
             await this.container.UpsertItemAsync<Event>(ev, new PartitionKey(id));
         }
 
-        public Task<IEnumerable<Event>> GetEventsByPage(int page)
+        public async Task<IEnumerable<Event>> GetEventsByPageAsync(int page, int eventsPerPage = 9)
         {
-            const int pageSize = 9;
-            int offset = pageSize * page;
+            int offset = eventsPerPage * (page - 1);
 
             string query = @$"select * from events e
                             order by e.created_on
-                            offset {offset} limit {pageSize}";
+                            offset {offset} limit {eventsPerPage}";
 
-            return this.GetEventsAsync(query);
+            return await this.GetEventsAsync(query);
+        }
+
+        public async Task<IEnumerable<Event>> GetNewestEvents(int count = 4)
+        {
+            string query = $@"SELECT * FROM EVENTS E
+                              ORDER BY E.created_on
+                              OFFSET 0 LIMIT {count}";
+
+            return await this.GetEventsAsync(query);
         }
     }
 }

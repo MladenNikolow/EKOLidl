@@ -16,5 +16,7 @@
         Task UpdateSignalAsync(string id, Signal signal);
 
         Task DeleteSignalAsync(string id);
+
+        Task<IEnumerable<Signal>> GetSignalsByPage(int page);
     }
 }

@@ -1,41 +1,71 @@
-﻿@model IEnumerable<EKOLidl.Data.Models.Event>
+﻿@model EKOLidl.Web.ViewModels.Events.EventsViewModel
 
 @{
-    ViewData["Title"] = @Model.FirstOrDefault().ShortDescription;
+    ViewData["Title"] = "Събития";
 }
 <h1>@ViewData["Title"]</h1>
-
-<table class="table">
-  <thead>
-    <tr>
-      <th>
-        @Html.DisplayNameFor(model => model.ShortDescription)
-      </th>
-      <th>
-        @Html.DisplayNameFor(model => model.LongDescription)
-      </th>
-      <th>
-        @Html.DisplayNameFor(model => model.Result.Description)
-      </th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-@foreach (var item in Model) {
-      <tr>
-        <td>
-          @Html.DisplayFor(modelItem => item.ShortDescription)
-        </td>
-        <td>
-          @Html.DisplayFor(modelItem => item.LongDescription)
-        </td>
-        <td>
-          @Html.DisplayFor(modelItem => item.Result.Description)
-        </td>
-        <td>
-          @Html.ActionLink("Details", "Details", new { id=item.Id }, new { @class = "btn btn-primary btn-sm" }) |
-        </td>
-      </tr>
-}
-  </tbody>
-</table>
+<hr/>
+<div class="row">
+    @foreach (var ev in Model.Events)
+    {
+        <div class="card col-md-4" style="width: 18rem;">
+            <img class="card-img-top" src="https://www.timeoutdubai.com/cloud/timeoutdubai/2021/09/11/udHvbKwV-IMG-Dubai-UAE-1.jpg" alt="@ev.ShortDescription">
+            <div class="card-body">
+                <h5 class="card-title">@ev.ShortDescription</h5>
+                 <div class="row mb-4">
+                    <div class="col-xl-9 col-12">
+                        <ul class="entry-meta">
+                            <li class="single-meta">
+                                <i class="far fa-calendar-alt"></i>
+                                @ev.CreatedOn.ToShortDateString()
+                                <i class="far fa-solid fa-clock" style="padding-left:25px;"></i>
+                                @ev.CreatedOn.ToShortTimeString()
+                            </li>
+                        </ul>
+                    </div>
+                   </div>
+                <p class="card-text">@ev.LongDescription</p>
+                @Html.ActionLink("Details", "Details", new { id=ev.Id }, new { @class = "btn btn-primary btn-sm" })
+            </div>
+        </div>
+        @*<div class="media col-md-4">
+          <img class="align-self-center" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/899674.png" height="" width="100">
+          <div class="media-body">
+            <h5 class="mt-0">@ev.ShortDescription</h5>                                                                         
+            @Html.ActionLink("Details", "Details", new { id=ev.Id }, new { @class = "btn btn-primary btn-sm" })
+            <hr/>
+          </div>
+        </div>*@
+    }
+</div>
+<hr/>
+<nav aria-label="...">
+  <ul class="pagination justify-content-center">
+    <li class="page-item @if(!@Model.HasPreviousPage) { <text>disabled</text> }">
+      <a class="page-link" asp-action="Events" asp-route-page="@Model.PreviousPageNumber">Previous</a>
+    </li>
+    @for(int pageNumber = Model.Page - 4; pageNumber < Model.Page; ++pageNumber)
+    {
+        if (pageNumber > 0)
+        {
+            <li class="page-item"><a class="page-link" asp-action="Events" asp-route-page="@pageNumber">@pageNumber</a></li>
+        }
+    }
+    <li class="page-item active" aria-current="page">
+      <span class="page-link">
+          @Model.Page
+          <span class="sr-only">(current)</span>
+      </span>
+    </li>
+    @for(int pageNumber = Model.Page + 1; pageNumber < Model.Page + 3; ++pageNumber)
+    {
+        if( pageNumber <= Model.PagesCount )
+        {
+            <li class="page-item"><a class="page-link" asp-controller="Events" asp-action="Events" asp-route-page="@pageNumber">@pageNumber</a></li>
+        }
+    }     
+    <li class="page-item @if(!@Model.HasNextPage) { <text>disabled</text>}">
+      <a class="page-link" asp-action="Events" asp-route-page="@Model.NextPageNumber">Next</a>
+    </li>
+  </ul>
+</nav>
