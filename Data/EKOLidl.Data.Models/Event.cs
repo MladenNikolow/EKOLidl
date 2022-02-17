@@ -8,6 +8,12 @@
     public class Event : BaseModel
     {
         /// <summary>
+        /// Gets or sets title of the event.
+        /// </summary>
+        [JsonProperty(PropertyName = "title")]
+        public string Title { get; set; }
+
+        /// <summary>
         /// Gets or sets short description of the event.
         /// </summary>
         [JsonProperty(PropertyName = "short_description")]

@@ -1,5 +1,120 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model EKOLidl.Data.Models.Signal
+
 @{
+    ViewData["Title"] = @Model.Title;
 }
+
+<section class="single-recipe-wrap-layout1">
+    <div class="container">
+        <div class="col gutters-60">
+            <div class="col">
+                Сигнал
+                <h2 class="item-title">@this.ViewData["Title"]</h2>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="single-event-layout1">
+                        <img id=featured src="@Model.Album.Links[0]">
+            
+            	        <div id="slide-wrapper" >
+            	         <img id="slideLeft" class="arrow" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/arrow-left.png">
+            
+            	         <div id="slider">
+                                <img class="thumbnail active" src="@Model.Album.Links[0]">
+                                @{
+                                    for(int index = 1; index < Model.Album.Links.Count; index++)
+                                    {
+                                        <img class="thumbnail" src="@Model.Album.Links[index]">
+                                    }
+                                }
+            	        </div>
+            
+            	         <img id="slideRight" class="arrow" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/arrow-right.png">
+            	        </div>
+                        @*<div class="item-feature">
+                            <ul>
+                                <li>
+                                    <div class="feature-wrap">
+                                        <div class="row">
+                                            <div class="feature-icon">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </div>
+                                            <div class="media-body space-sm">
+                                                <div class="feature-title">ДАТА НА СЪБИТИЕТО</div>
+                                                <div class="feature-sub-title">@Model.EventDate.ToShortDateString()</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li></li>
+                                <li>
+                                    <div class="feature-wrap">
+                                        <div class="feature-icon">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <div class="media-body space-sm">
+                                            <div class="feature-title">ПРОДЪЛЖИТЕЛНОСТ</div>
+                                            <div class="feature-sub-title">@Model.Duration Часа </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>*@
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="widget-tag border-bottom">
+                        @{
+                            if(Model.TrashType.Contains(EKOLidl.Data.Models.Enums.TrashType.Other))
+                            {
+                                <p class="ridge">@Model.OtherTrashType</p>
+                            }else
+                            {
+                                <ul>
+                                @foreach(var type in Model.TrashType)
+                                {
+                                    <li>
+                                        <a>@type.ToString()</a>
+                                    </li>
+                                }
+                                </ul>
+                            }
+                        }
+                    </div>
+                    <div class="border-top">
+                        <p>Описание :</p>
+                        <p class="item-description">@Model.Description</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="result-wrap-layout1">
+                    <div class="section-heading heading-blue">
+                        <h2 class="item-heading">РЕЗУЛТАТИ</h2>
+                    </div>
+                    <p class="section-paragraph">@Model.Result.Description</p>
+                </div>
+                @{
+                    if(Model.Result.Album.Links.Any())
+                    {
+                        <div class="also-like-wrap">
+                            <h4 class="also-like-title">СНИМКИ ОТ СЪБИТИЕТО</h4>
+                            <div class="row">
+                                @{
+                                    for(int index = 1; index < Model.Result.Album.Links.Count; index++)
+                                    {
+                                        <div class="col-xl-4 col-lg-6 col-md-6 col-12">
+                                            <div class="product-box-layout1">
+                                                <figure class="item-figure"><img src="@Model.Result.Album.Links[index]" alt="Product"></figure>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>             
+                        </div>   
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</section>

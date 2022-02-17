@@ -9,9 +9,9 @@
     @foreach (var ev in Model.Events)
     {
         <div class="card col-md-4" style="width: 18rem;">
-            <img class="card-img-top" src="https://www.timeoutdubai.com/cloud/timeoutdubai/2021/09/11/udHvbKwV-IMG-Dubai-UAE-1.jpg" alt="@ev.ShortDescription">
+            <img class="card-img-top" src="https://www.timeoutdubai.com/cloud/timeoutdubai/2021/09/11/udHvbKwV-IMG-Dubai-UAE-1.jpg" alt="@ev.Title">
             <div class="card-body">
-                <h5 class="card-title">@ev.ShortDescription</h5>
+                <h5 class="card-title">@ev.Title</h5>
                  <div class="row mb-4">
                     <div class="col-xl-9 col-12">
                         <ul class="entry-meta">
@@ -24,7 +24,7 @@
                         </ul>
                     </div>
                    </div>
-                <p class="card-text">@ev.LongDescription</p>
+                <p class="card-text">@ev.ShortDescription</p>
                 @Html.ActionLink("Details", "Details", new { id=ev.Id }, new { @class = "btn btn-primary btn-sm" })
             </div>
         </div>

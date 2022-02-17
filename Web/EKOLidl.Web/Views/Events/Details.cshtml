@@ -1,12 +1,12 @@
 ﻿@model EKOLidl.Data.Models.Event
 
 @{
-    ViewData["Title"] = @Model.ShortDescription;
+    ViewData["Title"] = @Model.Title;
 }
 
 <section class="single-recipe-wrap-layout1">
     <div class="container">
-        <div class="row gutters-60">
+        <div class="col gutters-60">
             <div class="col">
                 Събитие
                 <h2 class="item-title">@this.ViewData["Title"]</h2>

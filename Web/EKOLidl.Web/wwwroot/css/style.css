@@ -11907,7 +11907,7 @@ footer.ranna-bg-dark {
 	}
 
 	#slider::-webkit-scrollbar-thumb {
-		background-color: #dede2e;
+		background-color: #4b4aff;
 		outline: 1px solid slategrey;
 		border-radius: 100px;
 	}
@@ -11928,3 +11928,7 @@ footer.ranna-bg-dark {
 		width: 35px;
 		height: 35px;
 	}
+
+p.ridge {
+	border-style: ridge;
+}
