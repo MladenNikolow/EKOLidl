@@ -72,11 +72,28 @@
                     <div class="section-heading heading-blue">
                         <h2 class="item-heading">РЕЗУЛТАТИ</h2>
                     </div>
-                    <p class="section-paragraph">Salamander lied porpoise much over tightly circa horse
-                        taped so innocuously side crudey mightily rigorous plot life. New homes in
-                        particular are subject. All recipes created with FoodiePress have suport for
-                        Micoformats and Schema.org is a collaboration byo improve convallis.</p>
+                    <p class="section-paragraph">@Model.Result.Description</p>
                 </div>
+                @{
+                    if(Model.Result.Album.Links.Any())
+                    {
+                        <div class="also-like-wrap">
+                            <h4 class="also-like-title">СНИМКИ ОТ СЪБИТИЕТО</h4>
+                            <div class="row">
+                                @{
+                                    for(int index = 1; index < Model.Result.Album.Links.Count; index++)
+                                    {
+                                        <div class="col-xl-4 col-lg-6 col-md-6 col-12">
+                                            <div class="product-box-layout1">
+                                                <figure class="item-figure"><img src="@Model.Result.Album.Links[index]" alt="Product"></figure>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>             
+                        </div>   
+                    }
+                }
             </div>
         </div>
     </div>

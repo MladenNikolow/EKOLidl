@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Threading.Tasks;
+
     using EKOLidl.Data.Models;
     using EKOLidl.Web.ViewModels;
     using EKOLidl.Web.ViewModels.Home;
