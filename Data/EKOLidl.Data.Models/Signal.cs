@@ -6,6 +6,9 @@
 
     public class Signal : BaseModel
     {
+        [JsonProperty(PropertyName = "title")]
+        public string Title { get; set; }
+
         [JsonProperty(PropertyName = "album")]
         public Album Album { get; set; }
 

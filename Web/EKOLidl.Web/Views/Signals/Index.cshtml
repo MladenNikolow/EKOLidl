@@ -1,0 +1,51 @@
+﻿@model EKOLidl.Web.ViewModels.Signals.SignalsViewModel
+
+@{
+    ViewData["Title"] = "Сигнали";
+}
+<h1>@ViewData["Title"]</h1>
+<hr/>
+<div class="row">
+    @foreach (var signal in Model.Signals)
+    {
+        <div class="media col-md-3">
+          <img class="align-self-center" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/899674.png" width="100">
+          <div class="media-body">
+            <h5 class="mt-0">@signal.Description</h5>                                                                         
+            @Html.ActionLink("Details", "Details", new { id=signal.Id }, new { @class = "btn btn-primary btn-sm" })
+            <hr/>
+          </div>
+        </div>
+    }
+</div>
+<hr/>
+<nav aria-label="...">
+  <ul class="pagination justify-content-center">
+    <li class="page-item @if(!@Model.HasPreviousPage) { <text>disabled</text> }">
+      <a class="page-link" asp-action="Events" asp-route-page="@Model.PreviousPageNumber">Previous</a>
+    </li>
+    @for(int pageNumber = Model.Page - 4; pageNumber < Model.Page; ++pageNumber)
+    {
+        if (pageNumber > 0)
+        {
+            <li class="page-item"><a class="page-link" asp-controller="Signals" asp-action="Index" asp-route-page="@pageNumber">@pageNumber</a></li>
+        }
+    }
+    <li class="page-item active" aria-current="page">
+      <span class="page-link">
+          @Model.Page
+          <span class="sr-only">(current)</span>
+      </span>
+    </li>
+    @for(int pageNumber = Model.Page + 1; pageNumber < Model.Page + 3; ++pageNumber)
+    {
+        if( pageNumber <= Model.PagesCount )
+        {
+            <li class="page-item"><a class="page-link" asp-controller="Signals" asp-action="Index" asp-route-page="@pageNumber">@pageNumber</a></li>
+        }
+    }     
+    <li class="page-item @if(!@Model.HasNextPage) { <text>disabled</text>}">
+      <a class="page-link" asp-action="Events" asp-route-page="@Model.NextPageNumber">Next</a>
+    </li>
+  </ul>
+</nav>
