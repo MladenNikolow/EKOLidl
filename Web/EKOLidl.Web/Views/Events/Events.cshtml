@@ -48,7 +48,7 @@
     {
         if (pageNumber > 0)
         {
-            <li class="page-item"><a class="page-link" asp-action="Events" asp-route-page="@pageNumber">@pageNumber</a></li>
+            <li class="page-item"><a class="page-link" asp-controller="Events" asp-action="Events" asp-route-page="@pageNumber">@pageNumber</a></li>
         }
     }
     <li class="page-item active" aria-current="page">

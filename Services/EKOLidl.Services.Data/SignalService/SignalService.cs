@@ -6,6 +6,7 @@
 
     using EKOLidl.Data.Models;
     using Microsoft.Azure.Cosmos;
+    using Microsoft.Azure.Cosmos.Linq;
 
     public class SignalService : ISignalService
     {
@@ -60,14 +61,30 @@
             await this.container.UpsertItemAsync<Signal>(signal, new PartitionKey(id));
         }
 
-        public async Task<IEnumerable<Signal>> GetSignalsByPage(int page)
+        public async Task<int> GetCountAsync()
         {
-            const int pageSize = 9;
-            int offset = pageSize * (page - 1);
+            IOrderedQueryable<Signal> linqQueryable = this.container.GetItemLinqQueryable<Signal>();
+            int count = await linqQueryable.CountAsync();
 
-            string query = @$"select * from signals s
-                            order by s.created_on
-                            offset {offset} limit {pageSize}";
+            return count;
+        }
+
+        public async Task<IEnumerable<Signal>> GetSignalsByPageAsync(int page, int signalsPerPage = 12)
+        {
+            int offset = signalsPerPage * (page - 1);
+
+            string query = @$"select * from events e
+                            order by e.created_on
+                            offset {offset} limit {signalsPerPage}";
+
+            return await this.GetSignalsAsync(query);
+        }
+
+        public async Task<IEnumerable<Signal>> GetNewestSignals(int count = 4)
+        {
+            string query = $@"SELECT * FROM EVENTS E
+                              ORDER BY E.created_on
+                              OFFSET 0 LIMIT {count}";
 
             return await this.GetSignalsAsync(query);
         }

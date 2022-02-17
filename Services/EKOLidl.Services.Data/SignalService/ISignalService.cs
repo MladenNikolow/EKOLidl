@@ -17,6 +17,10 @@
 
         Task DeleteSignalAsync(string id);
 
-        Task<IEnumerable<Signal>> GetSignalsByPage(int page);
+        Task<int> GetCountAsync();
+
+        Task<IEnumerable<Signal>> GetSignalsByPageAsync(int page, int eventsPerPage = 12);
+
+        Task<IEnumerable<Signal>> GetNewestSignals(int count = 4);
     }
 }
