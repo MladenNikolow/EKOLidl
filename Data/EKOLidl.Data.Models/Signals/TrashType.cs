@@ -1,7 +1,10 @@
-﻿using System.ComponentModel;
-
-namespace EKOLidl.Data.Models.Enums
+﻿namespace EKOLidl.Data.Models.Signals
 {
+    using System.ComponentModel;
+
+    /// <summary>
+    /// Enum describing the trash in the signal.
+    /// </summary>
     public enum TrashType
     {
         Unknown = 0,

@@ -5,6 +5,7 @@
 
     using EKOLidl.Data.Models;
     using EKOLidl.Services.Data;
+    using EKOLidl.Services.Mapping;
     using EKOLidl.Web.ViewModels.Signals;
     using Microsoft.AspNetCore.Mvc;
 
@@ -37,7 +38,10 @@
         [Route("Signals/{id}")]
         public async Task<IActionResult> Details(string id)
         {
-            return this.View(await this.signalService.GetSignalAsync(id));
+            var result = await this.signalService.GetSignalAsync(id);
+            SignalDetailsViewModel signalDetailsViewModel = AutoMapperConfig.MapperInstance.Map<SignalDetailsViewModel>(result);
+
+            return this.View(signalDetailsViewModel);
         }
     }
 }

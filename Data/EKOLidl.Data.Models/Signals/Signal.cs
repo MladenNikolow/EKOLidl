@@ -1,9 +1,10 @@
 ﻿namespace EKOLidl.Data.Models
 {
-    using EKOLidl.Data.Common.Models;
-    using EKOLidl.Data.Models.Enums;
-    using Newtonsoft.Json;
     using System.Collections.Generic;
+
+    using EKOLidl.Data.Common.Models;
+    using EKOLidl.Data.Models.Signals;
+    using Newtonsoft.Json;
 
     public class Signal : BaseModel
     {

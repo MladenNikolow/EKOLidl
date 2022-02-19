@@ -1,4 +1,4 @@
-﻿@model EKOLidl.Data.Models.Signal
+﻿@model EKOLidl.Web.ViewModels.Signals.SignalDetailsViewModel
 
 @{
     ViewData["Title"] = @Model.Title;
@@ -27,54 +27,25 @@
                                         <img class="thumbnail" src="@Model.Album.Links[index]">
                                     }
                                 }
-            	        </div>
-            
-            	         <img id="slideRight" class="arrow" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/arrow-right.png">
-            	        </div>
-                        @*<div class="item-feature">
-                            <ul>
-                                <li>
-                                    <div class="feature-wrap">
-                                        <div class="row">
-                                            <div class="feature-icon">
-                                                <i class="far fa-calendar-alt"></i>
-                                            </div>
-                                            <div class="media-body space-sm">
-                                                <div class="feature-title">ДАТА НА СЪБИТИЕТО</div>
-                                                <div class="feature-sub-title">@Model.EventDate.ToShortDateString()</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li></li>
-                                <li>
-                                    <div class="feature-wrap">
-                                        <div class="feature-icon">
-                                            <i class="fas fa-clock"></i>
-                                        </div>
-                                        <div class="media-body space-sm">
-                                            <div class="feature-title">ПРОДЪЛЖИТЕЛНОСТ</div>
-                                            <div class="feature-sub-title">@Model.Duration Часа </div>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>*@
+                            </div>
+
+                            <img id="slideRight" class="arrow" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/arrow-right.png">
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-4">
                     <div class="widget-tag border-bottom">
                         @{
-                            if(Model.TrashType.Contains(EKOLidl.Data.Models.Enums.TrashType.Other))
-                            {
+                            if(Model.TrashType.Contains(EKOLidl.Data.Models.Signals.TrashType.Other))
+                                            {
                                 <p class="ridge">@Model.OtherTrashType</p>
                             }else
                             {
                                 <ul>
-                                @foreach(var type in Model.TrashType)
+                                @foreach(var type in Model.TrashTypeDescriptions)
                                 {
                                     <li>
-                                        <a>@type.ToString()</a>
+                                        <a>@type</a>
                                     </li>
                                 }
                                 </ul>
