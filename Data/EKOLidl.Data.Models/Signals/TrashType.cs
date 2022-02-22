@@ -7,6 +7,7 @@
     /// </summary>
     public enum TrashType
     {
+        [Description("Друго")]
         Unknown = 0,
 
         [Description("Хартия")]
@@ -26,5 +27,5 @@
 
         [Description("Други")]
         Other,
-    }
+}
 }

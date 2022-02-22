@@ -11932,3 +11932,24 @@ footer.ranna-bg-dark {
 p.ridge {
 	border-style: ridge;
 }
+
+.container-fluid {
+	font-size: 17px;
+	padding: 10px 20px;
+	color: #000000;
+	border: 1px solid #cccccc;
+	background-color: transparent;
+	border-radius: 15px;
+}
+
+.navbar-text {
+	border-style: ridge;
+	background-color: red;
+	border-radius: 15px;
+	font-size: 1.25rem;
+}
+
+.navbar-default {
+	border-bottom: 15px solid #7FFF00 !important;
+	background-color: #A52A2A !important;
+}

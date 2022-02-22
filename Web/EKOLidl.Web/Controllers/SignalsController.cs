@@ -1,9 +1,13 @@
 ﻿namespace EKOLidl.Web.Controllers
 {
+    using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using EKOLidl.Data.Models;
+    using EKOLidl.Data.Models.Signals;
     using EKOLidl.Services.Data;
     using EKOLidl.Services.Mapping;
     using EKOLidl.Web.ViewModels.Signals;
@@ -42,6 +46,46 @@
             SignalDetailsViewModel signalDetailsViewModel = AutoMapperConfig.MapperInstance.Map<SignalDetailsViewModel>(result);
 
             return this.View(signalDetailsViewModel);
+        }
+
+        [Route("Signals/Create")]
+        public IActionResult Create()
+        {
+            var viewModel = new CreateSignalInputModel();
+            viewModel.TrashType = new List<TrashType>();
+            viewModel.TrashTypeItems = ((TrashType[])Enum.GetValues(typeof(TrashType))).ToList().Select(x => new
+            {
+                id = (int)x,
+                description = ((DescriptionAttribute[])x.GetType().GetField(x.ToString()).GetCustomAttributes(typeof(DescriptionAttribute), false))[0].Description,
+            }).ToList().Select(x => new KeyValuePair<int, string>(x.id, x.description)).ToList();
+
+            return this.View(viewModel);
+        }
+
+        [Route("Signals/Create")]
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateSignalInputModel input)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(input);
+            }
+
+            try
+            {
+                var signal = AutoMapperConfig.MapperInstance.Map<Signal>(input);
+                await this.signalService.AddSignalAsync(signal);
+            }
+            catch (Exception ex)
+            {
+                this.ModelState.AddModelError(string.Empty, ex.Message);
+                return this.View(input);
+            }
+
+            this.TempData["Message"] = "Сигналът е добавен успешно.";
+
+            // TODO: Redirect to recipe info page
+            return this.RedirectToAction("Signals");
         }
     }
 }
