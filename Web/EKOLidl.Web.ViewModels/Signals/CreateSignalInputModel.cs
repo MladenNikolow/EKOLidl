@@ -20,7 +20,7 @@
         [Display(Name = "Описание")]
         public string Description { get; set; }
 
-        [Required]
+       // [Required]
         [Display(Name = "Тип на отпадъка")]
         public List<TrashType> TrashType { get; set; }
 
@@ -32,6 +32,8 @@
 
         [Required]
         public IEnumerable<IFormFile> Images { get; set; }
+
+        public IEnumerable<string> ImageUrls { get; set; }
 
         public List<KeyValuePair<int, string>> TrashTypeItems { get; set; }
     }

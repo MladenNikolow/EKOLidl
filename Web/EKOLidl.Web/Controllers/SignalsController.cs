@@ -9,17 +9,23 @@
     using EKOLidl.Data.Models;
     using EKOLidl.Data.Models.Signals;
     using EKOLidl.Services.Data;
+    using EKOLidl.Services.Data.BlobContainerService;
     using EKOLidl.Services.Mapping;
     using EKOLidl.Web.ViewModels.Signals;
+    using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
 
     public class SignalsController : BaseController
     {
         private readonly ISignalService signalService;
+        private readonly IWebHostEnvironment webHostEnvironment;
+        private readonly IBlobContainerService blobContainerService;
 
-        public SignalsController(ISignalService signalService)
+        public SignalsController(ISignalService signalService, IWebHostEnvironment webHostEnvironment, IBlobContainerService blobContainerService)
         {
             this.signalService = signalService;
+            this.webHostEnvironment = webHostEnvironment;
+            this.blobContainerService = blobContainerService;
         }
 
         public async Task<IActionResult> Index(int page = 1)
@@ -73,6 +79,8 @@
 
             try
             {
+                input.ImageUrls = await this.blobContainerService.UploadFilesAsync(input.Images, this.webHostEnvironment.WebRootPath);
+
                 var signal = AutoMapperConfig.MapperInstance.Map<Signal>(input);
                 await this.signalService.AddSignalAsync(signal);
             }
