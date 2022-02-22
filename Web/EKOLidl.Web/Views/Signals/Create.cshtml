@@ -1,0 +1,87 @@
+﻿@using EKOLidl.Data.Models.Signals
+@model EKOLidl.Web.ViewModels.Signals.CreateSignalInputModel
+
+@{
+    this.ViewData["Title"] = "Добави сигнал за замърсяване";
+}
+
+<form method="post">
+    <h1>@this.ViewData["Title"]</h1>
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Title"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="TrashType"></label>
+        <div class="container-fluid">
+            @foreach (var item in Model.TrashTypeItems)
+            {
+                @if(item.Key != (int)TrashType.Other)
+                {
+                    <div>
+                          <input type="checkbox" id="@item.Key" name="trashtypes" value="@item.Key">
+                          <label for="@item.Key">@item.Value</label>
+                    </div>
+                }
+            }
+            <div>
+                  <input type="checkbox" id="6" name="trashtypes" value="other">
+                  <label for="other">Други</label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group" tyle="display:none">
+        <label asp-for="OtherTrashType"></label>
+        <input asp-for="OtherTrashType" class="form-control" />
+        <span asp-validation-for="OtherTrashType" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Location"></label>
+        <input asp-for="Location" class="form-control" />
+        <span asp-validation-for="Location" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Images"></label>
+        <input asp-for="Images" class="form-control" />
+        <span asp-validation-for="Images" class="text-danger"></span>
+    </div>
+
+    <input type="submit" class="btn btn-primary" />
+</form>
+
+@section Scripts {
+    <script>
+        var otherCheckbox = document.querySelector('input[value="other"]');
+        var otherText = document.querySelector('input[id="OtherTrashTypeId"]');
+        otherText.style.visibility = 'hidden';
+        
+        otherCheckbox.addEventListener('change', () => {
+          if(otherCheckbox.checked) {
+            otherText.style.visibility = 'visible';
+            otherText.value = '';
+          } else {
+            otherText.style.visibility = 'hidden';
+          }
+        });
+    </script>
+    @*<script>
+        $(function CheckOtherTypeIsSettedOn() {
+            $("#check-6").click(function () {
+                if (!$(this).is(':checked')) {
+                    $("#OtherTrashTypeId").hide();
+                }
+                else {
+                    $("#OtherTrashTypeId").show();
+                }
+            });
+        });
+    </script>*@
+}
