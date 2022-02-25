@@ -15,8 +15,8 @@
         <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-5 fixed-top">         
             <div class="container">
                 <div class="col-2">
-                    <a asp-controller="Home" asp-action="Index" style="padding-bottom:20px"><img class="img-fluid logos-sm" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/Logo-MK.png"></a>
-                    <a asp-controller="Home" asp-action="Index" style="padding-top:20px"><img class="img-fluid logos-sm" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/2.WCIF.png"></a>
+                    <a href="https://seafriends.bg/"><img class="img-fluid logos-sm" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/Logo-MK.png"></a>
+                    <a href="https://frgi.bg/"><img class="img-fluid logos-lg" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/2.WCIF.png"></a>
                 </div>
                 <div class="col-8">
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -26,7 +26,7 @@
                     <div class="navbar-collapse collapse align-content-center">
                         <div class="row">
                             <div class="col">
-                                <ul class="navbar-nav" style="text-align: center;">
+                                <ul class="navbar-nav" style="text-align: start;">
                                    <li class="nav-item">
                                        <a asp-area="" asp-controller="Home" asp-action="Index"><i class="fa-solid fa-house-chimney"></i> Начало</a>
                                    </li>
@@ -46,18 +46,18 @@
                             </div>
                         </div>
                     </div>
-                    <p style="font-size: 10px; padding-top:20px"> НАСТОЯЩИЯТ ПРОЕКТ СЕ ОСЪЩЕСТВИ БЛАГДАРЕНИЕ НА НАЙ-ГОЛЯМАТА СОЦИАЛНО ОТГОВОРНА ИНИЦИАТИВАНА ЛИДЛ БЪЛГАРИЯ 
-                    <br>"ТИ И LIDL ЗА ПО-ДОБЪР ЖИВОТ", В ПАРТНЬОРСТВО С ФОНДАЦИЯ "РАБОТИЛНИЦА ЗА ГРАЖДАНСКИ ИНИЦИАТИВИ" И БЪЛГАРСКИ ДАРИТЕЛСКИ ФОРУМ </p>
+                    <p class="text-center" style="font-size: 10px; padding-top:20px"><b>НАСТОЯЩИЯТ ПРОЕКТ СЕ ОСЪЩЕСТВИ БЛАГДАРЕНИЕ НА НАЙ-ГОЛЯМАТА СОЦИАЛНО ОТГОВОРНА ИНИЦИАТИВАНА ЛИДЛ БЪЛГАРИЯ 
+                    <br>"ТИ И LIDL ЗА ПО-ДОБЪР ЖИВОТ", В ПАРТНЬОРСТВО С ФОНДАЦИЯ "РАБОТИЛНИЦА ЗА ГРАЖДАНСКИ ИНИЦИАТИВИ" И БЪЛГАРСКИ ДАРИТЕЛСКИ ФОРУМ</b></p>
                 </div>
                 <div class="col-2">
-                    <a asp-controller="Home" asp-action="Index" style="padding-bottom:20px"><img class="img-fluid logos-sm" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/1.Ti&Lidl.png"></a>
-                    <a asp-controller="Home" asp-action="Index" style="padding-top:20px"><img class="img-fluid logos-sm" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/3.BDF.png"></a>
+                    <a href="https://corporate.lidl.bg/otgovornost/ti-i-lidl-za-po-dob-r-zhivot"><img class="img-fluid logos-sm" style="padding-bottom:5px" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/1.Ti&Lidl.png"></a>
+                    <a href="https://www.dfbulgaria.org/"><img class="img-fluid logos-lg" style="padding-top:5px" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/3.BDF.png"></a>
                 </div>
             </div>
         </nav>
     </header>
     
-    <div class="container custom">
+    <div class="container" style="padding-top: 250px">
         <partial name="_CookieConsentPartial" />
         <main role="main" class="pb-3">
             @this.RenderBody()

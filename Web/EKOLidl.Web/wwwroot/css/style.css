@@ -11959,6 +11959,16 @@ p.ridge {
 
 lidl-logo {
 	position: fixed;
+
+}
+
+@media (min-width:0px) and (max-width: 500px) {
+	.logos-sm {
+		min-width: 50px;
+	}
+
+	.logos-lg {
+		min-width: 75px;
 	left: 0;
 	top: 0;
 }
@@ -11970,9 +11980,7 @@ lidl-logo {
 .logos-sm {
 }
 
-@media (min-width:0px) and (max-width: 500px) {
-	.logos-sm {
-		min-width: 50px;
+.logos-lg{
 	}
 }
 
@@ -11980,15 +11988,27 @@ lidl-logo {
 	.logos-sm {
 		width: 75%
 	}
+
+	.logos-lg {
+		width: 100%
+	}
 }
 
 @media (min-width: 1200px) {
 	.logos-sm {
 		width:50%
 	}
+
+	.logos-lg {
+		width: 75%
+	}
 }
 
 .navbar-nav > li{
 	padding-left:20px;
 	padding-right:20px;
+}
+
+.text-center{
+	color: #050b68
 }
