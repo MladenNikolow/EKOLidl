@@ -12,35 +12,52 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-5">
+        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-5 fixed-top">         
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="index">@GlobalConstants.SystemName</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                   
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="About" asp-action="Index">За проекта</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Events" asp-action="Events">Събития</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Signals" asp-action="Index">Сигнали</a>
-                        </li>
-                    </ul>
+                <div class="col-2">
+                    <a asp-controller="Home" asp-action="Index" style="padding-bottom:20px"><img class="img-fluid logos-sm" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/Logo-MK.png"></a>
+                    <a asp-controller="Home" asp-action="Index" style="padding-top:20px"><img class="img-fluid logos-sm" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/2.WCIF.png"></a>
                 </div>
-                <form class="form-inline my-2 my-lg-0">
-                  <a class="navbar-text" asp-area="" asp-controller="Signals" asp-action="Create">Подай сигнал за замърсяване</a>
-                </form>
+                <div class="col-8">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse align-content-center">
+                        <div class="row">
+                            <div class="col">
+                                <ul class="navbar-nav" style="text-align: center;">
+                                   <li class="nav-item">
+                                       <a asp-area="" asp-controller="Home" asp-action="Index"><i class="fa-solid fa-house-chimney"></i> Начало</a>
+                                   </li>
+                                    <li class="nav-item">
+                                        <a href="#"><i class="fa-solid fa-list-check"></i> За проекта</a>
+                                    </li>
+                                    <li class="nav-item">
+                                         <a asp-area="" asp-controller="Events" asp-action="Events"><i class="fa-solid fa-calendar-days"></i> Събития</a>
+                                    </li>
+                                    <li class="nav-item">
+                                         <a asp-area="" asp-controller="Signals" asp-action="Index"><i class="fas fa-archive"></i> Сигнали</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="btn btn-danger" role="button" asp-area="" asp-controller="Signals" asp-action="Create"><i class="fas fa-hand-point-right"> Подай сигнал</i></a>    
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <p style="font-size: 10px; padding-top:20px"> НАСТОЯЩИЯТ ПРОЕКТ СЕ ОСЪЩЕСТВИ БЛАГДАРЕНИЕ НА НАЙ-ГОЛЯМАТА СОЦИАЛНО ОТГОВОРНА ИНИЦИАТИВАНА ЛИДЛ БЪЛГАРИЯ 
+                    <br>"ТИ И LIDL ЗА ПО-ДОБЪР ЖИВОТ", В ПАРТНЬОРСТВО С ФОНДАЦИЯ "РАБОТИЛНИЦА ЗА ГРАЖДАНСКИ ИНИЦИАТИВИ" И БЪЛГАРСКИ ДАРИТЕЛСКИ ФОРУМ </p>
+                </div>
+                <div class="col-2">
+                    <a asp-controller="Home" asp-action="Index" style="padding-bottom:20px"><img class="img-fluid logos-sm" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/1.Ti&Lidl.png"></a>
+                    <a asp-controller="Home" asp-action="Index" style="padding-top:20px"><img class="img-fluid logos-sm" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/3.BDF.png"></a>
+                </div>
             </div>
         </nav>
     </header>
     
-    <div class="container">
+    <div class="container custom">
         <partial name="_CookieConsentPartial" />
         <main role="main" class="pb-3">
             @this.RenderBody()
@@ -58,6 +75,7 @@
     <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js" asp-append-version="true"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.min.js" asp-append-version="true"></script>
     <script src="~/js/site.min.js" asp-append-version="true"></script>
+    <script src="https://kit.fontawesome.com/0bd2799d6d.js" crossorigin="anonymous" asp-append-version="true"></script>
     @await this.RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

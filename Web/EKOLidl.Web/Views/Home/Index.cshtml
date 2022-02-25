@@ -2,52 +2,43 @@
 
 @using EKOLidl.Common
 @{
-    this.ViewData["Title"] = "EKOLidl";
+    this.ViewData["Title"] = "Накрая стигам до морето";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome to @this.ViewData["Title"]</h1>
-    <hr/>
-    <div id="" class="carousel slide" data-bs-ride="carousel">
-      <div class="carousel-indicators 300-px-wide">
-        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
-      </div>
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <div class="container">
-            <img src="https://www.timeoutdubai.com/cloud/timeoutdubai/2021/09/11/udHvbKwV-IMG-Dubai-UAE-1.jpg" class="d-block w-100" alt="...">
-          </div>
-          <div class="carousel-caption d-none d-md-block">
-            <h5>First slide label</h5>
-            <p>Some representative placeholder content for the first slide.</p>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <img src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/899674.png" class="d-block w-100" alt="...">
-          <div class="carousel-caption d-none d-md-block">
-            <h5>Second slide label</h5>
-            <p>Some representative placeholder content for the second slide.</p>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <img src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/899674.png" class="d-block w-100" alt="...">
-          <div class="carousel-caption d-none d-md-block">
-            <h5>Third slide label</h5>
-            <p>Some representative placeholder content for the third slide.</p>
-          </div>
-        </div>
-      </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
+<div class="row">
+    <div class="col-6">
+        <img class="img-responsive" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/front_background.jpg" alt="">
     </div>
-    <hr/>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <div class="col-6">
+        <img class="img-responsive" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/background.jpg" alt="">
+    </div>
+</div>
+<div class="row">
+    <div class="col sidebar-widget-area sidebar-break-md">
+        <div class="widget">
+            <div class="section-heading heading-dark">
+                <h3 class="item-heading">СЪБИТИЯ</h3>
+            </div>
+            <div class="widget-latest">
+                <ul class="block-list">
+                    @{int i = 0;}
+                    @foreach( var eventItem in Model.Events)
+                    {
+                        <li class="single-item">
+                           <div class="item-img">
+                               <a href="/Events/Details/@eventItem.Id"><img src="@eventItem.Album.Links.FirstOrDefault()" alt="Post"></a>
+                               <div class="count-number">@i</div>
+                           </div>
+                           <div class="item-content">
+                               <div class="item-ctg">Събитие</div>
+                               <h4 class="item-title"><a href="/Events/Details/@eventItem.Id">@eventItem.Title</a></h4>
+                           </div>
+                       </li>
+
+                       i++;
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
