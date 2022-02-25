@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using EKOLidl.Services.Data;
+    using EKOLidl.Services.Data.BlobContainerService;
     using EKOLidl.Services.Data.SignalService;
     using EKOLidl.Services.Mapping;
     using EKOLidl.Web.ViewModels;
@@ -32,6 +33,7 @@
         {
             services.AddSingleton<IEventService>(InitializeEventClientInstanceAsync(this.configuration.GetSection("CosmoDb")).GetAwaiter().GetResult());
             services.AddSingleton<ISignalService>(InitializeSignalClientInstanceAsync(this.configuration.GetSection("CosmoDb")).GetAwaiter().GetResult());
+            services.AddSingleton<IBlobContainerService>(InitializeBlobContainerService(this.configuration.GetSection("AzureStorage")));
 
             services.Configure<CookiePolicyOptions>(
                 options =>
@@ -112,6 +114,14 @@
             DatabaseResponse database = await client.CreateDatabaseIfNotExistsAsync(databaseName);
             await database.Database.CreateContainerIfNotExistsAsync(containerName, "/id");
             return signalService;
+        }
+
+        private static BlobContainerService InitializeBlobContainerService(IConfigurationSection configurationSection)
+        {
+            string connectionString = configurationSection.GetSection("ConnectionString").Value;
+            string containerName = configurationSection.GetSection("Container").Value;
+
+            return new BlobContainerService(connectionString, containerName);
         }
     }
 }
