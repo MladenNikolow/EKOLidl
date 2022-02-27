@@ -8,5 +8,7 @@
     public interface IBlobContainerService
     {
         Task<IEnumerable<string>> UploadFilesAsync(IEnumerable<IFormFile> files, string filesPath);
+
+        bool IsValidImage(IFormFile image);
     }
 }

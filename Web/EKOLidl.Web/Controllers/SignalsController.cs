@@ -72,11 +72,24 @@
         [HttpPost]
         public async Task<IActionResult> Create(CreateSignalInputModel input)
         {
+
+            // Image Validation
+            foreach (var image in input.Images)
+            {
+                if (!this.blobContainerService.IsValidImage(image))
+                {
+                    this.ModelState.AddModelError("Images", "Моля, добавете валидна снимка във формат: .png, .jpg или .jpeg и с размер до 10 MB.");
+                }
+            }
+
+            // General Validation
             if (!this.ModelState.IsValid)
             {
+                input.TrashTypeItems = new List<KeyValuePair<int, string>>();
                 return this.View(input);
             }
 
+            // Save Data
             try
             {
                 input.ImageUrls = await this.blobContainerService.UploadFilesAsync(input.Images, this.webHostEnvironment.WebRootPath);
