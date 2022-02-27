@@ -6,8 +6,8 @@
 
     public class HomeViewModel
     {
-        public IEnumerable<Event> Events { get; set; }
+        public List<Event> Events { get; set; }
 
-        public IEnumerable<Signal> Signals { get; set; }
+        public List<Signal> Signals { get; set; }
     }
 }

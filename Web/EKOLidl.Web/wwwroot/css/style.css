@@ -12012,3 +12012,22 @@ lidl-logo {
 .text-center{
 	color: #050b68
 }
+
+.carousel-inner img {
+	margin: auto;
+}
+
+.first-heading {
+}
+
+@media (min-width:0px) and (max-width: 999px) {
+	.first-heading {
+		margin-top: -5px;
+	}
+}
+
+@media (min-width:1000px) {
+	.first-heading {
+		margin-top: -50px;
+	}
+}

@@ -29,9 +29,8 @@
 
             HomeViewModel viewModel = new HomeViewModel()
             {
-                Events = events,
-                Signals = signals,
-
+                Events = new List<Event>(events),
+                Signals = new List<Signal>(signals),
             };
 
             return this.View(viewModel);

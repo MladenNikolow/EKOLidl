@@ -26,7 +26,7 @@
 
             EventsViewModel eventsViewModel = new EventsViewModel
             {
-                Events = events,
+                Events = new List<Event>(events),
                 Page = page,
                 Count = eventsCount,
                 EventsPerPage = eventsPerPage,

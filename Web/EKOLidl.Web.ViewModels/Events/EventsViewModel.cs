@@ -7,7 +7,7 @@
 
     public class EventsViewModel
     {
-        public IEnumerable<Event> Events { get; set; }
+        public List<Event> Events { get; set; }
 
         public int Page { get; set; }
 
