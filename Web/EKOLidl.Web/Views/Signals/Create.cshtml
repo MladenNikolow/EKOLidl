@@ -23,24 +23,22 @@
         <div class="container-fluid">
             @foreach (var item in Model.TrashTypeItems)
             {
-                @if(item.Key != (int)TrashType.Other)
+                @if(item.Key == (int)TrashType.Other || item.Key == (int)TrashType.Unknown)
                 {
-                    <div>
-                          <input type="checkbox" id="@item.Key" name="trashtypes" value="@item.Key">
-                          <label for="@item.Key">@item.Value</label>
-                    </div>
+                    continue;
                 }
+
+                <div>
+                      <input type="checkbox" id="check-@item.Key" name="TrashType" value="@item.Key">
+                      <label for="@item.Key">@item.Value</label>
+                </div>
             }
             <div>
-                  <input type="checkbox" id="6" name="trashtypes" value="other">
+                  <input type="checkbox" id="check-6" name="TrashType" value="6" onclick="OtherCheckFunction()">
                   <label for="other">Други</label>
+                  <input asp-for="OtherTrashType" class="form-control" id="otherTrashType" style="display:none;"/>
             </div>
         </div>
-    </div>
-    <div class="form-group" tyle="display:none">
-        <label asp-for="OtherTrashType"></label>
-        <input asp-for="OtherTrashType" class="form-control" />
-        <span asp-validation-for="OtherTrashType" class="text-danger"></span>
     </div>
 
     <div class="form-group">
@@ -50,38 +48,45 @@
     </div>
     <div class="form-group">
         <label asp-for="Images"></label>
-        <input asp-for="Images" class="form-control" />
+        <input asp-for="Images" class="form-control" value="Изберете файл"/>
         <span asp-validation-for="Images" class="text-danger"></span>
     </div>
 
+    <div class="section-heading heading-dark" style="margin-top: 30px;">
+        <h3 class="item-heading">ПОДАТЕЛ</h3>
+    </div>
+     <div class="form-group">
+        <label asp-for="ReporterNames"></label>
+        <input asp-for="ReporterNames" class="form-control" />
+        <span asp-validation-for="ReporterNames" class="text-danger"></span>
+    </div>
+     <div class="form-group">
+        <label asp-for="ReporterGsm"></label>
+        <input asp-for="ReporterGsm" class="form-control" />
+        <span asp-validation-for="ReporterGsm" class="text-danger"></span>
+    </div>
+     <div class="form-group">
+        <label asp-for="ReporterEmail"></label>
+        <input asp-for="ReporterEmail" class="form-control" />
+        <span asp-validation-for="ReporterEmail" class="text-danger"></span>
+    </div>
     <input type="submit" class="btn btn-primary" />
 </form>
 
 @section Scripts {
     <script>
-        var otherCheckbox = document.querySelector('input[value="other"]');
-        var otherText = document.querySelector('input[id="OtherTrashTypeId"]');
-        otherText.style.visibility = 'hidden';
-        
-        otherCheckbox.addEventListener('change', () => {
-          if(otherCheckbox.checked) {
-            otherText.style.visibility = 'visible';
-            otherText.value = '';
-          } else {
-            otherText.style.visibility = 'hidden';
-          }
-        });
+        function OtherCheckFunction() {
+            // Get the checkbox
+            var checkBox = document.getElementById("check-6");
+            // Get the output text
+            var text = document.getElementById("otherTrashType");
+
+            // If the checkbox is checked, display the output text
+            if (checkBox.checked == true) {
+              text.style.display = 'block';
+            } else {
+              text.style.display = 'none';
+            }
+        }
     </script>
-    @*<script>
-        $(function CheckOtherTypeIsSettedOn() {
-            $("#check-6").click(function () {
-                if (!$(this).is(':checked')) {
-                    $("#OtherTrashTypeId").hide();
-                }
-                else {
-                    $("#OtherTrashTypeId").show();
-                }
-            });
-        });
-    </script>*@
 }

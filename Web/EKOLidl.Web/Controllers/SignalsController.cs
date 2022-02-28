@@ -59,6 +59,11 @@
         {
             var viewModel = new CreateSignalInputModel();
             viewModel.TrashType = new List<TrashType>();
+            viewModel.Album = new Album()
+            {
+                Links = new List<string>(),
+            };
+
             viewModel.TrashTypeItems = ((TrashType[])Enum.GetValues(typeof(TrashType))).ToList().Select(x => new
             {
                 id = (int)x,
@@ -72,7 +77,6 @@
         [HttpPost]
         public async Task<IActionResult> Create(CreateSignalInputModel input)
         {
-
             // Image Validation
             foreach (var image in input.Images)
             {
@@ -92,10 +96,19 @@
             // Save Data
             try
             {
-                input.ImageUrls = await this.blobContainerService.UploadFilesAsync(input.Images, this.webHostEnvironment.WebRootPath);
+                input.Album = new Album();
+                var result = await this.blobContainerService.UploadFilesAsync(input.Images, this.webHostEnvironment.WebRootPath);
 
-                var signal = AutoMapperConfig.MapperInstance.Map<Signal>(input);
-                await this.signalService.AddSignalAsync(signal);
+                if (result == null)
+                {
+                    this.ModelState.AddModelError("Images", "Проблем при добавянето на една от снимките");
+                    input.TrashTypeItems = new List<KeyValuePair<int, string>>();
+                    return this.View(input);
+                }
+
+                input.Album.Links = (List<string>)result;
+
+                await this.signalService.AddSignalAsync(input);
             }
             catch (Exception ex)
             {
@@ -106,7 +119,7 @@
             this.TempData["Message"] = "Сигналът е добавен успешно.";
 
             // TODO: Redirect to recipe info page
-            return this.RedirectToAction("Signals");
+            return this.RedirectToAction("Index");
         }
     }
 }

@@ -39,7 +39,8 @@
                     using (var fileStream = System.IO.File.OpenRead(fullFilePath))
                     {
                         await blobClient.UploadAsync(fileStream);
-                        File.Delete(fullFilePath);
+
+                        // File.Delete(fullFilePath);
                     }
 
                     filesUrls.Add(blobClient.Uri.AbsoluteUri);

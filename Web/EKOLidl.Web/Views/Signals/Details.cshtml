@@ -4,7 +4,7 @@
     ViewData["Title"] = @Model.Title;
 }
 
-<section class="single-recipe-wrap-layout1">
+<section class="single-event-wrap-layout1">
     <div class="container">
         <div class="col gutters-60">
             <div class="col">
@@ -34,23 +34,25 @@
                     </div>
                 </div>
                 <div class="col-lg-4">
-                    <div class="widget-tag border-bottom">
-                        @{
-                            if(Model.TrashType.Contains(EKOLidl.Data.Models.Signals.TrashType.Other))
-                                            {
-                                <p class="ridge">@Model.OtherTrashType</p>
-                            }else
-                            {
-                                <ul>
-                                @foreach(var type in Model.TrashTypeDescriptions)
+                    <div class="row">
+                        <div class="widget-tag border-bottom">
+                            @{
+                                if(Model.TrashType.Contains(EKOLidl.Data.Models.Signals.TrashType.Other))
+                                                {
+                                    <p class="ridge">@Model.OtherTrashType</p>
+                                }else
                                 {
-                                    <li>
-                                        <a>@type</a>
-                                    </li>
+                                    <ul>
+                                    @foreach(var type in Model.TrashTypeDescriptions)
+                                    {
+                                        <li>
+                                            <a>@type</a>
+                                        </li>
+                                    }
+                                    </ul>
                                 }
-                                </ul>
                             }
-                        }
+                        </div>
                     </div>
                     <div class="border-top">
                         <p>Описание :</p>

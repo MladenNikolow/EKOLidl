@@ -28,5 +28,8 @@
 
         [JsonProperty(PropertyName = "result")]
         public Result Result { get; set; }
+
+        [JsonProperty(PropertyName = "reporter")]
+        public Reporter Reporter { get; set; }
     }
 }

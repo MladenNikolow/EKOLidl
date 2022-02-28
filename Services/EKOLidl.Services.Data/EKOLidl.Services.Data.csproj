@@ -26,6 +26,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Data\EKOLidl.Data.Common\EKOLidl.Data.Common.csproj" />
     <ProjectReference Include="..\..\Data\EKOLidl.Data.Models\EKOLidl.Data.Models.csproj" />
+    <ProjectReference Include="..\..\Web\EKOLidl.Web.ViewModels\EKOLidl.Web.ViewModels.csproj" />
     <ProjectReference Include="..\EKOLidl.Services.Mapping\EKOLidl.Services.Mapping.csproj" />
   </ItemGroup>
 

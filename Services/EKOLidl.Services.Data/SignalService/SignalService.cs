@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
 
     using EKOLidl.Data.Models;
+    using EKOLidl.Web.ViewModels.Signals;
     using Microsoft.Azure.Cosmos;
     using Microsoft.Azure.Cosmos.Linq;
 
@@ -46,8 +47,39 @@
             }
         }
 
-        public async Task AddSignalAsync(Signal signal)
+        public async Task AddSignalAsync(CreateSignalInputModel input)
         {
+            var signal = new Signal
+            {
+                Title = input.Title,
+                Description = input.Description,
+                TrashType = input.TrashType,
+                Location = input.Location,
+                Album = input.Album,
+                Reporter = new Reporter()
+                {
+                    Names = input.ReporterNames,
+                    Gsm = input.ReporterGsm,
+                    Email = input.ReporterEmail
+                },
+                Result = new Result()
+                {
+                    Description = "Още няма добавени резултати!",
+                    Album = new Album()
+                    {
+                        Links = new List<string>(),
+                    },
+                },
+            };
+
+            if (input.TrashType.Contains(EKOLidl.Data.Models.Signals.TrashType.Other))
+            {
+                input.TrashType = new List<EKOLidl.Data.Models.Signals.TrashType>();
+                input.TrashType.Add(EKOLidl.Data.Models.Signals.TrashType.Other);
+
+                signal.OtherTrashType = input.OtherTrashType;
+            }
+
             await this.container.CreateItemAsync<Signal>(signal, new PartitionKey(signal.Id));
         }
 

@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using EKOLidl.Data.Models;
+    using EKOLidl.Web.ViewModels.Signals;
 
     public interface ISignalService
     {
@@ -11,7 +12,7 @@
 
         Task<Signal> GetSignalAsync(string id);
 
-        Task AddSignalAsync(Signal signal);
+        Task AddSignalAsync(CreateSignalInputModel signal);
 
         Task UpdateSignalAsync(string id, Signal signal);
 
