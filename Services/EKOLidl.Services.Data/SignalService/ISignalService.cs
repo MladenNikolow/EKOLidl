@@ -12,7 +12,7 @@
 
         Task<Signal> GetSignalAsync(string id);
 
-        Task AddSignalAsync(CreateSignalInputModel signal);
+        Task<bool> AddSignalAsync(CreateSignalInputModel signal);
 
         Task UpdateSignalAsync(string id, Signal signal);
 

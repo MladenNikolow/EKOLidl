@@ -27,22 +27,33 @@
             {
                 foreach (var file in files)
                 {
-                    string fullFilePath = filesPath + "/" + file.FileName;
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string fullFilePath = Path.Combine(filesPath, fileName);
 
                     using (FileStream fileStream = new FileStream(fullFilePath, FileMode.Create))
                     {
                         await file.CopyToAsync(fileStream);
                     }
 
-                    BlobClient blobClient = this.blobContainerClient.GetBlobClient(file.FileName);
+                    BlobClient blobClient = this.blobContainerClient.GetBlobClient(fileName);
 
-                    using (var fileStream = System.IO.File.OpenRead(fullFilePath))
+                    using (FileStream fileStream = System.IO.File.OpenRead(fullFilePath))
                     {
-                        await blobClient.UploadAsync(fileStream);
-
-                        // File.Delete(fullFilePath);
+                        try
+                        {
+                            var blobUploadResult = await blobClient.UploadAsync(fileStream);
+                            if (blobUploadResult == null)
+                            {
+                                return null;
+                            }
+                        }
+                        catch
+                        {
+                            return null;
+                        }
                     }
 
+                    File.Delete(fullFilePath);
                     filesUrls.Add(blobClient.Uri.AbsoluteUri);
                 }
             }
@@ -62,7 +73,6 @@
             if (image.ContentType.ToLower() != "image/jpg" &&
                 image.ContentType.ToLower() != "image/jpeg" &&
                 image.ContentType.ToLower() != "image/pjpeg" &&
-                image.ContentType.ToLower() != "image/gif" &&
                 image.ContentType.ToLower() != "image/x-png" &&
                 image.ContentType.ToLower() != "image/png")
             {
@@ -74,7 +84,6 @@
             //-------------------------------------------
             if (Path.GetExtension(image.FileName).ToLower() != ".jpg"
                 && Path.GetExtension(image.FileName).ToLower() != ".png"
-                && Path.GetExtension(image.FileName).ToLower() != ".gif"
                 && Path.GetExtension(image.FileName).ToLower() != ".jpeg")
             {
                 return false;
@@ -93,7 +102,7 @@
                 //------------------------------------------
                 // Check whether the image size exceeding the limit or not
                 //------------------------------------------ 
-                if (image.Length < ImageMinimumBytes || image.Length > 10 * 1024 * 1024)
+                if (image.Length < ImageMinimumBytes || image.Length > 5 * 1024 * 1024)
                 {
                     return false;
                 }

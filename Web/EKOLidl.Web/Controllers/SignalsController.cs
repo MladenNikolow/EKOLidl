@@ -77,22 +77,30 @@
         [HttpPost]
         public async Task<IActionResult> Create(CreateSignalInputModel input)
         {
+            this.ModelState.Clear();
+
             input.TrashTypeItems = ((TrashType[])Enum.GetValues(typeof(TrashType))).ToList().Select(x => new
             {
                 id = (int)x,
                 description = ((DescriptionAttribute[])x.GetType().GetField(x.ToString()).GetCustomAttributes(typeof(DescriptionAttribute), false))[0].Description,
             }).ToList().Select(x => new KeyValuePair<int, string>(x.id, x.description)).ToList();
 
-            // Image Validation
+            if (input.TrashType == null)
+            {
+                this.ModelState.AddModelError("TrashType", "Моля изберете тип на отпадъка");
+            }
+
             foreach (var image in input.Images)
             {
+                // Image Validation
                 if (!this.blobContainerService.IsValidImage(image))
                 {
-                    this.ModelState.AddModelError("Images", "Моля, добавете валидна снимка във формат: .png, .jpg или .jpeg и с размер до 10 MB.");
+                    this.ModelState.AddModelError("Images", "Разрешени формат за изображение: .png, .jpg или .jpeg. Максимален размер до 5 MB.");
+                    break;
                 }
             }
 
-            // General Validation
+            // Model State Validation
             if (!this.ModelState.IsValid)
             {
                 return this.View(input);
@@ -101,28 +109,39 @@
             // Save Data
             try
             {
-                input.Album = new Album();
-                var result = await this.blobContainerService.UploadFilesAsync(input.Images, this.webHostEnvironment.WebRootPath);
+                // Upload Images
+                var imagesResult = await this.blobContainerService.UploadFilesAsync(input.Images, this.webHostEnvironment.WebRootPath);
 
-                if (result == null)
+                if (imagesResult == null)
                 {
-                    this.ModelState.AddModelError("Images", "Проблем при добавянето на една от снимките");
-                    return this.View(input);
+                    this.ModelState.AddModelError("Images", "Възникна проблем при обработка на вашия сигнал. Моля, опитайте онтово!");
                 }
+                else
+                {
+                    input.Album = new Album();
+                    input.Album.Links = (List<string>)imagesResult;
 
-                input.Album.Links = (List<string>)result;
-
-                await this.signalService.AddSignalAsync(input);
+                    var signalResult = await this.signalService.AddSignalAsync(input);
+                    if (!signalResult)
+                    {
+                        this.ModelState.AddModelError("Images", "Възникна проблем при обработка на вашия сигнал. Моля, опитайте онтово!");
+                    }
+                }
             }
-            catch (Exception ex)
+            catch
             {
-                this.ModelState.AddModelError(string.Empty, ex.Message);
+                this.ModelState.AddModelError("Images", "Възникна проблем при обработка на вашия сигнал. Моля, опитайте онтово!");
+            }
+
+            // Model State Validation
+            if (!this.ModelState.IsValid)
+            {
+                // TODO: Да се изтрият снимките, ако съшествуват
                 return this.View(input);
             }
 
             this.TempData["Message"] = "Сигналът е добавен успешно.";
 
-            // TODO: Redirect to recipe info page
             return this.RedirectToAction("Index");
         }
     }

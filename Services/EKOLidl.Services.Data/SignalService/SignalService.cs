@@ -47,7 +47,7 @@
             }
         }
 
-        public async Task AddSignalAsync(CreateSignalInputModel input)
+        public async Task<bool> AddSignalAsync(CreateSignalInputModel input)
         {
             var signal = new Signal
             {
@@ -80,7 +80,20 @@
                 signal.OtherTrashType = input.OtherTrashType;
             }
 
-            await this.container.CreateItemAsync<Signal>(signal, new PartitionKey(signal.Id));
+            try
+            {
+                var result = await this.container.CreateItemAsync<Signal>(signal, new PartitionKey(signal.Id));
+                if (result == null)
+                {
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
         }
 
         public async Task DeleteSignalAsync(string id)

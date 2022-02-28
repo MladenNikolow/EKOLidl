@@ -1,5 +1,6 @@
 ﻿@using EKOLidl.Data.Models.Signals
 @model EKOLidl.Web.ViewModels.Signals.CreateSignalInputModel
+@using Microsoft.AspNetCore.Mvc.Localization
 
 @{
     this.ViewData["Title"] = "Добави сигнал за замърсяване";
@@ -46,9 +47,10 @@
         <input asp-for="Location" class="form-control" />
         <span asp-validation-for="Location" class="text-danger"></span>
     </div>
+
     <div class="form-group">
         <label asp-for="Images"></label>
-        <input asp-for="Images" class="form-control" value="Изберете файл"/>
+        <input asp-for="Images" class="form-control"/>
         <span asp-validation-for="Images" class="text-danger"></span>
     </div>
 
@@ -70,7 +72,7 @@
         <input asp-for="ReporterEmail" class="form-control" />
         <span asp-validation-for="ReporterEmail" class="text-danger"></span>
     </div>
-    <input type="submit" class="btn btn-primary" />
+    <input type="submit" class="btn btn-primary" value="Добави" />
 </form>
 
 @section Scripts {
