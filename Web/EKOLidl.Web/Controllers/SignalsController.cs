@@ -77,6 +77,12 @@
         [HttpPost]
         public async Task<IActionResult> Create(CreateSignalInputModel input)
         {
+            input.TrashTypeItems = ((TrashType[])Enum.GetValues(typeof(TrashType))).ToList().Select(x => new
+            {
+                id = (int)x,
+                description = ((DescriptionAttribute[])x.GetType().GetField(x.ToString()).GetCustomAttributes(typeof(DescriptionAttribute), false))[0].Description,
+            }).ToList().Select(x => new KeyValuePair<int, string>(x.id, x.description)).ToList();
+
             // Image Validation
             foreach (var image in input.Images)
             {
@@ -89,7 +95,6 @@
             // General Validation
             if (!this.ModelState.IsValid)
             {
-                input.TrashTypeItems = new List<KeyValuePair<int, string>>();
                 return this.View(input);
             }
 
@@ -102,7 +107,6 @@
                 if (result == null)
                 {
                     this.ModelState.AddModelError("Images", "Проблем при добавянето на една от снимките");
-                    input.TrashTypeItems = new List<KeyValuePair<int, string>>();
                     return this.View(input);
                 }
 

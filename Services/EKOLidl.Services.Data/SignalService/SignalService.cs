@@ -60,7 +60,7 @@
                 {
                     Names = input.ReporterNames,
                     Gsm = input.ReporterGsm,
-                    Email = input.ReporterEmail
+                    Email = input.ReporterEmail,
                 },
                 Result = new Result()
                 {

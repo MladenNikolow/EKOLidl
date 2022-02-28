@@ -14,22 +14,22 @@
             <div class="row">
                 <div class="col-lg-6">
                     <div class="single-event-layout1">
-                        <img id=featured src="@Model.Album.Links[0]">
+                        <img id="featured" src="@Model.Album.Links[0]" class="custom-img">
             
             	        <div id="slide-wrapper" >
-            	         <img id="slideLeft" class="arrow" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/arrow-left.png">
+            	             <img id="slideLeft" class="arrow" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/arrow-left.png">
             
-            	         <div id="slider">
-                                <img class="thumbnail active" src="@Model.Album.Links[0]">
-                                @{
-                                    for(int index = 1; index < Model.Album.Links.Count; index++)
-                                    {
-                                        <img class="thumbnail" src="@Model.Album.Links[index]">
-                                    }
-                                }
-            	        </div>
+            	             <div id="slider">
+                                     <img class="thumbnail active" src="@Model.Album.Links[0]">
+                                     @{
+                                         for(int index = 1; index < Model.Album.Links.Count; index++)
+                                         {
+                                             <img class="thumbnail" src="@Model.Album.Links[index]">
+                                         }
+                                     }
+            	             </div>
             
-            	         <img id="slideRight" class="arrow" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/arrow-right.png">
+            	             <img id="slideRight" class="arrow" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/arrow-right.png">
             	        </div>
                         <div class="item-feature">
                             <ul>
@@ -40,21 +40,35 @@
                                                 <i class="far fa-calendar-alt"></i>
                                             </div>
                                             <div class="media-body space-sm">
-                                                <div class="feature-title">ДАТА НА СЪБИТИЕТО</div>
+                                                <div class="feature-title">ДАТА</div>
                                                 <div class="feature-sub-title">@Model.EventDate.ToShortDateString()</div>
                                             </div>
                                         </div>
                                     </div>
                                 </li>
-                                <li></li>
                                 <li>
                                     <div class="feature-wrap">
-                                        <div class="feature-icon">
-                                            <i class="fas fa-clock"></i>
+                                        <div class="row">
+                                            <div class="feature-icon">
+                                                <i class="far fa-clock"></i>
+                                            </div>
+                                            <div class="media-body space-sm">
+                                                <div class="feature-title">ЧАС</div>
+                                                <div class="feature-sub-title">@Model.EventDate.ToShortTimeString()</div>
+                                            </div>
                                         </div>
-                                        <div class="media-body space-sm">
-                                            <div class="feature-title">ПРОДЪЛЖИТЕЛНОСТ</div>
-                                            <div class="feature-sub-title">@Model.Duration Часа </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="feature-wrap">
+                                        <div class="row">
+                                            <div class="feature-icon">
+                                                <i class="far fa-hourglass"></i>
+                                            </div>
+                                            <div class="media-body space-sm">
+                                                <div class="feature-title">ПРОДЪЛЖИТЕЛНОСТ</div>
+                                                <div class="feature-sub-title">@Model.Duration часа</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </li>

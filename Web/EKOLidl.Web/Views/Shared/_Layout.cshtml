@@ -11,51 +11,56 @@
     <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-5 fixed-top">         
-            <div class="container">
-                <div class="col-2">
-                    <a href="https://seafriends.bg/"><img class="img-fluid logos-sm" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/Logo-MK.png"></a>
-                    <a href="https://frgi.bg/"><img class="img-fluid logos-lg" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/2.WCIF.png"></a>
-                </div>
-                <div class="col-8">
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="navbar-collapse collapse align-content-center">
-                        <div class="row">
-                            <div class="col">
-                                <ul class="navbar-nav" style="text-align: start;">
-                                   <li class="nav-item">
-                                       <a asp-area="" asp-controller="Home" asp-action="Index"><i class="fa-solid fa-house-chimney"></i> Начало</a>
-                                   </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="Home" asp-action="About"><i class="fa-solid fa-list-check"></i> За проекта</a>
-                                    </li>
-                                    <li class="nav-item">
-                                         <a asp-area="" asp-controller="Events" asp-action="Events"><i class="fa-solid fa-calendar-days"></i> Събития</a>
-                                    </li>
-                                    <li class="nav-item">
-                                         <a asp-area="" asp-controller="Signals" asp-action="Index"><i class="fas fa-archive"></i> Сигнали</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="btn btn-danger" role="button" asp-area="" asp-controller="Signals" asp-action="Create"><i class="fas fa-hand-point-right"> Подай сигнал</i></a>    
-                                    </li>
-                                </ul>
+    <a href="#wrapper" data-type="section-switch" class="scrollup back-top">
+        <i class="fas fa-angle-double-up"></i>
+    </a>
+    <div id="wrapper" class="wrapper">
+        <header>
+            <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-5 fixed-top">         
+                <div class="container">
+                    <div class="col-2">
+                        <a href="https://seafriends.bg/"><img class="img-fluid logos-sm" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/Logo-MK.png"></a>
+                        <a href="https://frgi.bg/"><img class="img-fluid logos-lg" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/2.WCIF.png"></a>
+                    </div>
+                    <div class="col-8">
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                                aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="navbar-collapse collapse align-content-center">
+                            <div class="row">
+                                <div class="col">
+                                    <ul class="navbar-nav" style="text-align: start;">
+                                       <li class="nav-item">
+                                           <a asp-area="" asp-controller="Home" asp-action="Index"><i class="fa-solid fa-house-chimney"></i> Начало</a>
+                                       </li>
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="Home" asp-action="About"><i class="fa-solid fa-list-check"></i> За проекта</a>
+                                        </li>
+                                        <li class="nav-item">
+                                             <a asp-area="" asp-controller="Events" asp-action="Events"><i class="fa-solid fa-calendar-days"></i> Събития</a>
+                                        </li>
+                                        <li class="nav-item">
+                                             <a asp-area="" asp-controller="Signals" asp-action="Index"><i class="fas fa-archive"></i> Сигнали</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="btn btn-danger" role="button" asp-area="" asp-controller="Signals" asp-action="Create"><i class="fas fa-hand-point-right"> Подай сигнал</i></a>    
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
+                        <p class="text-center" style="font-size: 10px; padding-top:20px"><b>НАСТОЯЩИЯТ ПРОЕКТ СЕ ОСЪЩЕСТВИ БЛАГДАРЕНИЕ НА НАЙ-ГОЛЯМАТА СОЦИАЛНО ОТГОВОРНА ИНИЦИАТИВАНА ЛИДЛ БЪЛГАРИЯ 
+                        <br>"ТИ И LIDL ЗА ПО-ДОБЪР ЖИВОТ", В ПАРТНЬОРСТВО С ФОНДАЦИЯ "РАБОТИЛНИЦА ЗА ГРАЖДАНСКИ ИНИЦИАТИВИ" И БЪЛГАРСКИ ДАРИТЕЛСКИ ФОРУМ</b></p>
                     </div>
-                    <p class="text-center" style="font-size: 10px; padding-top:20px"><b>НАСТОЯЩИЯТ ПРОЕКТ СЕ ОСЪЩЕСТВИ БЛАГДАРЕНИЕ НА НАЙ-ГОЛЯМАТА СОЦИАЛНО ОТГОВОРНА ИНИЦИАТИВАНА ЛИДЛ БЪЛГАРИЯ 
-                    <br>"ТИ И LIDL ЗА ПО-ДОБЪР ЖИВОТ", В ПАРТНЬОРСТВО С ФОНДАЦИЯ "РАБОТИЛНИЦА ЗА ГРАЖДАНСКИ ИНИЦИАТИВИ" И БЪЛГАРСКИ ДАРИТЕЛСКИ ФОРУМ</b></p>
+                    <div class="col-2">
+                        <a href="https://corporate.lidl.bg/otgovornost/ti-i-lidl-za-po-dob-r-zhivot"><img class="img-fluid logos-sm" style="padding-bottom:5px" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/1.Ti&Lidl.png"></a>
+                        <a href="https://www.dfbulgaria.org/"><img class="img-fluid logos-lg" style="padding-top:5px" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/3.BDF.png"></a>
+                    </div>
                 </div>
-                <div class="col-2">
-                    <a href="https://corporate.lidl.bg/otgovornost/ti-i-lidl-za-po-dob-r-zhivot"><img class="img-fluid logos-sm" style="padding-bottom:5px" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/1.Ti&Lidl.png"></a>
-                    <a href="https://www.dfbulgaria.org/"><img class="img-fluid logos-lg" style="padding-top:5px" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/3.BDF.png"></a>
-                </div>
-            </div>
-        </nav>
-    </header>
+            </nav>
+        </header>
+    </div>
     
     <div class="container" style="padding-top: 250px;">
         <main role="main" class="pb-3">

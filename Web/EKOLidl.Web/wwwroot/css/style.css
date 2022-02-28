@@ -6409,7 +6409,6 @@ ul {
 .single-event-layout1 .item-feature ul li .feature-wrap {
 	background-color: #f2f2f2;
 	display: flex;
-	justify-content: center;
 }
 
 .single-event-layout1 .item-feature ul li .media {
@@ -6419,25 +6418,25 @@ ul {
 }
 
 .single-event-layout1 .item-feature ul li .feature-icon {
-	font-size: 24px;
+	font-size: 25px;
 	line-height: 1;
 }
 
 .single-event-layout1 .item-feature ul li .feature-icon i,
 .single-event-layout1 .item-feature ul li .feature-icon i:before {
-	font-size: 30px;
-	font-weight: 600;
+	font-size: 25px;
+	font-weight: 500;
 	color: #a8a8a8;
 }
 
 .single-event-layout1 .item-feature ul li .feature-title {
-	font-size: 18px;
+	font-size: 10px;
 	color: #111111;
-	font-weight: 600;
+	font-weight: 800;
 }
 
 .single-event-layout1 .item-description {
-	font-size: 17px;
+	font-size: 15px;
 	color: #444444;
 	line-height: 1.8;
 	font-weight: 500;
@@ -12029,5 +12028,16 @@ lidl-logo {
 @media (min-width:1000px) {
 	.first-heading {
 		margin-top: -50px;
+	}
+}
+
+.custom-img{
+
+}
+
+@media (min-width:0px) and (max-width: 999px) {
+
+	.custom-img {
+		width: 75%
 	}
 }
