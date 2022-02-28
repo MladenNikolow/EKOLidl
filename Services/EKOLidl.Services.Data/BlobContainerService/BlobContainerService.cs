@@ -27,21 +27,22 @@
             {
                 foreach (var file in files)
                 {
-                    string fullFilePath = filesPath + "/" + file.FileName;
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string fullFilePath = Path.Combine(filesPath, fileName);
 
                     using (FileStream fileStream = new FileStream(fullFilePath, FileMode.Create))
                     {
                         await file.CopyToAsync(fileStream);
                     }
 
-                    BlobClient blobClient = this.blobContainerClient.GetBlobClient(file.FileName);
+                    BlobClient blobClient = this.blobContainerClient.GetBlobClient(fileName);
 
-                    using (var fileStream = System.IO.File.OpenRead(fullFilePath))
+                    using (FileStream fileStream = System.IO.File.OpenRead(fullFilePath))
                     {
                         await blobClient.UploadAsync(fileStream);
-
-                        // File.Delete(fullFilePath);
                     }
+
+                    File.Delete(fullFilePath);
 
                     filesUrls.Add(blobClient.Uri.AbsoluteUri);
                 }
