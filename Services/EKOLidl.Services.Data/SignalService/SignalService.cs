@@ -118,8 +118,9 @@
         {
             int offset = signalsPerPage * (page - 1);
 
-            string query = @$"select * from events e
-                            order by e.created_on
+            string query = @$"select * from signals s
+                            where s.is_approved = true
+                            order by s.created_on
                             offset {offset} limit {signalsPerPage}";
 
             return await this.GetSignalsAsync(query);
@@ -127,8 +128,8 @@
 
         public async Task<IEnumerable<Signal>> GetNewestSignals(int count = 4)
         {
-            string query = $@"SELECT * FROM EVENTS E
-                              ORDER BY E.created_on
+            string query = $@"SELECT * FROM SIGNALS S
+                              ORDER BY S.created_on
                               OFFSET 0 LIMIT {count}";
 
             return await this.GetSignalsAsync(query);

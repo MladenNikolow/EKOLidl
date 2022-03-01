@@ -31,5 +31,8 @@
 
         [JsonProperty(PropertyName = "reporter")]
         public Reporter Reporter { get; set; }
+
+        [JsonProperty(PropertyName = "is_approved")]
+        public bool IsApproved { get; set; }
     }
 }

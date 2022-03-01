@@ -29,21 +29,21 @@
 			</ol>
 			<div id="events" class="carousel-inner">
 				<div class="carousel-item active">
-					<img class="d-block w-100" src="https://www.timeoutdubai.com/cloud/timeoutdubai/2021/09/11/udHvbKwV-IMG-Dubai-UAE-1.jpg">
+					<img class="d-block w-100" src="@Model.Events[0].Album.Links[0]">
 					<div class="carousel-caption d-none d-md-block">
 						<h5">@Model.Events[0].Title</h5>
 						<p>@Model.Events[0].ShortDescription</p>
 					</div>
 				</div>
 				<div class="carousel-item">
-					<img class="d-block w-100" src="https://images.pexels.com/photos/382297/pexels-photo-382297.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500">
+					<img class="d-block w-100" src="@Model.Events[1].Album.Links[0]">
 					<div class="carousel-caption d-none d-md-block">
 						<h5>@Model.Events[1].Title</h5>
 						<p>@Model.Events[1].ShortDescription</p>
 					</div>
 				</div>
 				<div class="carousel-item">
-					<img class="d-block w-100" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/899674.png">
+					<img class="d-block w-100" src="@Model.Events[2].Album.Links[0]">
 					<div class="carousel-caption d-none d-md-block">
 						<h5>@Model.Events[2].Title</h5>
 						<p>@Model.Events[2].ShortDescription</p>
@@ -77,21 +77,21 @@
 			</ol>
 			<div id="events" class="carousel-inner">
 				<div class="carousel-item active">
-					<img class="d-block w-100" src="https://www.timeoutdubai.com/cloud/timeoutdubai/2021/09/11/udHvbKwV-IMG-Dubai-UAE-1.jpg">
+					<img class="d-block w-100" src="@Model.Signals[0].Album.Links[0]">
 					<div class="carousel-caption d-none d-md-block">
 						<h5">@Model.Signals[0].Title</h5>
 						<p>@Model.Signals[0].Description</p>
 					</div>
 				</div>
 				<div class="carousel-item">
-					<img class="d-block w-100" src="https://images.pexels.com/photos/382297/pexels-photo-382297.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500">
+					<img class="d-block w-100" src="@Model.Signals[1].Album.Links[0]">
 					<div class="carousel-caption d-none d-md-block">
 						<h5>@Model.Signals[1].Title</h5>
 						<p>@Model.Signals[1].Description</p>
 					</div>
 				</div>
 				<div class="carousel-item">
-					<img class="d-block w-100" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/899674.png">
+					<img class="d-block w-100" src="@Model.Signals[2].Album.Links[0]">
 					<div class="carousel-caption d-none d-md-block">
 						<h5>@Model.Signals[2].Title</h5>
 						<p>@Model.Signals[2].Description</p>
