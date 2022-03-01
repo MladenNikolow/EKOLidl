@@ -14,12 +14,12 @@
             <div class="row">
                 <div class="col-lg-6">
                     <div class="single-event-layout1">
-                        <img id=featured src="@Model.Album.Links[0]">
+                        <img id="featured" src="@Model.Album.Links[0]"  class="custom-img">
             
             	        <div id="slide-wrapper" >
-            	         <img id="slideLeft" class="arrow" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/arrow-left.png">
+            	            <img id="slideLeft" class="arrow" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/arrow-left.png">
             
-            	         <div id="slider">
+            	            <div id="slider">
                                 <img class="thumbnail active" src="@Model.Album.Links[0]">
                                 @{
                                     for(int index = 1; index < Model.Album.Links.Count; index++)
