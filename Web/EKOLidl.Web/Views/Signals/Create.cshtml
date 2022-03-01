@@ -41,13 +41,11 @@
             </div>
         </div>
     </div>
-
     <div class="form-group">
         <label asp-for="Location"></label>
         <input asp-for="Location" class="form-control" />
         <span asp-validation-for="Location" class="text-danger"></span>
     </div>
-
     <div class="form-group">
         <label asp-for="Images"></label>
         <input asp-for="Images" class="form-control"/>
@@ -57,17 +55,20 @@
     <div class="section-heading heading-dark" style="margin-top: 30px;">
         <h3 class="item-heading">ПОДАТЕЛ</h3>
     </div>
-     <div class="form-group">
+    <div class="p-3 mb-2 bg-primary text-white rounded-pill">
+        Данните за подателя, ще бъдат използвани само при нужда от повече детайли по сигнала и няма да бъдат видими в платформата!
+    </div>
+    <div class="form-group">
         <label asp-for="ReporterNames"></label>
         <input asp-for="ReporterNames" class="form-control" />
         <span asp-validation-for="ReporterNames" class="text-danger"></span>
     </div>
-     <div class="form-group">
+    <div class="form-group">
         <label asp-for="ReporterGsm"></label>
         <input asp-for="ReporterGsm" class="form-control" />
         <span asp-validation-for="ReporterGsm" class="text-danger"></span>
     </div>
-     <div class="form-group">
+    <div class="form-group">
         <label asp-for="ReporterEmail"></label>
         <input asp-for="ReporterEmail" class="form-control" />
         <span asp-validation-for="ReporterEmail" class="text-danger"></span>
