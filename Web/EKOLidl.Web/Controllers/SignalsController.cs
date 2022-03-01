@@ -28,7 +28,7 @@
             this.blobContainerService = blobContainerService;
         }
 
-        public async Task<IActionResult> Index(int page = 1)
+        public async Task<IActionResult> Index(int page = 1, bool isCreateSingalContext = false)
         {
             const int signalsPerPage = 12;
             IEnumerable<Signal> signals = await this.signalService.GetSignalsByPageAsync(page, signalsPerPage);
@@ -40,6 +40,7 @@
                 Page = page,
                 Count = signalsCount,
                 SignalsPerPage = signalsPerPage,
+                IsCreateSignalContext = isCreateSingalContext,
             };
 
             return this.View(signalsViewModel);
@@ -140,9 +141,9 @@
                 return this.View(input);
             }
 
-            this.TempData["Message"] = "Сигналът е добавен успешно.";
+            this.TempData["Message"] = "Благодарим Ви! Вашият сигнал е записан успешно и ще бъде видим на страницата възможно най-скоро.";
 
-            return this.RedirectToAction("Index");
+            return this.RedirectToAction("Index", new { page = 1, isCreateSingalContext = true });
         }
     }
 }

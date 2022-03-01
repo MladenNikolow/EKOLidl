@@ -39,6 +39,7 @@
 
         [Required(ErrorMessage = "Моля добавете имена на подател")]
         [Display(Name = "Име на подател")]
+        [RegularExpression(@"^[a-zA-Zа-яА-Я\s]*$", ErrorMessage = "Името може да съдържа само букви на литиница или кирилица.")]
         public string ReporterNames { get; set; }
 
         [Required(ErrorMessage = "Моля, добавете телефон за връзка")]
@@ -47,6 +48,7 @@
         public string ReporterGsm { get; set; }
 
         [Required(ErrorMessage = "Моля, добавете имейл за връзка")]
+        [RegularExpression(@"^\S+@\S+\.\S+$", ErrorMessage = "Моля, въведете коректен имейл.")]
         [Display(Name = "Имейл за връзка")]
         public string ReporterEmail { get; set; }
 

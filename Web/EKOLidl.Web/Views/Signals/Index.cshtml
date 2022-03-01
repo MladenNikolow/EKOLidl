@@ -5,6 +5,13 @@
 }
 <h1>@ViewData["Title"]</h1>
 <hr/>
+@if (Model.IsCreateSignalContext)
+{
+    <div class="p-3 mb-2 bg-primary text-white rounded-pill">
+        @TempData["message"]
+    </div>
+    <hr/>
+}
 <div class="row">
     @foreach (var signal in Model.Signals)
     {
