@@ -17,22 +17,22 @@
 
     public class SignalsController : BaseController
     {
-        private readonly ISignalService signalService;
         private readonly IWebHostEnvironment webHostEnvironment;
         private readonly IBlobContainerService blobContainerService;
+        private readonly ISignalRepository signalRepository;
 
-        public SignalsController(ISignalService signalService, IWebHostEnvironment webHostEnvironment, IBlobContainerService blobContainerService)
+        public SignalsController(IWebHostEnvironment webHostEnvironment, IBlobContainerService blobContainerService, ISignalRepository signalRepository)
         {
-            this.signalService = signalService;
             this.webHostEnvironment = webHostEnvironment;
             this.blobContainerService = blobContainerService;
+            this.signalRepository = signalRepository;
         }
 
         public async Task<IActionResult> Index(int page = 1, bool isCreateSingalContext = false)
         {
             const int signalsPerPage = 12;
-            IEnumerable<Signal> signals = await this.signalService.GetSignalsByPageAsync(page, signalsPerPage);
-            int signalsCount = await this.signalService.GetCountAsync();
+            IEnumerable<Signal> signals = await this.signalRepository.GetApprovedSignalsByPageAsync(page, signalsPerPage);
+            int signalsCount = await this.signalRepository.GetItemsCountAsync();
 
             SignalsViewModel signalsViewModel = new SignalsViewModel
             {
@@ -49,7 +49,7 @@
         [Route("Signals/{id}")]
         public async Task<IActionResult> Details(string id)
         {
-            var result = await this.signalService.GetSignalAsync(id);
+            var result = await this.signalRepository.GetItemAsync(id);
             SignalDetailsViewModel signalDetailsViewModel = AutoMapperConfig.MapperInstance.Map<SignalDetailsViewModel>(result);
 
             return this.View(signalDetailsViewModel);
@@ -122,11 +122,39 @@
                     input.Album = new Album();
                     input.Album.Links = (List<string>)imagesResult;
 
-                    var signalResult = await this.signalService.AddSignalAsync(input);
-                    if (!signalResult)
+                    // TODO: Make mapping from input to signal
+                    Signal signal = new Signal
                     {
-                        this.ModelState.AddModelError("Images", "Възникна проблем при обработка на вашия сигнал. Моля, опитайте онтово!");
+                        Title = input.Title,
+                        Description = input.Description,
+                        TrashType = input.TrashType,
+                        Location = input.Location,
+                        Album = input.Album,
+                        Reporter = new Reporter()
+                        {
+                            Names = input.ReporterNames,
+                            Gsm = input.ReporterGsm,
+                            Email = input.ReporterEmail,
+                        },
+                        Result = new Result()
+                        {
+                            Description = "Още няма добавени резултати!",
+                            Album = new Album()
+                            {
+                                Links = new List<string>(),
+                            },
+                        },
+                    };
+
+                    if (input.TrashType.Contains(EKOLidl.Data.Models.Signals.TrashType.Other))
+                    {
+                        input.TrashType = new List<EKOLidl.Data.Models.Signals.TrashType>();
+                        input.TrashType.Add(EKOLidl.Data.Models.Signals.TrashType.Other);
+
+                        signal.OtherTrashType = input.OtherTrashType;
                     }
+
+                    await this.signalRepository.AddItemAsync(signal);
                 }
             }
             catch

@@ -4,9 +4,9 @@
 
     using Newtonsoft.Json;
 
-    public abstract class BaseModel : IAuditInfo
+    public abstract class BaseEntity : IAuditInfo
     {
-        public BaseModel()
+        public BaseEntity()
         {
             this.Id = Guid.NewGuid().ToString();
             this.CreatedOn = DateTime.Now;

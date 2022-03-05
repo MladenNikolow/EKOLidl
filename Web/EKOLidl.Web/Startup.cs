@@ -1,20 +1,19 @@
 ﻿namespace EKOLidl.Web
 {
     using System.Reflection;
-    using System.Threading.Tasks;
 
-    using EKOLidl.Services.Data;
+    using EKOLidl.Data.Models.Events;
+    using EKOLidl.Data.Models.Signals;
     using EKOLidl.Services.Data.BlobContainerService;
-    using EKOLidl.Services.Data.SignalService;
+    using EKOLidl.Services.Data.CosmosDb;
+    using EKOLidl.Services.Data.CosmosDb.Repositories;
+    using EKOLidl.Services.Data.ServiceExtensions;
     using EKOLidl.Services.Mapping;
     using EKOLidl.Web.ViewModels;
-    using LidlProject.Services.Data;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Azure.Cosmos;
-    using Microsoft.Azure.Cosmos.Fluent;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
@@ -31,8 +30,12 @@
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IEventService>(InitializeEventClientInstanceAsync(this.configuration.GetSection("CosmoDb")).GetAwaiter().GetResult());
-            services.AddSingleton<ISignalService>(InitializeSignalClientInstanceAsync(this.configuration.GetSection("CosmoDb")).GetAwaiter().GetResult());
+            CosmosDbSettings cosmosDbSettings = this.configuration.GetSection("Connections:CosmosDB").Get<CosmosDbSettings>();
+            services = IServiceCollectionExtensions.AddCosmosDb(services, cosmosDbSettings.EndpointUrl, cosmosDbSettings.PrimaryKey, cosmosDbSettings.DatabaseName, cosmosDbSettings.Containers);
+
+            services.AddScoped<IEventRepository, EventRepository>();
+            services.AddScoped<ISignalRepository, SignalRepository>();
+
             services.AddSingleton<IBlobContainerService>(InitializeBlobContainerService(this.configuration.GetSection("AzureStorage")));
 
             services.Configure<CookiePolicyOptions>(
@@ -82,38 +85,6 @@
                         endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
                         endpoints.MapRazorPages();
                     });
-        }
-
-        private static async Task<EventService> InitializeEventClientInstanceAsync(IConfigurationSection configurationSection)
-        {
-            string databaseName = configurationSection.GetSection("DatabaseName").Value;
-            string containerName = "Events";
-            string account = configurationSection.GetSection("Endpoint").Value;
-            string key = configurationSection.GetSection("Key").Value;
-            CosmosClientBuilder clientBuilder = new CosmosClientBuilder(account, key);
-            CosmosClient client = clientBuilder
-                                .WithConnectionModeDirect()
-                                .Build();
-            EventService eventService = new EventService(client, databaseName, containerName);
-            DatabaseResponse database = await client.CreateDatabaseIfNotExistsAsync(databaseName);
-            await database.Database.CreateContainerIfNotExistsAsync(containerName, "/id");
-            return eventService;
-        }
-
-        private static async Task<SignalService> InitializeSignalClientInstanceAsync(IConfigurationSection configurationSection)
-        {
-            string databaseName = configurationSection.GetSection("DatabaseName").Value;
-            string containerName = "Signals";
-            string account = configurationSection.GetSection("Endpoint").Value;
-            string key = configurationSection.GetSection("Key").Value;
-            CosmosClientBuilder clientBuilder = new CosmosClientBuilder(account, key);
-            CosmosClient client = clientBuilder
-                                .WithConnectionModeDirect()
-                                .Build();
-            SignalService signalService = new SignalService(client, databaseName, containerName);
-            DatabaseResponse database = await client.CreateDatabaseIfNotExistsAsync(databaseName);
-            await database.Database.CreateContainerIfNotExistsAsync(containerName, "/id");
-            return signalService;
         }
 
         private static BlobContainerService InitializeBlobContainerService(IConfigurationSection configurationSection)

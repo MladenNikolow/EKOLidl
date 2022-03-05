@@ -5,27 +5,27 @@
     using System.Threading.Tasks;
 
     using EKOLidl.Data.Models;
-    using EKOLidl.Services.Data;
+    using EKOLidl.Data.Models.Events;
+    using EKOLidl.Data.Models.Signals;
     using EKOLidl.Web.ViewModels;
     using EKOLidl.Web.ViewModels.Home;
-    using LidlProject.Services.Data;
     using Microsoft.AspNetCore.Mvc;
 
     public class HomeController : BaseController
     {
-        private readonly IEventService eventService;
-        private readonly ISignalService signalService;
+        private readonly IEventRepository eventRepository;
+        private readonly ISignalRepository signalRepository;
 
-        public HomeController(IEventService eventService, ISignalService signalService)
+        public HomeController(IEventRepository eventRepository, ISignalRepository signalRepository)
         {
-            this.eventService = eventService;
-            this.signalService = signalService;
+            this.eventRepository = eventRepository;
+            this.signalRepository = signalRepository;
         }
 
         public async Task<IActionResult> Index()
         {
-            var events = await this.eventService.GetNewestEvents();
-            var signals = await this.signalService.GetNewestSignals();
+            var events = await this.eventRepository.GetNewestItems();
+            var signals = await this.signalRepository.GetNewestItems();
 
             HomeViewModel viewModel = new HomeViewModel()
             {
