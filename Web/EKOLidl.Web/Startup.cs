@@ -30,14 +30,6 @@
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            CosmosDbSettings cosmosDbSettings = this.configuration.GetSection("Connections:CosmosDB").Get<CosmosDbSettings>();
-            services = IServiceCollectionExtensions.AddCosmosDb(services, cosmosDbSettings.EndpointUrl, cosmosDbSettings.PrimaryKey, cosmosDbSettings.DatabaseName, cosmosDbSettings.Containers);
-
-            services.AddScoped<IEventRepository, EventRepository>();
-            services.AddScoped<ISignalRepository, SignalRepository>();
-
-            services.AddSingleton<IBlobContainerService>(InitializeBlobContainerService(this.configuration.GetSection("AzureStorage")));
-
             services.Configure<CookiePolicyOptions>(
                 options =>
                     {
@@ -54,6 +46,16 @@
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddSingleton(this.configuration);
+
+            // Azure Cosmos Db
+            CosmosDbSettings cosmosDbSettings = this.configuration.GetSection("Connections:CosmosDB").Get<CosmosDbSettings>();
+            services.AddCosmosDb(cosmosDbSettings.EndpointUrl, cosmosDbSettings.PrimaryKey, cosmosDbSettings.DatabaseName, cosmosDbSettings.Containers);
+
+            services.AddScoped<IEventRepository, EventRepository>();
+            services.AddScoped<ISignalRepository, SignalRepository>();
+
+            // Azure Blob Storage
+            services.AddSingleton<IBlobContainerService>(InitializeBlobContainerService(this.configuration.GetSection("AzureStorage")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
