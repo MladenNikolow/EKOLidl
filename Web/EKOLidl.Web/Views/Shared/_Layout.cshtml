@@ -14,7 +14,7 @@
     <a href="#wrapper" data-type="section-switch" class="scrollup back-top">
         <i class="fas fa-angle-double-up"></i>
     </a>
-    <div id="wrapper" class="wrapper">
+    <div id="wrapper" class="wrapper noselect">
         <header>
             <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-5 fixed-top">         
                 <div class="container">
@@ -62,15 +62,15 @@
         </header>
     </div>
     
-    <div class="container" style="padding-top: 250px;">
+    <div class="container noselect" style="padding-top: 250px;">
         <main role="main" class="pb-3">
             @this.RenderBody()
         </main>
     </div>
     
-    <footer class="ranna-bg-dark">
+    <footer class="ranna-bg-dark noselect">
         <div class="container">
-            &copy; @DateTime.Now.Year - @GlobalConstants.SystemName - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; @DateTime.Now.Year - @GlobalConstants.SystemName - <a asp-area="" asp-controller="Home" asp-action="Privacy">Общи условия</a>
         </div>
     </footer>
 
