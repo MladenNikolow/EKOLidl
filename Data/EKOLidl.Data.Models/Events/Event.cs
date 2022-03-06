@@ -5,7 +5,7 @@
     using EKOLidl.Data.Common.Models;
     using Newtonsoft.Json;
 
-    public class Event : BaseModel
+    public class Event : BaseEntity
     {
         /// <summary>
         /// Gets or sets title of the event.

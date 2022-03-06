@@ -6,7 +6,7 @@
     using EKOLidl.Data.Models.Signals;
     using Newtonsoft.Json;
 
-    public class Signal : BaseModel
+    public class Signal : BaseEntity
     {
         [JsonProperty(PropertyName = "title")]
         public string Title { get; set; }
