@@ -4,10 +4,12 @@
 
     using EKOLidl.Data.Models.Events;
     using EKOLidl.Data.Models.Signals;
-    using EKOLidl.Services.Data.BlobContainerService;
     using EKOLidl.Services.Data.CosmosDb;
     using EKOLidl.Services.Data.CosmosDb.Repositories;
     using EKOLidl.Services.Data.ServiceExtensions;
+    using EKOLidl.Services.Data.Services;
+    using EKOLidl.Services.Data.Services.AzureBlobStorage;
+    using EKOLidl.Services.Data.Services.Interfaces;
     using EKOLidl.Services.Mapping;
     using EKOLidl.Web.ViewModels;
     using Microsoft.AspNetCore.Builder;
@@ -48,14 +50,19 @@
             services.AddSingleton(this.configuration);
 
             // Azure Cosmos Db
-            CosmosDbSettings cosmosDbSettings = this.configuration.GetSection("Connections:CosmosDB").Get<CosmosDbSettings>();
-            services.AddCosmosDb(cosmosDbSettings.EndpointUrl, cosmosDbSettings.PrimaryKey, cosmosDbSettings.DatabaseName, cosmosDbSettings.Containers);
+            CosmosDbSettings cosmosDbSettings = this.configuration.GetSection("AzureConnections:CosmosDB").Get<CosmosDbSettings>();
+            services.AddAzureCosmosDb(cosmosDbSettings.EndpointUrl, cosmosDbSettings.PrimaryKey, cosmosDbSettings.DatabaseName, cosmosDbSettings.Containers);
 
+            // Azure Blob Storage
+            AzureBlobStorageSettings azureBlobStorageSettings = this.configuration.GetSection("AzureConnections:BlobStorage").Get<AzureBlobStorageSettings>();
+            services.AddAzureBlobStorage(azureBlobStorageSettings);
+
+            // Repositories
             services.AddScoped<IEventRepository, EventRepository>();
             services.AddScoped<ISignalRepository, SignalRepository>();
 
-            // Azure Blob Storage
-            services.AddSingleton<IBlobContainerService>(InitializeBlobContainerService(this.configuration.GetSection("AzureStorage")));
+            // Custom Services
+            services.AddScoped<IFileValidationService, ImageValidationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -87,14 +94,6 @@
                         endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
                         endpoints.MapRazorPages();
                     });
-        }
-
-        private static BlobContainerService InitializeBlobContainerService(IConfigurationSection configurationSection)
-        {
-            string connectionString = configurationSection.GetSection("ConnectionString").Value;
-            string containerName = configurationSection.GetSection("Container").Value;
-
-            return new BlobContainerService(connectionString, containerName);
         }
     }
 }

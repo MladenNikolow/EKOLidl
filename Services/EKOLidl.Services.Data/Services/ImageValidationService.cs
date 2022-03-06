@@ -1,71 +1,23 @@
-﻿namespace EKOLidl.Services.Data.BlobContainerService
+﻿namespace EKOLidl.Services.Data.Services
 {
     using System;
-    using System.Collections.Generic;
     using System.IO;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
-    using Azure.Storage.Blobs;
+    using EKOLidl.Services.Data.Services.Interfaces;
     using Microsoft.AspNetCore.Http;
 
-    public class BlobContainerService : IBlobContainerService
+    public class ImageValidationService : IFileValidationService
     {
         private const int ImageMinimumBytes = 512;
-        private readonly BlobContainerClient blobContainerClient;
 
-        public BlobContainerService(string connectionString, string containerName)
-        {
-            this.blobContainerClient = new BlobContainerClient(connectionString, containerName);
-        }
-
-        public async Task<IEnumerable<string>> UploadFilesAsync(IEnumerable<IFormFile> files, string filesPath)
-        {
-            List<string> filesUrls = new List<string>();
-
-            try
-            {
-                foreach (var file in files)
-                {
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                    string fullFilePath = Path.Combine(filesPath, fileName);
-
-                    using (FileStream fileStream = new FileStream(fullFilePath, FileMode.Create))
-                    {
-                        await file.CopyToAsync(fileStream);
-                    }
-
-                    BlobClient blobClient = this.blobContainerClient.GetBlobClient(fileName);
-
-                    using (FileStream fileStream = System.IO.File.OpenRead(fullFilePath))
-                    {
-                        try
-                        {
-                            var blobUploadResult = await blobClient.UploadAsync(fileStream);
-                            if (blobUploadResult == null)
-                            {
-                                return null;
-                            }
-                        }
-                        catch
-                        {
-                            return null;
-                        }
-                    }
-
-                    File.Delete(fullFilePath);
-                    filesUrls.Add(blobClient.Uri.AbsoluteUri);
-                }
-            }
-            catch
-            {
-                return null;
-            }
-
-            return filesUrls;
-        }
-
-        public bool IsValidImage(IFormFile image)
+        /// <summary>
+        /// Check if the input is valid image.
+        /// </summary>
+        /// <param name="image">Image from the input.</param>
+        /// <returns></returns>
+        public async Task<bool> CheckAsync(IFormFile image)
         {
             //-------------------------------------------
             //  Check the image mime types
@@ -108,7 +60,7 @@
                 }
 
                 byte[] buffer = new byte[ImageMinimumBytes];
-                image.OpenReadStream().Read(buffer, 0, ImageMinimumBytes);
+                await image.OpenReadStream().ReadAsync(buffer, 0, ImageMinimumBytes);
                 string content = System.Text.Encoding.UTF8.GetString(buffer);
                 if (Regex.IsMatch(content, @"<script|<html|<head|<title|<body|<pre|<table|<a\s+href|<img|<plaintext|<cross\-domain\-policy", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Multiline))
                 {

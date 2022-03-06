@@ -2,8 +2,12 @@
 {
     using System.Collections.Generic;
 
+    using Azure.Storage.Blobs;
     using EKOLidl.Services.Data.CosmosDb;
     using EKOLidl.Services.Data.CosmosDb.CosmosDbContainerFactory;
+    using EKOLidl.Services.Data.Services;
+    using EKOLidl.Services.Data.Services.AzureBlobStorage;
+    using EKOLidl.Services.Data.Services.Interfaces;
     using Microsoft.Extensions.DependencyInjection;
 
     public static class IServiceCollectionExtensions
@@ -17,7 +21,7 @@
         /// <param name="databaseName"></param>
         /// <param name="containers"></param>
         /// <returns></returns>
-        public static IServiceCollection AddCosmosDb(
+        public static IServiceCollection AddAzureCosmosDb(
             this IServiceCollection services,
             string endpointUrl,
             string primaryKey,
@@ -28,6 +32,20 @@
             CosmosDbContainerFactory cosmosDbClientFactory = new CosmosDbContainerFactory(client, databaseName, containers);
             services.AddSingleton<ICosmosDbContainerFactory>(cosmosDbClientFactory);
             return services;
+        }
+
+        /// <summary>
+        ///     Setup Azure Blob Storage Service.
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configuration"></param>
+        public static void AddAzureBlobStorage(this IServiceCollection services, AzureBlobStorageSettings azureBlobStorageSettings)
+        {
+            services.AddScoped<IStorageService, AzureBlobStorageService>(factory =>
+            {
+                BlobContainerClient blobContainerClient = new BlobContainerClient(azureBlobStorageSettings.ConnectionString, azureBlobStorageSettings.Container);
+                return new AzureBlobStorageService(blobContainerClient);
+            });
         }
     }
 }
