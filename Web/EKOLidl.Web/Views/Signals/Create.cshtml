@@ -30,12 +30,22 @@
                 }
 
                 <div>
-                      <input type="checkbox" id="check-@item.Key" name="TrashType" value="@item.Key">
+                      <input type="checkbox" id="check-@item.Key" name="TrashType" value="@item.Key"
+                      @if(Model.TrashType.Contains((TrashType)item.Key))
+                      {
+                        @:checked
+                      }
+                      >
                       <label for="@item.Key">@item.Value</label>
                 </div>
             }
             <div>
-                  <input type="checkbox" id="check-6" name="TrashType" value="6" onclick="OtherCheckFunction()">
+                  <input type="checkbox" id="check-6" name="TrashType" value="6" onclick="OtherCheckFunction()"
+                  @if(Model.TrashType.Contains(TrashType.Other))
+                  {
+                    @:checked
+                  }
+                  >
                   <label for="other">Други</label>
                   <input asp-for="OtherTrashType" class="form-control" id="otherTrashType" style="display:none;"/>
             </div>
