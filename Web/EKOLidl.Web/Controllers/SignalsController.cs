@@ -8,8 +8,7 @@
 
     using EKOLidl.Data.Models;
     using EKOLidl.Data.Models.Signals;
-    using EKOLidl.Services.Data;
-    using EKOLidl.Services.Data.BlobContainerService;
+    using EKOLidl.Services.Data.Services.Interfaces;
     using EKOLidl.Services.Mapping;
     using EKOLidl.Web.ViewModels.Signals;
     using Microsoft.AspNetCore.Hosting;
@@ -17,15 +16,15 @@
 
     public class SignalsController : BaseController
     {
-        private readonly IWebHostEnvironment webHostEnvironment;
-        private readonly IBlobContainerService blobContainerService;
         private readonly ISignalRepository signalRepository;
+        private readonly IFileValidationService fileValidationService;
+        private readonly IStorageService storageService;
 
-        public SignalsController(IWebHostEnvironment webHostEnvironment, IBlobContainerService blobContainerService, ISignalRepository signalRepository)
+        public SignalsController(ISignalRepository signalRepository, IFileValidationService fileValidationService, IStorageService storageService)
         {
-            this.webHostEnvironment = webHostEnvironment;
-            this.blobContainerService = blobContainerService;
             this.signalRepository = signalRepository;
+            this.fileValidationService = fileValidationService;
+            this.storageService = storageService;
         }
 
         public async Task<IActionResult> Index(int page = 1, bool isCreateSingalContext = false)
@@ -94,7 +93,8 @@
             foreach (var image in input.Images)
             {
                 // Image Validation
-                if (!this.blobContainerService.IsValidImage(image))
+                var validationResult = await this.fileValidationService.CheckAsync(image);
+                if (!validationResult)
                 {
                     this.ModelState.AddModelError("Images", "Разрешени формат за изображение: .png, .jpg или .jpeg. Максимален размер до 5 MB.");
                     break;
@@ -111,51 +111,44 @@
             try
             {
                 // Upload Images
-                var imagesResult = await this.blobContainerService.UploadFilesAsync(input.Images, this.webHostEnvironment.WebRootPath);
+                var imagesResult = await this.storageService.UploadFilesAsync(input.Images);
 
-                if (imagesResult == null)
+                input.Album = new Album();
+                input.Album.Links = (List<string>)imagesResult;
+
+                // TODO: Make mapping from input to signal
+                Signal signal = new Signal
                 {
-                    this.ModelState.AddModelError("Images", "Възникна проблем при обработка на вашия сигнал. Моля, опитайте онтово!");
-                }
-                else
+                    Title = input.Title,
+                    Description = input.Description,
+                    TrashType = input.TrashType,
+                    Location = input.Location,
+                    Album = input.Album,
+                    Reporter = new Reporter()
+                    {
+                        Names = input.ReporterNames,
+                        Gsm = input.ReporterGsm,
+                        Email = input.ReporterEmail,
+                    },
+                    Result = new Result()
+                    {
+                        Description = "Още няма добавени резултати!",
+                        Album = new Album()
+                        {
+                            Links = new List<string>(),
+                        },
+                    },
+                };
+
+                if (input.TrashType.Contains(EKOLidl.Data.Models.Signals.TrashType.Other))
                 {
-                    input.Album = new Album();
-                    input.Album.Links = (List<string>)imagesResult;
+                    input.TrashType = new List<EKOLidl.Data.Models.Signals.TrashType>();
+                    input.TrashType.Add(EKOLidl.Data.Models.Signals.TrashType.Other);
 
-                    // TODO: Make mapping from input to signal
-                    Signal signal = new Signal
-                    {
-                        Title = input.Title,
-                        Description = input.Description,
-                        TrashType = input.TrashType,
-                        Location = input.Location,
-                        Album = input.Album,
-                        Reporter = new Reporter()
-                        {
-                            Names = input.ReporterNames,
-                            Gsm = input.ReporterGsm,
-                            Email = input.ReporterEmail,
-                        },
-                        Result = new Result()
-                        {
-                            Description = "Още няма добавени резултати!",
-                            Album = new Album()
-                            {
-                                Links = new List<string>(),
-                            },
-                        },
-                    };
-
-                    if (input.TrashType.Contains(EKOLidl.Data.Models.Signals.TrashType.Other))
-                    {
-                        input.TrashType = new List<EKOLidl.Data.Models.Signals.TrashType>();
-                        input.TrashType.Add(EKOLidl.Data.Models.Signals.TrashType.Other);
-
-                        signal.OtherTrashType = input.OtherTrashType;
-                    }
-
-                    await this.signalRepository.AddItemAsync(signal);
+                    signal.OtherTrashType = input.OtherTrashType;
                 }
+
+                await this.signalRepository.AddItemAsync(signal);
             }
             catch
             {
