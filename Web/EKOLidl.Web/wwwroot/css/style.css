@@ -12019,29 +12019,6 @@ lidl-logo {
 .first-heading {
 }
 
-@media (min-width:0px) and (max-width: 999px) {
-	.first-heading {
-		margin-top: -5px;
-	}
-}
-
-@media (min-width:1000px) {
-	.first-heading {
-		margin-top: -50px;
-	}
-}
-
-.custom-img{
-
-}
-
-@media (min-width:0px) and (max-width: 999px) {
-
-	.custom-img {
-		width: 75%
-	}
-}
-
 .noselect {
 	-webkit-touch-callout: none; /* iOS Safari */
 	-webkit-user-select: none; /* Safari */
@@ -12049,4 +12026,50 @@ lidl-logo {
 	-ms-user-select: none; /* Internet Explorer/Edge */
 	user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
+}
+
+.custom-img {
+}
+
+.nav-form-left{
+
+}
+
+.nav-form-right {
+}
+
+
+@media (min-width:0px) and (max-width: 500px) {
+
+	.nav-form-right {
+		padding: revert;
+	}
+
+	.nav-form-left {
+		padding-left: 40px;
+	}
+}
+
+@media (min-width:0px) and (max-width: 999px) {
+	.first-heading {
+		margin-top: -5px;
+	}
+
+	.noselect {
+		padding-top: 170px;
+	}
+
+	.custom-img {
+		width: 75%
+	}
+}
+
+@media (min-width:1000px) {
+	.first-heading {
+		margin-top: -50px;
+	}
+
+	.noselect {
+		padding-top: 100px;
+	}
 }
