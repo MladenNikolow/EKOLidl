@@ -90,6 +90,11 @@
                 this.ModelState.AddModelError("TrashType", "Моля изберете тип на отпадъка");
             }
 
+            if (input.CheckedRules == false)
+            {
+                this.ModelState.AddModelError("CheckedRules", "Моля съгласете се с общите условия на сайта");
+            }
+
             foreach (var image in input.Images)
             {
                 // Image Validation

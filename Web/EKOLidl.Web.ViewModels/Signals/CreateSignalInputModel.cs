@@ -52,6 +52,8 @@
         [Display(Name = "Имейл за връзка")]
         public string ReporterEmail { get; set; }
 
+        public bool CheckedRules { get; set; }
+
         public List<KeyValuePair<int, string>> TrashTypeItems { get; set; }
     }
 }

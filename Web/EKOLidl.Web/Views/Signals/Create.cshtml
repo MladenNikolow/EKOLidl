@@ -83,6 +83,10 @@
         <input asp-for="ReporterEmail" class="form-control" />
         <span asp-validation-for="ReporterEmail" class="text-danger"></span>
     </div>
+    <div class="form-group">
+        @Html.CheckBoxFor(model => model.CheckedRules) Съгласявам се с <a asp-controller="Home" asp-action="Privacy"> Общите условия на сйата</a>
+        <span asp-validation-for="CheckedRules" class="text-danger"></span>
+    </div>
     <input type="submit" class="btn btn-primary" value="Добави" />
 </form>
 
