@@ -12074,10 +12074,23 @@ lidl-logo {
 }
 
 .carousel-caption {
-	background-color: rgba(255,255,255,0.6);
+	background-color: rgba(255,255,255,0.5);
 }
 
-.carousel-caption h3, p {
+.carousel-caption-text-style {
+	color: rgb(0,0,0);
+	font-weight: normal;
+}
+
+.carousel-caption-title-style {
 	color: rgb(0,0,0);
 	font-weight: bold;
+}
+
+.carousel .carousel-indicators li.active {
+	background-color: #138DD5;
+}
+
+.carousel .carousel-indicators li {
+	background-color: #00f0ff;
 }

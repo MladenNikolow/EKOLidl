@@ -29,7 +29,7 @@
 <nav aria-label="...">
   <ul class="pagination justify-content-center">
     <li class="page-item @if(!@Model.HasPreviousPage) { <text>disabled</text> }">
-      <a class="page-link" asp-action="Events" asp-route-page="@Model.PreviousPageNumber">Previous</a>
+      <a class="page-link" asp-action="Events" asp-route-page="@Model.PreviousPageNumber">Предишна</a>
     </li>
     @for(int pageNumber = Model.Page - 4; pageNumber < Model.Page; ++pageNumber)
     {
@@ -52,7 +52,7 @@
         }
     }     
     <li class="page-item @if(!@Model.HasNextPage) { <text>disabled</text>}">
-      <a class="page-link" asp-action="Events" asp-route-page="@Model.NextPageNumber">Next</a>
+      <a class="page-link" asp-action="Events" asp-route-page="@Model.NextPageNumber">Следваща</a>
     </li>
   </ul>
 </nav>
