@@ -31,13 +31,12 @@
         {
             const int signalsPerPage = 12;
             IEnumerable<Signal> signals = await this.signalRepository.GetApprovedSignalsByPageAsync(page, signalsPerPage);
-            int signalsCount = await this.signalRepository.GetItemsCountAsync();
 
             SignalsViewModel signalsViewModel = new SignalsViewModel
             {
                 Signals = signals,
                 Page = page,
-                Count = signalsCount,
+                Count = signals.Count(),
                 SignalsPerPage = signalsPerPage,
                 IsCreateSignalContext = isCreateSingalContext,
             };
@@ -167,7 +166,7 @@
                 return this.View(input);
             }
 
-            this.TempData["Message"] = "Благодарим Ви! Вашият сигнал е записан успешно и ще бъде видим на страницата възможно най-скоро.";
+            this.TempData["message"] = "Благодарим Ви! Вашият сигнал е записан успешно и ще бъде видим на страницата възможно най-скоро.";
 
             return this.RedirectToAction("Index", new { page = 1, isCreateSingalContext = true });
         }
