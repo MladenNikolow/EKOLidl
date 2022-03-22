@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+
     using EKOLidl.Data.Models;
     using EKOLidl.Data.Models.Signals;
     using Microsoft.Azure.Cosmos;
@@ -30,7 +31,7 @@
         }
 
         /// <summary>
-        ///     Returns the value of the partition key
+        ///     Returns the value of the partition key.
         /// </summary>
         /// <param name="entityId"></param>
         /// <returns></returns>

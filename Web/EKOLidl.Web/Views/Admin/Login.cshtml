@@ -1,0 +1,23 @@
+﻿@model EKOLidl.Web.ViewModels.Administration.CredentialsInputModel
+
+@{
+    ViewData["Title"] = "ADMIN НАКРАЯ СТИГАМ ДО МОРЕТО";
+}
+
+<form method="post" enctype="multipart/form-data">
+    <h1>@this.ViewData["Title"]</h1>
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Username"></label>
+        <input asp-for="Username" class="form-control"/>
+        <span asp-validation-for="Username" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Password"></label>
+        <input asp-for="Password" class="form-control"/>
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <input type="submit" class="btn btn-primary" value="Вписване" />
+</form>
+

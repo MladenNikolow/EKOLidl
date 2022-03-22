@@ -1,0 +1,23 @@
+﻿@{
+    this.ViewData["Title"] = "АДМИНСКИ ПАНЕЛ НАКРАЯ СТИГАМ ДО МОРЕТО";
+}
+<h1><b>@this.ViewData["Title"]</b></h1>
+
+<section class="about-page-wrap">
+    <div class="container">
+        <div class="row gutters-60">
+            <div class="col-lg-6">
+                <h2 class="about-title title-bar bar-center">Обработка на Сигнали</h2>
+                <a href="@Url.Action("EditEvents", "Admin")" class="links">
+							<img class="d-block w-100" src="https://media.istockphoto.com/vectors/upcoming-events-neon-signs-vector-upcoming-events-design-template-vector-id978975308?k=20&m=978975308&s=170667a&w=0&h=HUSIAiymLvon2LgDMQuLCtLYtrXLPUSRW6vfhCZujxk="/>
+						</a>
+            </div>
+            <div class="col-lg-6">
+                <h2 class="about-title title-bar bar-center">Обработка и добавяне на Събития</h2>
+                 <a href="@Url.Action("EditSignals", "Admin")" class="links">
+							<img class="d-block w-100" src="https://media.istockphoto.com/vectors/upcoming-events-neon-signs-vector-upcoming-events-design-template-vector-id978975308?k=20&m=978975308&s=170667a&w=0&h=HUSIAiymLvon2LgDMQuLCtLYtrXLPUSRW6vfhCZujxk="/>
+						</a>
+            </div>
+        </div>
+    </div>
+</section>

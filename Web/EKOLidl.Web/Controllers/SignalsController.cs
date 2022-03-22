@@ -56,18 +56,20 @@
         [Route("Signals/Create")]
         public IActionResult Create()
         {
-            var viewModel = new CreateSignalInputModel();
-            viewModel.TrashType = new List<TrashType>();
-            viewModel.Album = new Album()
+            var viewModel = new CreateSignalInputModel
             {
-                Links = new List<string>(),
-            };
+                TrashType = new List<TrashType>(),
+                Album = new Album()
+                {
+                    Links = new List<string>(),
+                },
 
-            viewModel.TrashTypeItems = ((TrashType[])Enum.GetValues(typeof(TrashType))).ToList().Select(x => new
-            {
-                id = (int)x,
-                description = ((DescriptionAttribute[])x.GetType().GetField(x.ToString()).GetCustomAttributes(typeof(DescriptionAttribute), false))[0].Description,
-            }).ToList().Select(x => new KeyValuePair<int, string>(x.id, x.description)).ToList();
+                TrashTypeItems = ((TrashType[])Enum.GetValues(typeof(TrashType))).ToList().Select(x => new
+                {
+                    id = (int)x,
+                    description = ((DescriptionAttribute[])x.GetType().GetField(x.ToString()).GetCustomAttributes(typeof(DescriptionAttribute), false))[0].Description,
+                }).ToList().Select(x => new KeyValuePair<int, string>(x.id, x.description)).ToList(),
+            };
 
             return this.View(viewModel);
         }
@@ -146,8 +148,10 @@
 
                 if (input.TrashType.Contains(EKOLidl.Data.Models.Signals.TrashType.Other))
                 {
-                    input.TrashType = new List<EKOLidl.Data.Models.Signals.TrashType>();
-                    input.TrashType.Add(EKOLidl.Data.Models.Signals.TrashType.Other);
+                    input.TrashType = new List<EKOLidl.Data.Models.Signals.TrashType>
+                    {
+                        EKOLidl.Data.Models.Signals.TrashType.Other,
+                    };
 
                     signal.OtherTrashType = input.OtherTrashType;
                 }
