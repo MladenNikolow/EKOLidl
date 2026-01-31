@@ -79,7 +79,8 @@ EKOLidl/
 - .NET 6.0 SDK
 - SQL Server (LocalDB или пълна версия)
 - Visual Studio 2022 или Visual Studio Code
-- Azure Storage Account (за работа с изображения)
+- Entity Framework Core tools (`dotnet tool install --global dotnet-ef`)
+- Azure Storage Account (опционално, за работа с изображения)
 
 ### Стъпки за инсталация
 
@@ -91,28 +92,45 @@ EKOLidl/
 
 2. **Конфигурирайте connection string**
    
-   Създайте файл `appsettings.json` в `Web/EKOLidl.Web/` със следното съдържание:
+   Актуализирайте `appsettings.Development.json` в `Web/EKOLidl.Web/` или използвайте User Secrets:
    ```json
    {
      "ConnectionStrings": {
        "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=EKOLidl;Trusted_Connection=True;MultipleActiveResultSets=true"
+     },
+     "Azure": {
+       "StorageConnectionString": "your-azure-storage-connection-string-here"
      }
    }
    ```
+   
+   **Забележка**: Не commit-вайте файлове с чувствителни данни! Използвайте `appsettings.Development.json` (вече в .gitignore) или .NET User Secrets за локална разработка.
 
-3. **Приложете миграциите на базата данни**
+3. **Инсталирайте EF Core tools** (ако вече не са инсталирани)
+   ```bash
+   dotnet tool install --global dotnet-ef
+   ```
+
+4. **Приложете миграциите на базата данни**
    ```bash
    cd Data/EKOLidl.Data
    dotnet ef database update
    ```
 
-4. **Стартирайте приложението**
+5. **Стартирайте приложението**
    ```bash
    cd ../../Web/EKOLidl.Web
    dotnet run
    ```
 
-5. Отворете браузър на адрес `https://localhost:5001`
+6. Отворете браузър на адрес `https://localhost:5001`
+
+### Конфигурация на Azure Blob Storage (опционално)
+
+За пълна функционалност на upload на изображения, конфигурирайте Azure Storage:
+- Създайте Azure Storage Account
+- Добавете connection string в `appsettings.Development.json` или User Secrets
+- Приложението може да работи без това за локална разработка, но функциите за upload на изображения няма да работят
 
 ## 🧪 Тестване
 
