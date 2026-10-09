@@ -3,9 +3,8 @@
     using System;
 
     using EKOLidl.Data.Models;
-    using EKOLidl.Services.Mapping;
 
-    public class EventDetailsViewModel : IMapFrom<Event>
+    public class EventDetailsViewModel
     {
         /// <summary>
         /// Gets or sets title of the event.
@@ -41,5 +40,19 @@
         /// Gets or sets result of the event.
         /// </summary>
         public Result Result { get; set; }
+
+        public static EventDetailsViewModel FromEntity(Event @event)
+        {
+            return new EventDetailsViewModel
+            {
+                Title = @event.Title,
+                ShortDescription = @event.ShortDescription,
+                LongDescription = @event.LongDescription,
+                EventDate = @event.EventDate,
+                Duration = @event.Duration,
+                Album = @event.Album,
+                Result = @event.Result,
+            };
+        }
     }
 }

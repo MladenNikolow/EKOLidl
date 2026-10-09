@@ -8,12 +8,13 @@
     using EKOLidl.Services.Data.Services;
     using EKOLidl.Services.Data.Services.AzureBlobStorage;
     using EKOLidl.Services.Data.Services.Interfaces;
+    using Microsoft.Azure.Cosmos;
     using Microsoft.Extensions.DependencyInjection;
 
     public static class IServiceCollectionExtensions
     {
         /// <summary>
-        ///     Register a singleton instance of Cosmos Db Container Factory, which is a wrapper for the CosmosClient.
+        ///     Register a singleton Cosmos client and the container factory that wraps it.
         /// </summary>
         /// <param name="services"></param>
         /// <param name="endpointUrl"></param>
@@ -28,8 +29,9 @@
             string databaseName,
             List<ContainerInfo> containers)
         {
-            Microsoft.Azure.Cosmos.CosmosClient client = new Microsoft.Azure.Cosmos.CosmosClient(endpointUrl, primaryKey);
+            CosmosClient client = new CosmosClient(endpointUrl, primaryKey);
             CosmosDbContainerFactory cosmosDbClientFactory = new CosmosDbContainerFactory(client, databaseName, containers);
+            services.AddSingleton(client);
             services.AddSingleton<ICosmosDbContainerFactory>(cosmosDbClientFactory);
             return services;
         }
@@ -38,14 +40,11 @@
         ///     Setup Azure Blob Storage Service.
         /// </summary>
         /// <param name="services"></param>
-        /// <param name="configuration"></param>
+        /// <param name="azureBlobStorageSettings"></param>
         public static void AddAzureBlobStorage(this IServiceCollection services, AzureBlobStorageSettings azureBlobStorageSettings)
         {
-            services.AddScoped<IStorageService, AzureBlobStorageService>(factory =>
-            {
-                BlobContainerClient blobContainerClient = new BlobContainerClient(azureBlobStorageSettings.ConnectionString, azureBlobStorageSettings.Container);
-                return new AzureBlobStorageService(blobContainerClient);
-            });
+            services.AddSingleton(new BlobContainerClient(azureBlobStorageSettings.ConnectionString, azureBlobStorageSettings.Container));
+            services.AddScoped<IStorageService, AzureBlobStorageService>();
         }
     }
 }

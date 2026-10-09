@@ -1,6 +1,5 @@
 ﻿namespace EKOLidl.Data.Common.Repositories
 {
-    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -10,16 +9,7 @@
         where T : BaseEntity
     {
         /// <summary>
-        ///     Get items given a string SQL query directly.
-        ///     Likely in production, you may want to use alternatives like Parameterized Query or LINQ to avoid SQL Injection and avoid having to work with strings directly.
-        ///     This is kept here for demonstration purpose.
-        /// </summary>
-        /// <param name="query"></param>
-        /// <returns></returns>
-        Task<IEnumerable<T>> GetItemsAsync(string query);
-
-        /// <summary>
-        ///     Get the count on items that match the specification
+        ///     Get the count of all items.
         /// </summary>
         /// <returns></returns>
         Task<int> GetItemsCountAsync();
@@ -28,7 +18,7 @@
         ///     Get one item by Id.
         /// </summary>
         /// <param name="id"></param>
-        /// <returns></returns>
+        /// <returns>The item, or <c>null</c> when it does not exist.</returns>
         Task<T> GetItemAsync(string id);
 
         /// <summary>
@@ -54,7 +44,7 @@
         Task DeleteItemAsync(string id);
 
         /// <summary>
-        /// Get list of items for the current page.
+        /// Get list of items for the current page, newest first.
         /// </summary>
         /// <param name="page">Number of the current page.</param>
         /// <param name="itemsPerPage">How many items per page.</param>
@@ -62,7 +52,7 @@
         Task<IEnumerable<T>> GetItemsByPageAsync(int page, int itemsPerPage);
 
         /// <summary>
-        /// Get newest items by created_on.
+        /// Get the newest items.
         /// </summary>
         /// <param name="count">How many items to get.</param>
         /// <returns></returns>

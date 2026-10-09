@@ -2,7 +2,6 @@
 {
     using EKOLidl.Data.Models;
     using EKOLidl.Data.Models.Events;
-    using EKOLidl.Services.Mapping;
     using EKOLidl.Web.ViewModels.Administration;
     using EKOLidl.Web.ViewModels.Events;
     using Microsoft.AspNetCore.Mvc;
@@ -80,10 +79,14 @@
         [Route("Admin/3912cd5e-8b27-405a-9e93-da59d97db6343d1dbb05-7d9a-4b28-a945-f738489a59d1/EditEvent")]
         public async Task<IActionResult> EditEvent(string id)
         {
-            var result = await this.eventRepository.GetItemAsync(id);
-            EditEventInputModel editEventInputModel = AutoMapperConfig.MapperInstance.Map<EditEventInputModel>(result);
+            Event result = await this.eventRepository.GetItemAsync(id);
 
-            return this.View(editEventInputModel);
+            if (result == null)
+            {
+                return this.NotFound();
+            }
+
+            return this.View(EditEventInputModel.FromEntity(result));
         }
 
         [Route("Admin/3912cd5e-8b27-405a-9e93-da59d97db6343d1dbb05-7d9a-4b28-a945-f738489a59d1/EditEvent")]

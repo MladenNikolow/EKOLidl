@@ -8,5 +8,9 @@
     public interface ISignalRepository : IRepository<Signal>
     {
         Task<IEnumerable<Signal>> GetApprovedSignalsByPageAsync(int page, int itemsPerPage);
+
+        Task<IEnumerable<Signal>> GetNewestApprovedSignalsAsync(int count);
+
+        Task<int> GetApprovedSignalsCountAsync();
     }
 }

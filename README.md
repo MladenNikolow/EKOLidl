@@ -27,120 +27,68 @@
 
 ### Използвани технологии
 
-- **Framework**: ASP.NET Core 6.0
-- **Database**: Microsoft SQL Server with Entity Framework Core 5.0.6
-- **Frontend**: 
-  - ASP.NET Core MVC (Razor Views)
-  - Bootstrap
-  - JavaScript/jQuery
-- **Authentication**: ASP.NET Core Identity
-- **Cloud Storage**: Azure Blob Storage (за съхранение на изображения)
-- **Email**: SendGrid (за имейл услуги)
-- **Code Quality**: StyleCop Analyzers
+- **Framework**: ASP.NET Core 10 MVC (Razor Views)
+- **База данни**: Azure Cosmos DB (контейнери `Events` и `Signals`)
+- **Снимки**: Azure Blob Storage
+- **Хостинг**: Azure App Service (Windows)
+- **Code Quality**: StyleCop Analyzers (`Rules.ruleset`, `stylecop.json`, общи настройки в `Directory.Build.props`)
 
 ### Архитектура на проекта
 
-Проектът следва многослойна архитектура:
-
 ```
 EKOLidl/
-├── Web/                          # Уеб слой
-│   ├── EKOLidl.Web/             # Основно ASP.NET Core приложение
-│   ├── EKOLidl.Web.ViewModels/  # View модели
-│   └── EKOLidl.Web.Infrastructure/ # Уеб инфраструктура
-├── Services/                     # Бизнес логика
-│   ├── EKOLidl.Services/        # Общи услуги
-│   ├── EKOLidl.Services.Data/   # Услуги за работа с данни
-│   ├── EKOLidl.Services.Mapping/ # AutoMapper конфигурация
-│   └── EKOLidl.Services.Messaging/ # Имейл услуги
-├── Data/                         # Данни слой
-│   ├── EKOLidl.Data/            # EF Core DbContext и репозитории
-│   ├── EKOLidl.Data.Models/     # Модели на данни
+├── Web/
+│   ├── EKOLidl.Web/             # ASP.NET Core MVC приложение
+│   └── EKOLidl.Web.ViewModels/  # View модели
+├── Services/
+│   ├── EKOLidl.Services.Data/   # Cosmos DB репозитории, Blob Storage, валидация на снимки
+│   └── EKOLidl.Services.Messaging/ # не се използва и не е в решението
+├── Data/
+│   ├── EKOLidl.Data.Models/     # Модели на данни (Event, Signal, ...)
 │   └── EKOLidl.Data.Common/     # Общи интерфейси за данни
-├── EKOLidl.Common/              # Общи константи и помощни класове
-└── Tests/                        # Тестове
-    ├── EKOLidl.Services.Data.Tests/
-    ├── EKOLidl.Web.Tests/
-    └── Sandbox/
+└── EKOLidl.Common/              # Общи константи
 ```
 
 ### Основни функционалности
 
-- **Управление на събития**: Създаване и визуализация на екологични събития
-- **Система за сигнали**: Подаване на сигнали за замърсени райони по крайбрежието
-- **Галерия с изображения**: Azure Blob Storage интеграция за съхранение на снимки
-- **Потребителска система**: Регистрация и автентикация
-- **Администраторски панел**: Управление на съдържанието
+- **Събития**: архив на дейностите по проекта, с албум и резултати
+- **Сигнали**: всеки може да подаде сигнал за замърсен район със снимки; сигналът става публичен след одобрение
+- **Администраторски панел**: управление на съдържанието
 
 ## 🚀 Как да стартираме проекта
 
 ### Предварителни изисквания
 
-- .NET 6.0 SDK
-- SQL Server (LocalDB или пълна версия)
-- Visual Studio 2022 или Visual Studio Code
-- Entity Framework Core tools (`dotnet tool install --global dotnet-ef`)
-- Azure Storage Account (опционално, за работа с изображения)
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
+- [Azure Cosmos DB Emulator](https://learn.microsoft.com/azure/cosmos-db/emulator) (локална база данни)
+- [Azurite](https://learn.microsoft.com/azure/storage/common/storage-use-azurite) (локално Blob Storage), напр. чрез Node.js: `npx azurite --silent --location .azurite`
 
-### Стъпки за инсталация
+### Стъпки
 
-1. **Клонирайте репозиторито**
+1. Клонирайте репозиторито:
    ```bash
    git clone https://github.com/MladenNikolow/EKOLidl.git
    cd EKOLidl
    ```
-
-2. **Конфигурирайте connection string**
-   
-   Актуализирайте `appsettings.Development.json` в `Web/EKOLidl.Web/` или използвайте User Secrets:
-   ```json
-   {
-     "ConnectionStrings": {
-       "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=EKOLidl;Trusted_Connection=True;MultipleActiveResultSets=true"
-     },
-     "Azure": {
-       "StorageConnectionString": "your-azure-storage-connection-string-here"
-     }
-   }
-   ```
-   
-   **Забележка**: Не commit-вайте файлове с чувствителни данни! Използвайте `appsettings.Development.json` (вече в .gitignore) или .NET User Secrets за локална разработка.
-
-3. **Инсталирайте EF Core tools** (ако вече не са инсталирани)
+2. Стартирайте Cosmos DB Emulator и Azurite.
+3. Стартирайте приложението:
    ```bash
-   dotnet tool install --global dotnet-ef
+   dotnet run --project Web/EKOLidl.Web
    ```
+4. Отворете `https://localhost:5001`.
 
-4. **Приложете миграциите на базата данни**
-   ```bash
-   cd Data/EKOLidl.Data
-   dotnet ef database update
-   ```
+В среда `Development` приложението използва `appsettings.Development.json`, който сочи към двата емулатора. При първо стартиране то създава базата, контейнерите и Blob контейнера и добавя примерни събития и сигнали. Продукционните данни не се използват.
 
-5. **Стартирайте приложението**
-   ```bash
-   cd ../../Web/EKOLidl.Web
-   dotnet run
-   ```
-
-6. Отворете браузър на адрес `https://localhost:5001`
-
-### Конфигурация на Azure Blob Storage (опционално)
-
-За пълна функционалност на upload на изображения, конфигурирайте Azure Storage:
-- Създайте Azure Storage Account
-- Добавете connection string в `appsettings.Development.json` или User Secrets
-- Приложението може да работи без това за локална разработка, но функциите за upload на изображения няма да работят
-
-## 🧪 Тестване
-
+**Работа с реалните данни в Azure** (само при нужда): задайте ключовете чрез User Secrets. Те имат предимство пред `appsettings.Development.json`:
 ```bash
-# Изпълнение на всички тестове
-dotnet test
-
-# Изпълнение на тестове за конкретен проект
-dotnet test Tests/EKOLidl.Services.Data.Tests/
+dotnet user-secrets --project Web/EKOLidl.Web set "AzureConnections:CosmosDB:EndpointUrl" "<endpoint>"
+dotnet user-secrets --project Web/EKOLidl.Web set "AzureConnections:CosmosDB:PrimaryKey" "<key>"
 ```
+Не подавайте тестови сигнали срещу продукционната база.
+
+### Конфигурация в Azure
+
+Продукционните настройки са в App Service → Configuration (`AzureConnections__CosmosDB__EndpointUrl`, `AzureConnections__CosmosDB__PrimaryKey`, `AzureConnections__CosmosDB__DatabaseName`, `AzureConnections__CosmosDB__Containers__0__Name` и т.н., `AzureConnections__BlobStorage__ConnectionString`, `AzureConnections__BlobStorage__Container`). Никога не commit-вайте ключове в репозиторито.
 
 ## 📞 Контакти
 

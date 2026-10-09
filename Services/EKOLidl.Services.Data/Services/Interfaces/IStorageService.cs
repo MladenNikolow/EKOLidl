@@ -21,5 +21,12 @@
         /// <param name="file"></param>
         /// <returns></returns>
         Task<IEnumerable<string>> UploadFilesAsync(IEnumerable<IFormFile> files);
+
+        /// <summary>
+        ///     Delete previously uploaded files by their URLs. URLs outside this storage are ignored.
+        /// </summary>
+        /// <param name="fileUrls"></param>
+        /// <returns></returns>
+        Task DeleteFilesAsync(IEnumerable<string> fileUrls);
     }
 }

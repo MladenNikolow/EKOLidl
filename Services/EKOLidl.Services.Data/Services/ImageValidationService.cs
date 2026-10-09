@@ -2,95 +2,66 @@
 {
     using System;
     using System.IO;
-    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
     using EKOLidl.Services.Data.Services.Interfaces;
     using Microsoft.AspNetCore.Http;
 
+    /// <summary>
+    /// Accepts JPEG, PNG and WebP photos between 512 B and 5 MB, checked by extension and by file signature.
+    /// </summary>
     public class ImageValidationService : IFileValidationService
     {
+        public const long MaxImageBytes = 5 * 1024 * 1024;
+
         private const int ImageMinimumBytes = 512;
 
+        private static readonly byte[] JpegSignature = { 0xFF, 0xD8, 0xFF };
+
+        private static readonly byte[] PngSignature = { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
+
         /// <summary>
-        /// Check if the input is valid image.
+        /// Check if the input is a valid image.
         /// </summary>
         /// <param name="image">Image from the input.</param>
-        /// <returns></returns>
+        /// <returns><c>true</c> when the file is an allowed image.</returns>
         public async Task<bool> CheckAsync(IFormFile image)
         {
-            //-------------------------------------------
-            //  Check the image mime types
-            //-------------------------------------------
-            if (image.ContentType.ToLower() != "image/jpg" &&
-                image.ContentType.ToLower() != "image/jpeg" &&
-                image.ContentType.ToLower() != "image/pjpeg" &&
-                image.ContentType.ToLower() != "image/x-png" &&
-                image.ContentType.ToLower() != "image/png")
+            if (image == null || image.Length < ImageMinimumBytes || image.Length > MaxImageBytes)
             {
                 return false;
             }
 
-            //-------------------------------------------
-            //  Check the image extension
-            //-------------------------------------------
-            if (Path.GetExtension(image.FileName).ToLower() != ".jpg"
-                && Path.GetExtension(image.FileName).ToLower() != ".png"
-                && Path.GetExtension(image.FileName).ToLower() != ".jpeg")
+            string extension = Path.GetExtension(image.FileName)?.ToLowerInvariant();
+            if (extension != ".jpg" && extension != ".jpeg" && extension != ".png" && extension != ".webp")
             {
                 return false;
             }
 
-            //-------------------------------------------
-            //  Attempt to read the file and check the first bytes
-            //-------------------------------------------
-            try
+            byte[] header = new byte[12];
+            await using (Stream stream = image.OpenReadStream())
             {
-                if (!image.OpenReadStream().CanRead)
-                {
-                    return false;
-                }
-
-                //------------------------------------------
-                // Check whether the image size exceeding the limit or not
-                //------------------------------------------ 
-                if (image.Length < ImageMinimumBytes || image.Length > 5 * 1024 * 1024)
-                {
-                    return false;
-                }
-
-                byte[] buffer = new byte[ImageMinimumBytes];
-                await image.OpenReadStream().ReadAsync(buffer, 0, ImageMinimumBytes);
-                string content = System.Text.Encoding.UTF8.GetString(buffer);
-                if (Regex.IsMatch(content, @"<script|<html|<head|<title|<body|<pre|<table|<a\s+href|<img|<plaintext|<cross\-domain\-policy", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Multiline))
+                int read = await stream.ReadAtLeastAsync(header, header.Length, throwOnEndOfStream: false);
+                if (read < header.Length)
                 {
                     return false;
                 }
             }
-            catch (Exception)
-            {
-                return false;
-            }
 
-            //-------------------------------------------
-            //  Try to instantiate new Bitmap, if .NET will throw exception
-            //  we can assume that it's not a valid image
-            //-------------------------------------------
-
-            try
+            return extension switch
             {
-                using var bitmap = new System.Drawing.Bitmap(image.OpenReadStream());
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            finally
-            {
-                image.OpenReadStream().Position = 0;
-            }
-
-            return true;
+                ".jpg" or ".jpeg" => StartsWith(header, JpegSignature),
+                ".png" => StartsWith(header, PngSignature),
+                _ => IsWebP(header),
+            };
         }
+
+        private static bool StartsWith(byte[] header, byte[] signature) =>
+            header.AsSpan().StartsWith(signature);
+
+        // RIFF....WEBP
+        private static bool IsWebP(byte[] header) =>
+            header[0] == 'R' && header[1] == 'I' && header[2] == 'F' && header[3] == 'F'
+            && header[8] == 'W' && header[9] == 'E' && header[10] == 'B' && header[11] == 'P';
     }
 }

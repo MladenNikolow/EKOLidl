@@ -37,16 +37,28 @@
         /// <returns></returns>
         public override PartitionKey ResolvePartitionKey(string entityId) => new PartitionKey(entityId);
 
-        public async Task<IEnumerable<Signal>> GetApprovedSignalsByPageAsync(int page, int itemsPerPage)
+        public Task<IEnumerable<Signal>> GetApprovedSignalsByPageAsync(int page, int itemsPerPage)
         {
-            int offset = itemsPerPage * (page - 1);
+            QueryDefinition query = new QueryDefinition(
+                    "SELECT * FROM c WHERE c.is_approved = true ORDER BY c.created_on DESC OFFSET @offset LIMIT @limit")
+                .WithParameter("@offset", Offset(page, itemsPerPage))
+                .WithParameter("@limit", itemsPerPage);
 
-            string query = @$"select * from {this.ContainerName} c
-                            where c.is_approved = true
-                            order by c.created_on
-                            offset {offset} limit {itemsPerPage}";
+            return this.QueryAsync(query);
+        }
 
-            return await this.GetItemsAsync(query);
+        public Task<IEnumerable<Signal>> GetNewestApprovedSignalsAsync(int count)
+        {
+            QueryDefinition query = new QueryDefinition(
+                    "SELECT * FROM c WHERE c.is_approved = true ORDER BY c.created_on DESC OFFSET 0 LIMIT @limit")
+                .WithParameter("@limit", count);
+
+            return this.QueryAsync(query);
+        }
+
+        public Task<int> GetApprovedSignalsCountAsync()
+        {
+            return this.CountAsync(new QueryDefinition("SELECT VALUE COUNT(1) FROM c WHERE c.is_approved = true"));
         }
     }
 }
