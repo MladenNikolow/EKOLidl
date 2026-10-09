@@ -1,0 +1,48 @@
+@model EKOLidl.Web.ViewModels.Administration.AdminDashboardViewModel
+@{
+    this.ViewData["Title"] = "Табло";
+    var pending = this.Model.LatestPending.ToList();
+}
+
+<div class="container-page py-10">
+    <h1 class="text-h2">Табло</h1>
+    <p class="mt-2 text-muted">Здравейте, @this.User.Identity?.Name. Ето какво чака внимание.</p>
+
+    <div class="mt-8 grid gap-4 sm:grid-cols-3">
+        <a class="card card-link block p-6 no-underline" asp-controller="Admin" asp-action="Signals" asp-route-approved="false">
+            <span class="flex items-center gap-2 text-sm font-semibold text-coral-600 dark:text-coral"><icon name="hourglass" class="size-4" /> Чакащи сигнали</span>
+            <span class="mt-3 block font-display text-5xl font-semibold">@this.Model.PendingSignalsCount</span>
+        </a>
+        <a class="card card-link block p-6 no-underline" asp-controller="Admin" asp-action="Signals" asp-route-approved="true">
+            <span class="flex items-center gap-2 text-sm font-semibold text-success dark:text-[#47cd89]"><icon name="check" class="size-4" /> Публикувани сигнали</span>
+            <span class="mt-3 block font-display text-5xl font-semibold">@this.Model.ApprovedSignalsCount</span>
+        </a>
+        <a class="card card-link block p-6 no-underline" asp-controller="Admin" asp-action="Events">
+            <span class="flex items-center gap-2 text-sm font-semibold text-accent"><icon name="calendar-days" class="size-4" /> Събития</span>
+            <span class="mt-3 block font-display text-5xl font-semibold">@this.Model.EventsCount</span>
+        </a>
+    </div>
+
+    <section class="mt-12" aria-labelledby="pending-title">
+        <div class="flex flex-wrap items-end justify-between gap-4">
+            <h2 id="pending-title" class="text-h3">Последни чакащи сигнали</h2>
+            @if (this.Model.PendingSignalsCount > pending.Count)
+            {
+                <a class="text-sm font-semibold text-accent" asp-controller="Admin" asp-action="Signals" asp-route-approved="false">Всички @this.Model.PendingSignalsCount →</a>
+            }
+        </div>
+        @if (pending.Count == 0)
+        {
+            <div class="mt-6"><partial name="_EmptyState" model='new EmptyState("check", "Няма чакащи сигнали", "Всички подадени сигнали са прегледани.")' /></div>
+        }
+        else
+        {
+            <ul class="mt-6 space-y-3">
+                @foreach (var signal in pending)
+                {
+                    <li><partial name="_AdminSignalRow" model="signal" /></li>
+                }
+            </ul>
+        }
+    </section>
+</div>

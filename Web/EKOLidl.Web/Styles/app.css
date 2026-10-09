@@ -565,6 +565,21 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
+  /* A light surface placed inside a .sea section (e.g. the admin sign-in card). */
+  .on-light {
+    --text: var(--color-ink);
+    --text-muted: var(--color-slate);
+    --border: var(--color-line);
+    --accent: var(--color-tide);
+    --accent-strong: var(--color-tide-800);
+    --accent-soft: var(--color-foam);
+    --surface-raised: var(--color-white);
+    --danger: var(--color-error);
+    --focus: var(--color-coral-600);
+    background: var(--color-shell);
+    color: var(--text);
+  }
+
   /* Long-form text: About, Privacy, event and signal descriptions */
   .prose-site {
     max-width: 68ch;

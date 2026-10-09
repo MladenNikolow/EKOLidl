@@ -4,15 +4,14 @@
 
     public class CredentialsInputModel
     {
-        [Required(ErrorMessage = "Моля, въведете име!")]
-        [MinLength(3, ErrorMessage = "Невалидно име или парола!")]
-        [MaxLength(40, ErrorMessage = "Невалидно име или парола!")]
+        [Required(ErrorMessage = "Моля, въведете потребителско име.")]
+        [StringLength(64, ErrorMessage = "Грешно потребителско име или парола.")]
         [Display(Name = "Потребителско име")]
         public string Username { get; set; }
 
-        [Required(ErrorMessage = "Моля, въведете парола!")]
-        [MinLength(3, ErrorMessage = "Невалидно име или парола!")]
-        [MaxLength(40, ErrorMessage = "Невалидно име или парола!")]
+        [Required(ErrorMessage = "Моля, въведете парола.")]
+        [StringLength(256, ErrorMessage = "Грешно потребителско име или парола.")]
+        [DataType(DataType.Password)]
         [Display(Name = "Парола")]
         public string Password { get; set; }
     }

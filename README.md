@@ -86,6 +86,18 @@ dotnet user-secrets --project Web/EKOLidl.Web set "AzureConnections:CosmosDB:Pri
 ```
 Не подавайте тестови сигнали срещу продукционната база.
 
+### Администрация
+
+Администрацията е на `/admin`. Там се одобряват, скриват и изтриват сигнали, добавят се резултати и се редактират събития.
+
+- **Локално** (среда `Development`): потребител `admin`, парола `local-dev-admin-2026`. Профилът е само в `appsettings.Development.json` и работи само с емулаторите.
+- **В Azure**: задайте `Admin__Username` и `Admin__PasswordHash` в App Service → Configuration. Паролата никога не се пази в явен вид. Хешът се генерира така (паролата е поне 12 символа и не се показва при въвеждане):
+  ```bash
+  dotnet run --project Web/EKOLidl.Web -- --hash-password
+  ```
+- Смяната на `Admin__PasswordHash` излиза от всички отворени сесии.
+- След 5 неуспешни опита за вход от един IP адрес входът се блокира за 5 минути.
+
 ### Конфигурация в Azure
 
 Продукционните настройки са в App Service → Configuration (`AzureConnections__CosmosDB__EndpointUrl`, `AzureConnections__CosmosDB__PrimaryKey`, `AzureConnections__CosmosDB__DatabaseName`, `AzureConnections__CosmosDB__Containers__0__Name` и т.н., `AzureConnections__BlobStorage__ConnectionString`, `AzureConnections__BlobStorage__Container`). Никога не commit-вайте ключове в репозиторито.

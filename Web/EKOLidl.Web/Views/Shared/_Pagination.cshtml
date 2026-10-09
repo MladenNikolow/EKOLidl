@@ -6,6 +6,7 @@
     }
 
     int page = Math.Clamp(this.Model.Page, 1, this.Model.PagesCount);
+    var routeValues = this.Model.RouteValues ?? new Dictionary<string, string>();
 
     // First, last and two pages either side of the current one; gaps become "…".
     var pages = Enumerable.Range(1, this.Model.PagesCount)
@@ -16,7 +17,7 @@
 <nav class="mt-14 flex items-center justify-center gap-2" aria-label="Страници">
     @if (page > 1)
     {
-        <a class="btn btn-outline btn-sm" asp-controller="@this.Model.Controller" asp-action="@this.Model.Action" asp-route-page="@(page - 1)" rel="prev">
+        <a class="btn btn-outline btn-sm" asp-controller="@this.Model.Controller" asp-action="@this.Model.Action" asp-all-route-data="@routeValues" asp-route-page="@(page - 1)" rel="prev">
             <icon name="arrow-left" class="size-4" />
             <span class="max-sm:sr-only">Предишна</span>
         </a>
@@ -37,7 +38,7 @@
                 }
                 else
                 {
-                    <a class="grid size-10 place-items-center rounded-full font-semibold no-underline hover:bg-accent-soft" asp-controller="@this.Model.Controller" asp-action="@this.Model.Action" asp-route-page="@pages[i]" aria-label="Страница @pages[i]">@pages[i]</a>
+                    <a class="grid size-10 place-items-center rounded-full font-semibold no-underline hover:bg-accent-soft" asp-controller="@this.Model.Controller" asp-action="@this.Model.Action" asp-all-route-data="@routeValues" asp-route-page="@pages[i]" aria-label="Страница @pages[i]">@pages[i]</a>
                 }
             </li>
         }
@@ -45,7 +46,7 @@
 
     @if (page < this.Model.PagesCount)
     {
-        <a class="btn btn-outline btn-sm" asp-controller="@this.Model.Controller" asp-action="@this.Model.Action" asp-route-page="@(page + 1)" rel="next">
+        <a class="btn btn-outline btn-sm" asp-controller="@this.Model.Controller" asp-action="@this.Model.Action" asp-all-route-data="@routeValues" asp-route-page="@(page + 1)" rel="next">
             <span class="max-sm:sr-only">Следваща</span>
             <icon name="arrow-right" class="size-4" />
         </a>

@@ -12,5 +12,7 @@
         public bool ShowRequestId => !string.IsNullOrEmpty(this.RequestId);
 
         public bool IsNotFound => this.StatusCode == 404;
+
+        public bool IsTooManyRequests => this.StatusCode == 429;
     }
 }

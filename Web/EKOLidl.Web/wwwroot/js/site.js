@@ -128,6 +128,13 @@
     dialog.addEventListener('close', () => opener?.focus());
   }
 
+  // Confirm before destructive actions: <form data-confirm="Сигурни ли сте?">.
+  document.querySelectorAll('form[data-confirm]').forEach((form) => {
+    form.addEventListener('submit', (event) => {
+      if (!window.confirm(form.dataset.confirm)) event.preventDefault();
+    });
+  });
+
   // Copy buttons: <button data-copy="seaclub2@gmail.com" data-copied-label="Копирано">.
   document.querySelectorAll('[data-copy]').forEach((button) => {
     button.addEventListener('click', async () => {

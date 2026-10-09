@@ -43,7 +43,9 @@
 
         private static readonly CultureInfo Bulgarian = CultureInfo.GetCultureInfo("bg-BG");
 
-        private static readonly TimeZoneInfo Sofia = TimeZoneInfo.FindSystemTimeZoneById("Europe/Sofia");
+        // IANA id when ICU is available; Windows id as a fallback ("FLE Standard Time" covers Sofia).
+        private static readonly TimeZoneInfo Sofia =
+            TimeZoneInfo.TryFindSystemTimeZoneById("Europe/Sofia", out TimeZoneInfo iana) ? iana : TimeZoneInfo.FindSystemTimeZoneById("FLE Standard Time");
 
         /// <summary>
         ///     Formats a date as „31 октомври 2022“.
@@ -76,8 +78,12 @@
         /// <summary>
         ///     Dates entered in the admin have no time zone and are already Sofia time; only UTC values are converted.
         /// </summary>
-        private static DateTime ToSofia(DateTime date) =>
-            date.Kind == DateTimeKind.Utc ? TimeZoneInfo.ConvertTimeFromUtc(date, Sofia) : date;
+        /// <param name="date">The stored date.</param>
+        /// <returns>The date in Sofia time, without a kind.</returns>
+        public static DateTime ToSofiaTime(DateTime date) =>
+            DateTime.SpecifyKind(date.Kind == DateTimeKind.Utc ? TimeZoneInfo.ConvertTimeFromUtc(date, Sofia) : date, DateTimeKind.Unspecified);
+
+        private static DateTime ToSofia(DateTime date) => ToSofiaTime(date);
 
         public sealed record Partner(string Name, string Url, string Logo, int Width, int Height);
     }

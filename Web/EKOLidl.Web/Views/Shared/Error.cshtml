@@ -1,6 +1,13 @@
 @model ErrorViewModel
 @{
-    this.ViewData["Title"] = this.Model.IsNotFound ? "Страницата не е намерена" : "Възникна грешка";
+    (string title, string text) = this.Model switch
+    {
+        { IsNotFound: true } => ("Тази страница е отнесена от вълните", "Страницата, която търсите, не съществува или е преместена."),
+        { IsTooManyRequests: true } => ("Твърде много опити", "Изчакайте няколко минути и опитайте отново."),
+        _ => ("Нещо се обърка", "Възникна грешка при обработката на заявката. Моля, опитайте отново след малко."),
+    };
+
+    this.ViewData["Title"] = this.Model.IsNotFound ? "Страницата не е намерена" : title;
     this.ViewData["HeaderOverlay"] = true;
 }
 
@@ -8,19 +15,13 @@
     <div class="container-page relative py-36 text-center">
         <icon name="waves" class="absolute left-1/2 top-1/2 -z-10 size-[36rem] -translate-x-1/2 -translate-y-1/2 text-white/[0.04]" stroke="1" />
         <p class="font-display text-[clamp(5rem,3rem+10vw,10rem)] font-semibold leading-none text-lagoon">@(this.Model.StatusCode ?? 500)</p>
-        <h1 id="error-title" class="mx-auto mt-6 max-w-2xl text-h1">
-            @(this.Model.IsNotFound ? "Тази страница е отнесена от вълните" : "Нещо се обърка")
-        </h1>
-        <p class="mx-auto mt-5 max-w-xl text-lead text-muted">
-            @(this.Model.IsNotFound
-                ? "Страницата, която търсите, не съществува или е преместена."
-                : "Възникна грешка при обработката на заявката. Моля, опитайте отново след малко.")
-        </p>
+        <h1 id="error-title" class="mx-auto mt-6 max-w-2xl text-h1">@title</h1>
+        <p class="mx-auto mt-5 max-w-xl text-lead text-muted">@text</p>
         <div class="mt-10 flex flex-wrap justify-center gap-3">
             <a class="btn btn-coral" asp-controller="Home" asp-action="Index"><icon name="arrow-left" class="size-4" /> Към началото</a>
             <a class="btn btn-ghost-light" asp-controller="Signals" asp-action="Index">Виж сигналите</a>
         </div>
-        @if (this.Model.ShowRequestId && !this.Model.IsNotFound)
+        @if (this.Model.ShowRequestId && !this.Model.IsNotFound && !this.Model.IsTooManyRequests)
         {
             <p class="mt-10 text-sm text-muted">Код на заявката: <code>@this.Model.RequestId</code></p>
         }

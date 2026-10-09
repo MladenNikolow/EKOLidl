@@ -31,8 +31,8 @@
         public async Task<IActionResult> Index(int page = 1)
         {
             const int signalsPerPage = 12;
-            IEnumerable<Signal> signals = await this.signalRepository.GetApprovedSignalsByPageAsync(page, signalsPerPage);
-            int signalsCount = await this.signalRepository.GetApprovedSignalsCountAsync();
+            IEnumerable<Signal> signals = await this.signalRepository.GetSignalsByPageAsync(true, page, signalsPerPage);
+            int signalsCount = await this.signalRepository.GetSignalsCountAsync(true);
 
             SignalsViewModel signalsViewModel = new SignalsViewModel
             {

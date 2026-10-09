@@ -37,14 +37,23 @@
         /// <returns></returns>
         public override PartitionKey ResolvePartitionKey(string entityId) => new PartitionKey(entityId);
 
-        public Task<IEnumerable<Signal>> GetApprovedSignalsByPageAsync(int page, int itemsPerPage)
+        public Task<IEnumerable<Signal>> GetSignalsByPageAsync(bool isApproved, int page, int itemsPerPage)
         {
             QueryDefinition query = new QueryDefinition(
-                    "SELECT * FROM c WHERE c.is_approved = true ORDER BY c.created_on DESC OFFSET @offset LIMIT @limit")
+                    "SELECT * FROM c WHERE (c.is_approved ?? false) = @approved ORDER BY c.created_on DESC OFFSET @offset LIMIT @limit")
+                .WithParameter("@approved", isApproved)
                 .WithParameter("@offset", Offset(page, itemsPerPage))
                 .WithParameter("@limit", itemsPerPage);
 
             return this.QueryAsync(query);
+        }
+
+        public Task<int> GetSignalsCountAsync(bool isApproved)
+        {
+            QueryDefinition query = new QueryDefinition("SELECT VALUE COUNT(1) FROM c WHERE (c.is_approved ?? false) = @approved")
+                .WithParameter("@approved", isApproved);
+
+            return this.CountAsync(query);
         }
 
         public Task<IEnumerable<Signal>> GetNewestApprovedSignalsAsync(int count)
@@ -54,11 +63,6 @@
                 .WithParameter("@limit", count);
 
             return this.QueryAsync(query);
-        }
-
-        public Task<int> GetApprovedSignalsCountAsync()
-        {
-            return this.CountAsync(new QueryDefinition("SELECT VALUE COUNT(1) FROM c WHERE c.is_approved = true"));
         }
     }
 }

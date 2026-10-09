@@ -29,7 +29,8 @@
     <link rel="preload" href="/fonts/onest-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/geologica-cyrillic-shrp-normal.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="~/css/app.css" asp-append-version="true" />
-    <script>document.documentElement.classList.add('js');</script>
+    @* Allowed by the CSP via its hash; see SecurityHeaders.JsFlagScript. *@
+    <script>@Html.Raw(SecurityHeaders.JsFlagScript)</script>
     @await this.RenderSectionAsync("Head", required: false)
 </head>
 <body class="flex min-h-dvh flex-col">

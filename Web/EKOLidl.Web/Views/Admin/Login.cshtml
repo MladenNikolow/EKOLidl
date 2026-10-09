@@ -1,23 +1,48 @@
-﻿@model EKOLidl.Web.ViewModels.Administration.CredentialsInputModel
-
+@model EKOLidl.Web.ViewModels.Administration.CredentialsInputModel
+@inject AdminAuthenticator Authenticator
 @{
-    ViewData["Title"] = "ADMIN НАКРАЯ СТИГАМ ДО МОРЕТО";
+    this.ViewData["Title"] = "Вход";
 }
 
-<form method="post" enctype="multipart/form-data">
-    <h1>@this.ViewData["Title"]</h1>
-    <div asp-validation-summary="All" class="text-danger"></div>
-    <div class="form-group">
-        <label asp-for="Username"></label>
-        <input asp-for="Username" class="form-control"/>
-        <span asp-validation-for="Username" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Password"></label>
-        <input asp-for="Password" class="form-control"/>
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
+<section class="sea flex min-h-dvh items-center justify-center px-4 py-16">
+    <div class="w-full max-w-md">
+        <div class="mb-8 flex justify-center"><partial name="_Brand" /></div>
 
-    <input type="submit" class="btn btn-primary" value="Вписване" />
-</form>
+        <div class="on-light rounded-xl p-8 shadow-lift sm:p-10">
+            <h1 class="text-h3">Вход за администратори</h1>
+            <p class="mt-2 text-muted">Управление на сигналите и събитията.</p>
 
+            @if (!Authenticator.IsConfigured)
+            {
+                <p class="mt-6 rounded-lg bg-error-soft p-4 text-sm text-error" role="alert">
+                    Администраторският профил не е настроен. Задайте <code>Admin__Username</code> и <code>Admin__PasswordHash</code> в настройките на приложението.
+                </p>
+            }
+
+            <form class="mt-8 space-y-5" asp-controller="Admin" asp-action="Login" asp-route-returnUrl="@this.ViewData["ReturnUrl"]" method="post">
+                @foreach (var error in this.ViewData.ModelState[string.Empty]?.Errors ?? Enumerable.Empty<Microsoft.AspNetCore.Mvc.ModelBinding.ModelError>())
+                {
+                    <p class="flex items-center gap-2 rounded-lg bg-error-soft p-4 text-sm font-medium text-error" role="alert">
+                        <icon name="circle-alert" class="size-4" /> @error.ErrorMessage
+                    </p>
+                }
+
+                <div class="field">
+                    <label class="field-label" asp-for="Username">Потребителско име</label>
+                    <input class="field-input" asp-for="Username" autocomplete="username" required autofocus />
+                    <span class="field-error" asp-validation-for="Username"></span>
+                </div>
+                <div class="field">
+                    <label class="field-label" asp-for="Password">Парола</label>
+                    <input class="field-input" asp-for="Password" type="password" autocomplete="current-password" required />
+                    <span class="field-error" asp-validation-for="Password"></span>
+                </div>
+                <button type="submit" class="btn btn-primary w-full">Вход</button>
+            </form>
+        </div>
+
+        <p class="mt-6 text-center text-sm text-muted">
+            <a class="no-underline hover:text-white" asp-controller="Home" asp-action="Index"><icon name="arrow-left" class="inline size-4" /> Към сайта</a>
+        </p>
+    </div>
+</section>
