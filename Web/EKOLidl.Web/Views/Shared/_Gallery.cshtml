@@ -21,7 +21,7 @@
 <ul class="grid gap-3 @columns" data-gallery>
     @for (int i = 0; i < count; i++)
     {
-        string alt = $"{this.Model.AltPrefix} – снимка {i + 1} от {count}";
+        string alt = $"{this.Model.AltPrefix} - снимка {i + 1} от {count}";
         <li class="@(feature && i == 0 ? "col-span-2 row-span-2" : null)">
             <a class="media group block h-full overflow-hidden rounded-lg" href="@this.Model.Images[i]" data-gallery-item data-caption="@alt">
                 <img src="@this.Model.Images[i]" alt="@alt" width="800" height="600" class="aspect-[4/3] h-full transition-transform duration-500 group-hover:scale-[1.04]" loading="lazy" decoding="async" />

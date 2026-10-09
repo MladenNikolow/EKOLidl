@@ -114,7 +114,7 @@
                 // Browsers clear file inputs when the form comes back, so ask for the photos again.
                 if (images.Count > 0 && this.ModelState.GetFieldValidationState(nameof(input.Images)) != ModelValidationState.Invalid)
                 {
-                    this.ModelState.AddModelError(nameof(input.Images), "Моля, изберете снимките отново – браузърът не ги запазва след проверка.");
+                    this.ModelState.AddModelError(nameof(input.Images), "Моля, изберете снимките отново - браузърът не ги запазва след проверка.");
                 }
 
                 return this.View(input);

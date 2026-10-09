@@ -9,7 +9,7 @@
     /// </summary>
     public static class SiteInfo
     {
-        public const string Organisation = "Морски клуб „Приятели на морето“ – Варна";
+        public const string Organisation = "Морски клуб „Приятели на морето“ - Варна";
 
         public const string OrganisationUrl = "https://seafriends.bg/";
 
@@ -35,8 +35,8 @@
 
         public static readonly IReadOnlyList<Partner> Partners = new[]
         {
-            new Partner("Морски клуб „Приятели на морето“ – Варна", OrganisationUrl, "/img/partners/sea-friends.png", 320, 320),
-            new Partner("„Ти и Lidl за по-добър живот“ – инициатива на Лидл България", FundingProgrammeUrl, "/img/partners/ti-i-lidl.webp", 480, 485),
+            new Partner("Морски клуб „Приятели на морето“ - Варна", OrganisationUrl, "/img/partners/sea-friends.png", 320, 320),
+            new Partner("„Ти и Lidl за по-добър живот“ - инициатива на Лидл България", FundingProgrammeUrl, "/img/partners/ti-i-lidl.webp", 480, 485),
             new Partner("Фондация „Работилница за граждански инициативи“", "https://frgi.bg/", "/img/partners/frgi.png", 480, 259),
             new Partner("Български дарителски форум", "https://dfbulgaria.org/", "/img/partners/bdf.webp", 354, 171),
         };
