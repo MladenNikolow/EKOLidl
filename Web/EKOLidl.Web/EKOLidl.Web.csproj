@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Local emulator settings and the development-only admin account never ship to Azure. -->
+    <Content Update="appsettings.Development.json" CopyToPublishDirectory="Never" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\EKOLidl.Common\EKOLidl.Common.csproj" />
     <ProjectReference Include="..\..\Data\EKOLidl.Data.Models\EKOLidl.Data.Models.csproj" />
     <ProjectReference Include="..\..\Services\EKOLidl.Services.Data\EKOLidl.Services.Data.csproj" />
