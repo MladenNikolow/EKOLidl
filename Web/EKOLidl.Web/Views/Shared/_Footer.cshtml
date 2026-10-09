@@ -1,0 +1,74 @@
+@using EKOLidl.Common
+
+<footer class="sea mt-auto" aria-labelledby="footer-title">
+    <h2 id="footer-title" class="sr-only">За проекта и контакти</h2>
+
+    <div class="container-page grid gap-12 py-16 lg:grid-cols-12 lg:py-20">
+        <div class="lg:col-span-5">
+            <partial name="_Brand" />
+            <p class="mt-5 max-w-md text-muted">
+                Проект на @SiteInfo.Organisation с кауза „Плажове и море свободни от пластмаса“.
+            </p>
+            <a class="btn btn-coral btn-sm mt-7" asp-controller="Signals" asp-action="Create">
+                <icon name="camera" class="size-[18px]" />
+                Подай сигнал
+            </a>
+        </div>
+
+        <nav class="lg:col-span-3" aria-labelledby="footer-nav-title">
+            <h3 id="footer-nav-title" class="eyebrow">Сайтът</h3>
+            <ul class="mt-5 space-y-3">
+                <li><a class="no-underline hover:text-lagoon" asp-controller="Home" asp-action="Index">Начало</a></li>
+                <li><a class="no-underline hover:text-lagoon" asp-controller="Home" asp-action="About">За проекта</a></li>
+                <li><a class="no-underline hover:text-lagoon" asp-controller="Events" asp-action="Events">Събития</a></li>
+                <li><a class="no-underline hover:text-lagoon" asp-controller="Signals" asp-action="Index">Сигнали</a></li>
+                <li><a class="no-underline hover:text-lagoon" asp-controller="Home" asp-action="Privacy">Общи условия</a></li>
+            </ul>
+        </nav>
+
+        <div class="lg:col-span-4">
+            <h3 class="eyebrow">Контакти</h3>
+            <address class="mt-5 space-y-3 not-italic">
+                <p class="font-semibold">@SiteInfo.ContactName</p>
+                <p>
+                    <a class="inline-flex items-center gap-2 no-underline hover:text-lagoon" href="@SiteInfo.ContactPhoneHref">
+                        <icon name="phone" class="size-4 text-lagoon" />@SiteInfo.ContactPhone
+                    </a>
+                </p>
+                <p>
+                    <a class="inline-flex items-center gap-2 no-underline hover:text-lagoon" href="mailto:@SiteInfo.ContactEmail">
+                        <icon name="mail" class="size-4 text-lagoon" />@SiteInfo.ContactEmail
+                    </a>
+                </p>
+                <p class="flex items-start gap-2 text-muted">
+                    <icon name="map-pin" class="mt-1 size-4 text-lagoon" />@SiteInfo.Address
+                </p>
+                <p>
+                    <a class="inline-flex items-center gap-2 no-underline hover:text-lagoon" href="@SiteInfo.OrganisationUrl" target="_blank" rel="noopener">
+                        <icon name="external-link" class="size-4 text-lagoon" />seafriends.bg
+                    </a>
+                </p>
+            </address>
+        </div>
+    </div>
+
+    <div class="container-page border-t border-white/10 py-10">
+        <h3 class="text-sm font-semibold text-muted">Организатор и партньори</h3>
+        <ul class="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:max-w-3xl">
+            @foreach (SiteInfo.Partner partner in SiteInfo.Partners)
+            {
+                <li>
+                    <a class="logo-plate" href="@partner.Url" target="_blank" rel="noopener" title="@partner.Name">
+                        <img src="@partner.Logo" alt="@partner.Name" width="@partner.Width" height="@partner.Height" loading="lazy" decoding="async" />
+                    </a>
+                </li>
+            }
+        </ul>
+        <p class="mt-6 max-w-4xl text-sm leading-relaxed text-muted">@SiteInfo.FundingNotice</p>
+    </div>
+
+    <div class="container-page flex flex-col gap-2 border-t border-white/10 py-6 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
+        <p>© 2022–@DateTime.Now.Year „@GlobalConstants.SystemName“ · @SiteInfo.Organisation</p>
+        <a class="no-underline hover:text-white" asp-controller="Home" asp-action="Privacy">Общи условия</a>
+    </div>
+</footer>

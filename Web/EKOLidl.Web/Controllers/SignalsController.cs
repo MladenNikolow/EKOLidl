@@ -132,7 +132,7 @@
                     },
                     Result = new Result()
                     {
-                        Description = "Още няма добавени резултати!",
+                        Description = Result.NoResultsYet,
                         Album = new Album()
                         {
                             Links = new List<string>(),

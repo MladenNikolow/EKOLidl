@@ -130,9 +130,13 @@
   }
 
   @keyframes float {
-    0%, 100% { transform: translate3d(0, 0, 0); }
-    50% { transform: translate3d(0, -12px, 0); }
+    0%, 100% { transform: translate3d(0, 0, 0) rotate(var(--float-rotate, 0deg)); }
+    50% { transform: translate3d(0, -12px, 0) rotate(var(--float-rotate, 0deg)); }
   }
+}
+
+@keyframes sheet-in {
+  from { opacity: 0; transform: translateY(-12px); }
 }
 
 /* Semantic colours: light by default, dark when the system asks for it. */
@@ -150,6 +154,9 @@
   --danger: var(--color-error);
   --focus: var(--color-coral-600);
   --header-glass: rgb(251 248 243 / 0.72);
+
+  /* Computed here, so it keeps the page value inside .sea sections (used by the hero wave). */
+  --page-surface: var(--surface);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -240,6 +247,142 @@
   }
 
   .section { padding-block: clamp(4rem, 3rem + 5vw, 7.5rem); }
+
+  .skip-link {
+    position: fixed;
+    left: 1rem;
+    top: 1rem;
+    z-index: 100;
+    padding: 0.75rem 1.25rem;
+    border-radius: 999px;
+    background: var(--color-coral);
+    color: var(--color-abyss);
+    font-weight: 600;
+    transform: translateY(-200%);
+    transition: transform 160ms var(--ease-out-quart);
+  }
+
+  .skip-link:focus { transform: none; }
+
+  /* Header: glass by default; transparent with light text over a dark hero until the page scrolls. */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    color: var(--text);
+    background: var(--header-glass);
+    -webkit-backdrop-filter: saturate(1.6) blur(14px);
+    backdrop-filter: saturate(1.6) blur(14px);
+    border-bottom: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
+    transition: background-color 240ms var(--ease-out-quart), color 240ms var(--ease-out-quart),
+      border-color 240ms var(--ease-out-quart), box-shadow 240ms var(--ease-out-quart);
+  }
+
+  .site-header[data-scrolled] { box-shadow: 0 10px 30px -18px rgb(6 34 58 / 0.35); }
+
+  .site-header[data-overlay] {
+    position: fixed;
+    inset-inline: 0;
+  }
+
+  .site-header[data-overlay]:not([data-scrolled]) {
+    --text: var(--color-white);
+    --accent: var(--color-lagoon);
+    --focus: var(--color-coral);
+    background: transparent;
+    border-color: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .nav-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding-inline: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    color: inherit;
+    opacity: 0.86;
+    transition: opacity 160ms;
+  }
+
+  .nav-link:hover, .nav-link[aria-current="page"] { opacity: 1; }
+
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0.875rem;
+    bottom: 0.4rem;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 240ms var(--ease-out-quart);
+  }
+
+  .nav-link:hover::after, .nav-link[aria-current="page"]::after { transform: scaleX(1); }
+
+  /* Mobile menu sheet */
+  .menu-sheet {
+    width: 100%;
+    max-width: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
+
+  .menu-sheet::backdrop { background: rgb(6 34 58 / 0.5); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .menu-sheet[open] > * { animation: sheet-in 320ms var(--ease-out-quart); }
+  }
+
+  /* Partner logos on light plates; greyscale until hovered */
+  .logo-plate {
+    display: grid;
+    place-items: center;
+    height: 5.5rem;
+    padding: 0.875rem 1.25rem;
+    border-radius: var(--radius-md);
+    background: var(--color-white);
+    transition: transform 200ms var(--ease-out-quart);
+  }
+
+  .logo-plate img {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 3.75rem;
+    object-fit: contain;
+    filter: grayscale(1);
+    opacity: 0.78;
+    transition: filter 200ms, opacity 200ms;
+  }
+
+  .logo-plate:hover { transform: translateY(-2px); }
+  .logo-plate:hover img, .logo-plate:focus-visible img { filter: none; opacity: 1; }
+
+  /* Media frames with a graceful empty state */
+  .media {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--color-deep), var(--color-tide));
+  }
+
+  .media > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 700ms var(--ease-out-quart);
+  }
+
+  .card-link:hover .media > img { transform: scale(1.04); }
 
   .eyebrow {
     display: inline-flex;

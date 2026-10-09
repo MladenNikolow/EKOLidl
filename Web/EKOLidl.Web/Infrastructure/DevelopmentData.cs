@@ -94,7 +94,7 @@
                 EventDate = new DateTime(2022, 7, 9, 9, 0, 0, DateTimeKind.Utc),
                 Duration = 4,
                 Album = Photos("background.jpg", "front_background.jpg"),
-                Result = new Result { Description = "Още няма добавени резултати!", Album = new Album { Links = new List<string>() } },
+                Result = new Result { Description = Result.NoResultsYet, Album = new Album { Links = new List<string>() } },
             };
 
             yield return new Event
@@ -105,7 +105,7 @@
                 EventDate = new DateTime(2022, 8, 20, 9, 0, 0, DateTimeKind.Utc),
                 Duration = 3,
                 Album = Photos("justin-hofman.m.jpg"),
-                Result = new Result { Description = "Още няма добавени резултати!", Album = new Album { Links = new List<string>() } },
+                Result = new Result { Description = Result.NoResultsYet, Album = new Album { Links = new List<string>() } },
             };
 
             yield return new Event
@@ -116,7 +116,7 @@
                 EventDate = new DateTime(2022, 10, 31, 11, 0, 0, DateTimeKind.Utc),
                 Duration = 3,
                 Album = Photos("front_background.jpg"),
-                Result = new Result { Description = "Още няма добавени резултати!", Album = new Album { Links = new List<string>() } },
+                Result = new Result { Description = Result.NoResultsYet, Album = new Album { Links = new List<string>() } },
             };
         }
 
@@ -133,7 +133,7 @@
                 Album = Photos("background.jpg"),
                 Reporter = reporter,
                 IsApproved = true,
-                Result = new Result { Description = "Още няма добавени резултати!", Album = new Album { Links = new List<string>() } },
+                Result = new Result { Description = Result.NoResultsYet, Album = new Album { Links = new List<string>() } },
             };
 
             yield return new Signal
@@ -158,7 +158,7 @@
                 Album = Photos("justin-hofman.m.jpg"),
                 Reporter = reporter,
                 IsApproved = true,
-                Result = new Result { Description = "Още няма добавени резултати!", Album = new Album { Links = new List<string>() } },
+                Result = new Result { Description = Result.NoResultsYet, Album = new Album { Links = new List<string>() } },
             };
 
             yield return new Signal
@@ -170,7 +170,7 @@
                 Album = Photos("background.jpg"),
                 Reporter = reporter,
                 IsApproved = false,
-                Result = new Result { Description = "Още няма добавени резултати!", Album = new Album { Links = new List<string>() } },
+                Result = new Result { Description = Result.NoResultsYet, Album = new Album { Links = new List<string>() } },
             };
         }
     }

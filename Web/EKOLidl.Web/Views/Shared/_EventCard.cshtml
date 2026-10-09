@@ -1,0 +1,32 @@
+@model EKOLidl.Data.Models.Event
+@{
+    string cover = this.Model.Album?.Links?.FirstOrDefault();
+    int index = this.ViewData["Index"] as int? ?? 0;
+}
+
+<article class="card card-link group h-full" data-reveal="@index">
+    <a class="flex h-full flex-col no-underline" asp-controller="Events" asp-action="Details" asp-route-id="@this.Model.Id">
+        <div class="media aspect-[4/3]">
+            @if (cover != null)
+            {
+                <img src="@cover" alt="" width="640" height="480" loading="lazy" decoding="async" />
+            }
+            else
+            {
+                <div class="grid h-full place-items-center text-white/70"><icon name="images" class="size-10" /></div>
+            }
+            <span class="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-white/92 px-3 py-1 text-sm font-semibold text-abyss shadow-soft backdrop-blur">
+                <icon name="calendar-days" class="size-4" />
+                <time datetime="@this.Model.EventDate.ToString("yyyy-MM-dd")">@SiteInfo.LongDate(this.Model.EventDate)</time>
+            </span>
+        </div>
+        <div class="flex flex-1 flex-col gap-3 p-6">
+            <h3 class="text-h3">@this.Model.Title</h3>
+            <p class="line-clamp-3 text-muted">@this.Model.ShortDescription</p>
+            <span class="mt-auto inline-flex items-center gap-2 pt-2 font-semibold text-accent">
+                Прочетете повече
+                <icon name="arrow-right" class="size-4 transition-transform duration-300 group-hover:translate-x-1" />
+            </span>
+        </div>
+    </a>
+</article>

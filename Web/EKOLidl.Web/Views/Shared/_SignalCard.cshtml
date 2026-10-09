@@ -1,0 +1,44 @@
+@using EKOLidl.Data.Models.Signals
+@model EKOLidl.Data.Models.Signal
+@{
+    string cover = this.Model.Album?.Links?.FirstOrDefault();
+    int index = this.ViewData["Index"] as int? ?? 0;
+    bool hasResult = this.Model.Result?.HasContent == true;
+    IEnumerable<string> trash = (this.Model.TrashType ?? new List<TrashType>())
+        .Select(t => t == TrashType.Other && !string.IsNullOrWhiteSpace(this.Model.OtherTrashType) ? this.Model.OtherTrashType : t.GetDescription());
+}
+
+<article class="card card-link group h-full" data-reveal="@index">
+    <a class="flex h-full flex-col no-underline" asp-controller="Signals" asp-action="Details" asp-route-id="@this.Model.Id">
+        <div class="media aspect-[16/10]">
+            @if (cover != null)
+            {
+                <img src="@cover" alt="" width="640" height="400" loading="lazy" decoding="async" />
+            }
+            else
+            {
+                <div class="grid h-full place-items-center text-white/70"><icon name="camera" class="size-10" /></div>
+            }
+            @if (hasResult)
+            {
+                <span class="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-success px-3 py-1 text-sm font-semibold text-white shadow-soft">
+                    <icon name="check" class="size-4" /> Има резултат
+                </span>
+            }
+        </div>
+        <div class="flex flex-1 flex-col gap-3 p-6">
+            <p class="flex items-center gap-1.5 text-sm font-medium text-muted">
+                <icon name="map-pin" class="size-4 text-coral-600" />
+                @this.Model.Location
+            </p>
+            <h3 class="text-h3">@this.Model.Title</h3>
+            <ul class="flex flex-wrap gap-2" aria-label="Вид отпадъци">
+                @foreach (string item in trash)
+                {
+                    <li class="chip">@item</li>
+                }
+            </ul>
+            <p class="mt-auto pt-2 text-sm text-muted">Подаден на @SiteInfo.LongDate(this.Model.CreatedOn)</p>
+        </div>
+    </a>
+</article>

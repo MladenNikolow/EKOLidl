@@ -24,8 +24,8 @@
 
         public async Task<IActionResult> Index()
         {
-            var events = await this.eventRepository.GetNewestItems();
-            var signals = await this.signalRepository.GetNewestApprovedSignalsAsync(4);
+            var events = await this.eventRepository.GetNewestItems(3);
+            var signals = await this.signalRepository.GetNewestApprovedSignalsAsync(3);
 
             HomeViewModel viewModel = new HomeViewModel()
             {
