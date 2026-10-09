@@ -11,4 +11,39 @@
     <ProjectReference Include="..\EKOLidl.Web.ViewModels\EKOLidl.Web.ViewModels.csproj" />
   </ItemGroup>
 
+  <!--
+    Tailwind CSS: Styles/app.css is compiled to wwwroot/css/app.css on every build by the
+    standalone CLI (no Node.js). The binary is downloaded once into .tools/ at the repository root.
+  -->
+  <PropertyGroup>
+    <TailwindVersion>v4.3.3</TailwindVersion>
+    <TailwindDir>$([MSBuild]::NormalizeDirectory('$(MSBuildProjectDirectory)', '..', '..', '.tools', 'tailwindcss', '$(TailwindVersion)'))</TailwindDir>
+    <TailwindExe Condition="$([MSBuild]::IsOSPlatform('Windows'))">tailwindcss-windows-x64.exe</TailwindExe>
+    <TailwindExe Condition="$([MSBuild]::IsOSPlatform('Linux'))">tailwindcss-linux-x64</TailwindExe>
+    <TailwindExe Condition="$([MSBuild]::IsOSPlatform('OSX'))">tailwindcss-macos-arm64</TailwindExe>
+    <TailwindInput>Styles/app.css</TailwindInput>
+    <TailwindOutput>wwwroot/css/app.css</TailwindOutput>
+    <TailwindArgs Condition="'$(Configuration)' == 'Release'">--minify</TailwindArgs>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <TailwindSource Include="Styles/**/*.css;Views/**/*.cshtml;TagHelpers/**/*.cs;wwwroot/js/**/*.js" />
+    <UpToDateCheckInput Include="@(TailwindSource)" Set="Tailwind" />
+    <UpToDateCheckBuilt Include="$(TailwindOutput)" Set="Tailwind" />
+  </ItemGroup>
+
+  <Target Name="TailwindDownload" Condition="!Exists('$(TailwindDir)$(TailwindExe)')">
+    <DownloadFile SourceUrl="https://github.com/tailwindlabs/tailwindcss/releases/download/$(TailwindVersion)/$(TailwindExe)" DestinationFolder="$(TailwindDir)" />
+    <Exec Command="chmod +x &quot;$(TailwindDir)$(TailwindExe)&quot;" Condition="!$([MSBuild]::IsOSPlatform('Windows'))" />
+  </Target>
+
+  <Target Name="TailwindBuild" BeforeTargets="BeforeBuild" DependsOnTargets="TailwindDownload" Inputs="@(TailwindSource);$(MSBuildProjectFullPath)" Outputs="$(TailwindOutput)">
+    <Exec Command="&quot;$(TailwindDir)$(TailwindExe)&quot; --input $(TailwindInput) --output $(TailwindOutput) $(TailwindArgs)" WorkingDirectory="$(MSBuildProjectDirectory)" />
+
+    <!-- The output is generated, so on a clean clone it was not in the evaluation-time wwwroot glob. -->
+    <ItemGroup>
+      <Content Include="$(TailwindOutput)" Exclude="@(Content)" />
+    </ItemGroup>
+  </Target>
+
 </Project>

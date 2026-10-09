@@ -1,7 +1,7 @@
-﻿using Microsoft.Azure.Cosmos;
-
-namespace EKOLidl.Services.Data.CosmosDb
+﻿namespace EKOLidl.Services.Data.CosmosDb
 {
+    using Microsoft.Azure.Cosmos;
+
     public class CosmosDbContainer : ICosmosDbContainer
     {
         public CosmosDbContainer(
