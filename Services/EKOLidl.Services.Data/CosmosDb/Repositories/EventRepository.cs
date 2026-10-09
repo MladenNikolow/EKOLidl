@@ -19,6 +19,11 @@
         public override string ContainerName { get; } = "Events";
 
         /// <summary>
+        ///     Gets the sort property: events are listed by when they happen, not when they were entered.
+        /// </summary>
+        protected override string SortProperty => "event_date";
+
+        /// <summary>
         ///     Generate Id.
         /// </summary>
         /// <param name="entity"></param>

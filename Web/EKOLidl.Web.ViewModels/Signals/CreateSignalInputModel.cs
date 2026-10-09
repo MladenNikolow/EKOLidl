@@ -9,47 +9,64 @@
 
     public class CreateSignalInputModel
     {
-        [Required(ErrorMessage = "Моля, добавете заглавие на сигнала")]
-        [MinLength(5, ErrorMessage = "Дължината на заглавието трябва да е между 5 и 40 символа")]
-        [MaxLength(40, ErrorMessage = "Дължината на заглавието трябва да е между 5 и 40 символа")]
-        [Display(Name = "Заглавие на сигнала")]
+        public const int MaxImages = 5;
+
+        /// <summary>
+        /// Bulgarian mobile number, with optional spaces or dashes: 0888 123 456, +359 888 123 456.
+        /// Shared with the form's HTML pattern attribute, which browsers compile in Unicode-sets ("v") mode:
+        /// keep it JavaScript-compatible and escape "-" inside character classes.
+        /// </summary>
+        public const string PhonePattern = @"^(\+359|0)[\s\-]?8[7-9]([\s\-]?\d){7}$";
+
+        /// <summary>
+        /// Letters of any script, spaces, apostrophes, dots and hyphens (Анна-Мария, O'Neil).
+        /// </summary>
+        public const string NamePattern = @"^[\p{L}\s'.\-]+$";
+
+        [Required(ErrorMessage = "Моля, добавете заглавие на сигнала.")]
+        [StringLength(40, MinimumLength = 5, ErrorMessage = "Заглавието трябва да е между 5 и 40 символа.")]
+        [Display(Name = "Заглавие")]
         public string Title { get; set; }
 
-        [Required(ErrorMessage = "Моля, добавете описание на сигнала")]
-        [MinLength(20, ErrorMessage = "Дължината на заглавието трябва да е между 20 и 300 символа")]
-        [MaxLength(300, ErrorMessage = "Дължината на заглавието трябва да е между 20 и 300 символа")]
+        [Required(ErrorMessage = "Моля, опишете какво видяхте.")]
+        [StringLength(300, MinimumLength = 20, ErrorMessage = "Описанието трябва да е между 20 и 300 символа.")]
         [Display(Name = "Описание")]
         public string Description { get; set; }
 
-        [Required(ErrorMessage = "Моля, посочете тип на отпадъка")]
-        [Display(Name = "Тип на отпадъка")]
+        [Required(ErrorMessage = "Моля, изберете поне един вид отпадъци.")]
+        [Display(Name = "Вид отпадъци")]
         public List<TrashType> TrashType { get; set; }
 
+        [StringLength(40, ErrorMessage = "Моля, опишете вида отпадъци с до 40 символа.")]
+        [Display(Name = "Какви други отпадъци")]
         public string OtherTrashType { get; set; }
 
-        [Required(ErrorMessage = "Моля, въведете местоположението на сигнала")]
-        [Display(Name = "Местоположение на замърсеният район")]
+        [Required(ErrorMessage = "Моля, опишете къде се намира мястото.")]
+        [StringLength(120, MinimumLength = 3, ErrorMessage = "Местоположението трябва да е между 3 и 120 символа.")]
+        [Display(Name = "Местоположение")]
         public string Location { get; set; }
 
-        [Required(ErrorMessage = "Моля, прикачете снимки към сигнала")]
-        [Display(Name = "Снимки на замърсеният район")]
+        [Required(ErrorMessage = "Моля, прикачете поне една снимка.")]
+        [Display(Name = "Снимки")]
         public IEnumerable<IFormFile> Images { get; set; }
 
         public Album Album { get; set; }
 
-        [Required(ErrorMessage = "Моля добавете имена на подател")]
-        [Display(Name = "Име на подател")]
-        [RegularExpression(@"^[a-zA-Zа-яА-Я\s]*$", ErrorMessage = "Името може да съдържа само букви на литиница или кирилица.")]
+        [Required(ErrorMessage = "Моля, въведете името си.")]
+        [StringLength(80, ErrorMessage = "Името може да е до 80 символа.")]
+        [RegularExpression(NamePattern, ErrorMessage = "Името може да съдържа само букви, интервали и тире.")]
+        [Display(Name = "Име и фамилия")]
         public string ReporterNames { get; set; }
 
-        [Required(ErrorMessage = "Моля, добавете телефон за връзка")]
-        [Display(Name = "Телефон за връзка")]
-        [RegularExpression(@"(\+359|0)\s?8(\d{2}\s\d{3}\d{3}|[789]\d{7})$", ErrorMessage = "Моля, въведете валиден телефонен номер в един от следните формати: +359XXXXXXXXX / 0XXXXXXXXX")]
+        [Required(ErrorMessage = "Моля, въведете телефон за връзка.")]
+        [RegularExpression(PhonePattern, ErrorMessage = "Въведете мобилен номер, например 0888 123 456 или +359 888 123 456.")]
+        [Display(Name = "Телефон")]
         public string ReporterGsm { get; set; }
 
-        [Required(ErrorMessage = "Моля, добавете имейл за връзка")]
-        [RegularExpression(@"^\S+@\S+\.\S+$", ErrorMessage = "Моля, въведете коректен имейл.")]
-        [Display(Name = "Имейл за връзка")]
+        [Required(ErrorMessage = "Моля, въведете имейл за връзка.")]
+        [EmailAddress(ErrorMessage = "Моля, въведете валиден имейл адрес.")]
+        [StringLength(120, ErrorMessage = "Имейлът може да е до 120 символа.")]
+        [Display(Name = "Имейл")]
         public string ReporterEmail { get; set; }
 
         public bool CheckedRules { get; set; }

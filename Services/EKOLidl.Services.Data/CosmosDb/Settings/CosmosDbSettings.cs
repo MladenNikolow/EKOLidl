@@ -27,6 +27,5 @@
         ///     Gets or sets list of containers in the database.
         /// </summary>
         public List<ContainerInfo> Containers { get; set; }
-
     }
 }

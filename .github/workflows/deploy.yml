@@ -1,0 +1,91 @@
+# Builds main and deploys it to the Azure App Service.
+#
+# One-time setup (see README → "Публикуване в Azure"):
+#   Secrets:   AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID  (OIDC, no publish profile)
+#   Variables: AZURE_WEBAPP_NAME (default "domoreto"), AZURE_WEBAPP_SLOT (optional, e.g. "staging"),
+#              SITE_URL (default https://domoreto.azurewebsites.net)
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Cache NuGet packages and the Tailwind CLI
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.nuget/packages
+            .tools
+          key: ${{ runner.os }}-build-${{ hashFiles('**/*.csproj', 'Directory.Build.props') }}
+
+      - name: Build (Release)
+        run: dotnet build EKOLidl.sln -c Release
+
+      - name: Publish
+        run: dotnet publish Web/EKOLidl.Web -c Release --no-build -o publish
+
+      - name: Check the published CSS is minified
+        run: test "$(wc -l < publish/wwwroot/css/app.css)" -le 2
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: site
+          path: publish
+          retention-days: 7
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: ${{ vars.SITE_URL || 'https://domoreto.azurewebsites.net' }}
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: site
+          path: publish
+
+      - uses: azure/login@v3
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ vars.AZURE_WEBAPP_NAME || 'domoreto' }}
+          slot-name: ${{ vars.AZURE_WEBAPP_SLOT || 'production' }}
+          package: publish
+
+      - name: Smoke test
+        if: ${{ !vars.AZURE_WEBAPP_SLOT }}
+        run: |
+          url="${{ vars.SITE_URL || 'https://domoreto.azurewebsites.net' }}"
+          for i in 1 2 3 4 5 6; do
+            if curl -fsS "$url/" | grep -q 'lang="bg"'; then echo "Home page OK"; break; fi
+            echo "Waiting for the site to start ($i)…"; sleep 20
+            [ "$i" = 6 ] && exit 1
+          done
+          curl -fsS -o /dev/null "$url/Signals" && echo "Signals OK"
+          test "$(curl -s -o /dev/null -w '%{http_code}' "$url/this-page-does-not-exist")" = 404 && echo "404 page OK"

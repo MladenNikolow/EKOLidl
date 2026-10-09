@@ -15,8 +15,6 @@
 
         public int SignalsPerPage { get; set; }
 
-        public bool IsCreateSignalContext { get; set; }
-
         public bool HasPreviousPage => this.Page > 1;
 
         public int PreviousPageNumber => this.Page - 1;

@@ -9,6 +9,7 @@
     using EKOLidl.Data.Models.Signals;
     using EKOLidl.Web.ViewModels;
     using EKOLidl.Web.ViewModels.Home;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
     public class HomeController : BaseController
@@ -24,8 +25,8 @@
 
         public async Task<IActionResult> Index()
         {
-            var events = await this.eventRepository.GetNewestItems();
-            var signals = await this.signalRepository.GetNewestItems();
+            var events = await this.eventRepository.GetNewestItems(3);
+            var signals = await this.signalRepository.GetNewestApprovedSignalsAsync(3);
 
             HomeViewModel viewModel = new HomeViewModel()
             {
@@ -47,10 +48,17 @@
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [Route("Home/Error/{code:int?}")]
+        [IgnoreAntiforgeryToken] // Failed POSTs are re-executed here as POSTs.
+        public IActionResult Error(int? code)
         {
-            return this.View(
-                new ErrorViewModel { RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier });
+            this.Response.StatusCode = code ?? StatusCodes.Status500InternalServerError;
+
+            return this.View(new ErrorViewModel
+            {
+                RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier,
+                StatusCode = code ?? StatusCodes.Status500InternalServerError,
+            });
         }
     }
 }

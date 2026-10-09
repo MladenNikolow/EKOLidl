@@ -1,0 +1,58 @@
+@model EKOLidl.Data.Models.Signal
+@{
+    string cover = this.Model.Album?.Links?.FirstOrDefault();
+}
+
+<article class="card flex flex-col gap-5 p-4 sm:flex-row sm:items-center sm:p-5">
+    <a class="media block aspect-[4/3] w-full shrink-0 overflow-hidden rounded-lg sm:w-36" asp-controller="Admin" asp-action="ModerateSignal" asp-route-id="@this.Model.Id">
+        @if (cover != null)
+        {
+            <img src="@cover" alt="" width="288" height="216" loading="lazy" decoding="async" />
+        }
+        else
+        {
+            <span class="grid h-full place-items-center text-white/70"><icon name="camera" class="size-7" /></span>
+        }
+    </a>
+
+    <div class="min-w-0 flex-1">
+        <div class="flex flex-wrap items-center gap-2">
+            @if (this.Model.IsApproved)
+            {
+                <span class="inline-flex items-center gap-1 rounded-full bg-success-soft px-2.5 py-0.5 text-xs font-semibold text-success"><icon name="check" class="size-3.5" /> Публикуван</span>
+            }
+            else
+            {
+                <span class="inline-flex items-center gap-1 rounded-full bg-coral/15 px-2.5 py-0.5 text-xs font-semibold text-coral-600"><icon name="hourglass" class="size-3.5" /> Чака преглед</span>
+            }
+            <span class="text-sm text-muted">@SiteInfo.LongDate(this.Model.CreatedOn), @SiteInfo.Time(this.Model.CreatedOn)</span>
+        </div>
+        <h3 class="mt-2 truncate font-display text-lg font-semibold">
+            <a class="no-underline hover:text-accent" asp-controller="Admin" asp-action="ModerateSignal" asp-route-id="@this.Model.Id">@this.Model.Title</a>
+        </h3>
+        <p class="mt-1 flex items-center gap-1.5 text-sm text-muted"><icon name="map-pin" class="size-4" /> @this.Model.Location</p>
+        @if (this.Model.Reporter != null)
+        {
+            <p class="mt-1 truncate text-sm text-muted">
+                <icon name="users" class="inline size-4" /> @this.Model.Reporter.Names ·
+                <a href="tel:@this.Model.Reporter.Gsm">@this.Model.Reporter.Gsm</a> ·
+                <a href="mailto:@this.Model.Reporter.Email">@this.Model.Reporter.Email</a>
+            </p>
+        }
+    </div>
+
+    <div class="flex shrink-0 flex-wrap gap-2">
+        <a class="btn btn-outline btn-sm" asp-controller="Admin" asp-action="ModerateSignal" asp-route-id="@this.Model.Id">Преглед</a>
+        <form asp-controller="Admin" asp-action="SetApproval" asp-route-id="@this.Model.Id" method="post">
+            <input type="hidden" name="approved" value="@(this.Model.IsApproved ? "false" : "true")" />
+            @if (this.Model.IsApproved)
+            {
+                <button type="submit" class="btn btn-outline btn-sm">Скрий</button>
+            }
+            else
+            {
+                <button type="submit" class="btn btn-primary btn-sm"><icon name="check" class="size-4" /> Публикувай</button>
+            }
+        </form>
+    </div>
+</article>

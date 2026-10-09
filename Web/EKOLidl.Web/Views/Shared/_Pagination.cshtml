@@ -1,0 +1,54 @@
+@model Pagination
+@{
+    if (this.Model.PagesCount <= 1)
+    {
+        return;
+    }
+
+    int page = Math.Clamp(this.Model.Page, 1, this.Model.PagesCount);
+    var routeValues = this.Model.RouteValues ?? new Dictionary<string, string>();
+
+    // First, last and two pages either side of the current one; gaps become "…".
+    var pages = Enumerable.Range(1, this.Model.PagesCount)
+        .Where(p => p == 1 || p == this.Model.PagesCount || Math.Abs(p - page) <= 2)
+        .ToList();
+}
+
+<nav class="mt-14 flex items-center justify-center gap-2" aria-label="Страници">
+    @if (page > 1)
+    {
+        <a class="btn btn-outline btn-sm" asp-controller="@this.Model.Controller" asp-action="@this.Model.Action" asp-all-route-data="@routeValues" asp-route-page="@(page - 1)" rel="prev">
+            <icon name="arrow-left" class="size-4" />
+            <span class="max-sm:sr-only">Предишна</span>
+        </a>
+    }
+
+    <ul class="flex items-center gap-1">
+        @for (int i = 0; i < pages.Count; i++)
+        {
+            if (i > 0 && pages[i] - pages[i - 1] > 1)
+            {
+                <li class="px-1 text-muted" aria-hidden="true">…</li>
+            }
+
+            <li>
+                @if (pages[i] == page)
+                {
+                    <span class="grid size-10 place-items-center rounded-full bg-accent font-semibold text-surface" aria-current="page">@pages[i]</span>
+                }
+                else
+                {
+                    <a class="grid size-10 place-items-center rounded-full font-semibold no-underline hover:bg-accent-soft" asp-controller="@this.Model.Controller" asp-action="@this.Model.Action" asp-all-route-data="@routeValues" asp-route-page="@pages[i]" aria-label="Страница @pages[i]">@pages[i]</a>
+                }
+            </li>
+        }
+    </ul>
+
+    @if (page < this.Model.PagesCount)
+    {
+        <a class="btn btn-outline btn-sm" asp-controller="@this.Model.Controller" asp-action="@this.Model.Action" asp-all-route-data="@routeValues" asp-route-page="@(page + 1)" rel="next">
+            <span class="max-sm:sr-only">Следваща</span>
+            <icon name="arrow-right" class="size-4" />
+        </a>
+    }
+</nav>

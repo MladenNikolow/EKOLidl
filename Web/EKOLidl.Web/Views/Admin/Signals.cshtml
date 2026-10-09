@@ -1,0 +1,39 @@
+@model EKOLidl.Web.ViewModels.Administration.AdminSignalsViewModel
+@{
+    this.ViewData["Title"] = "Сигнали";
+    var signals = this.Model.Signals.ToList();
+    string tab = "rounded-full px-4 py-2 text-sm font-semibold no-underline transition-colors";
+}
+
+<div class="container-page py-10">
+    <h1 class="text-h2">Сигнали</h1>
+
+    <nav class="mt-6 flex flex-wrap gap-2" aria-label="Филтър">
+        <a class="@tab @(this.Model.ShowsApproved ? "hover:bg-raised" : "bg-abyss text-white")" asp-controller="Admin" asp-action="Signals" asp-route-approved="false" aria-current="@(this.Model.ShowsApproved ? null : "page")">
+            Чакат преглед <span class="ml-1 rounded-full bg-coral px-2 py-0.5 text-xs text-abyss">@this.Model.PendingCount</span>
+        </a>
+        <a class="@tab @(this.Model.ShowsApproved ? "bg-abyss text-white" : "hover:bg-raised")" asp-controller="Admin" asp-action="Signals" asp-route-approved="true" aria-current="@(this.Model.ShowsApproved ? "page" : null)">
+            Публикувани <span class="ml-1 rounded-full bg-success-soft px-2 py-0.5 text-xs text-success">@this.Model.ApprovedCount</span>
+        </a>
+    </nav>
+
+    @if (signals.Count == 0)
+    {
+        <div class="mt-8">
+            <partial name="_EmptyState" model='this.Model.ShowsApproved
+                ? new EmptyState("camera", "Няма публикувани сигнали", "Публикуваните сигнали ще се появят тук.")
+                : new EmptyState("check", "Няма чакащи сигнали", "Всички подадени сигнали са прегледани.")' />
+        </div>
+    }
+    else
+    {
+        <ul class="mt-8 space-y-3">
+            @foreach (var signal in signals)
+            {
+                <li><partial name="_AdminSignalRow" model="signal" /></li>
+            }
+        </ul>
+
+        <partial name="_Pagination" model='new Pagination("Admin", "Signals", this.Model.Page, this.Model.PagesCount, new Dictionary<string, string> { ["approved"] = this.Model.ShowsApproved ? "true" : "false" })' />
+    }
+</div>

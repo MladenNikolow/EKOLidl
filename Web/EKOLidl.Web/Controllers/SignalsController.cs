@@ -1,21 +1,22 @@
 ﻿namespace EKOLidl.Web.Controllers
 {
-    using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Linq;
     using System.Threading.Tasks;
 
     using EKOLidl.Data.Models;
     using EKOLidl.Data.Models.Signals;
     using EKOLidl.Services.Data.Services.Interfaces;
-    using EKOLidl.Services.Mapping;
     using EKOLidl.Web.ViewModels.Signals;
-    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
 
     public class SignalsController : BaseController
     {
+        // Five photos of up to 5 MB plus the form fields.
+        private const int MaxRequestBytes = 28 * 1024 * 1024;
+
         private readonly ISignalRepository signalRepository;
         private readonly IFileValidationService fileValidationService;
         private readonly IStorageService storageService;
@@ -27,18 +28,18 @@
             this.storageService = storageService;
         }
 
-        public async Task<IActionResult> Index(int page = 1, bool isCreateSingalContext = false)
+        public async Task<IActionResult> Index(int page = 1)
         {
             const int signalsPerPage = 12;
-            IEnumerable<Signal> signals = await this.signalRepository.GetApprovedSignalsByPageAsync(page, signalsPerPage);
+            IEnumerable<Signal> signals = await this.signalRepository.GetSignalsByPageAsync(true, page, signalsPerPage);
+            int signalsCount = await this.signalRepository.GetSignalsCountAsync(true);
 
             SignalsViewModel signalsViewModel = new SignalsViewModel
             {
                 Signals = signals,
                 Page = page,
-                Count = signals.Count(),
+                Count = signalsCount,
                 SignalsPerPage = signalsPerPage,
-                IsCreateSignalContext = isCreateSingalContext,
             };
 
             return this.View(signalsViewModel);
@@ -47,10 +48,15 @@
         [Route("Signals/{id}")]
         public async Task<IActionResult> Details(string id)
         {
-            var result = await this.signalRepository.GetItemAsync(id);
-            SignalDetailsViewModel signalDetailsViewModel = AutoMapperConfig.MapperInstance.Map<SignalDetailsViewModel>(result);
+            Signal signal = await this.signalRepository.GetItemAsync(id);
 
-            return this.View(signalDetailsViewModel);
+            // Signals are public only after a moderator approves them.
+            if (signal == null || !signal.IsApproved)
+            {
+                return this.NotFound();
+            }
+
+            return this.View(SignalDetailsViewModel.FromEntity(signal));
         }
 
         [Route("Signals/Create")]
@@ -63,12 +69,7 @@
                 {
                     Links = new List<string>(),
                 },
-
-                TrashTypeItems = ((TrashType[])Enum.GetValues(typeof(TrashType))).ToList().Select(x => new
-                {
-                    id = (int)x,
-                    description = ((DescriptionAttribute[])x.GetType().GetField(x.ToString()).GetCustomAttributes(typeof(DescriptionAttribute), false))[0].Description,
-                }).ToList().Select(x => new KeyValuePair<int, string>(x.id, x.description)).ToList(),
+                TrashTypeItems = TrashTypeExtensions.GetSelectableItems(),
             };
 
             return this.View(viewModel);
@@ -76,60 +77,62 @@
 
         [Route("Signals/Create")]
         [HttpPost]
+        [RequestSizeLimit(MaxRequestBytes)]
+        [RequestFormLimits(MultipartBodyLengthLimit = MaxRequestBytes)]
         public async Task<IActionResult> Create(CreateSignalInputModel input)
         {
-            this.ModelState.Clear();
+            input.TrashType ??= new List<TrashType>();
+            input.TrashTypeItems = TrashTypeExtensions.GetSelectableItems();
+            List<IFormFile> images = input.Images?.ToList() ?? new List<IFormFile>();
 
-            input.TrashTypeItems = ((TrashType[])Enum.GetValues(typeof(TrashType))).ToList().Select(x => new
+            if (input.TrashType.Contains(TrashType.Other) && string.IsNullOrWhiteSpace(input.OtherTrashType))
             {
-                id = (int)x,
-                description = ((DescriptionAttribute[])x.GetType().GetField(x.ToString()).GetCustomAttributes(typeof(DescriptionAttribute), false))[0].Description,
-            }).ToList().Select(x => new KeyValuePair<int, string>(x.id, x.description)).ToList();
-
-            if (input.TrashType == null)
-            {
-                this.ModelState.AddModelError("TrashType", "Моля изберете тип на отпадъка");
+                this.ModelState.AddModelError(nameof(input.OtherTrashType), "Моля, опишете какви са другите отпадъци.");
             }
 
-            if (input.CheckedRules == false)
+            if (!input.CheckedRules)
             {
-                this.ModelState.AddModelError("CheckedRules", "Моля съгласете се с общите условия на сайта");
+                this.ModelState.AddModelError(nameof(input.CheckedRules), "Моля, съгласете се с общите условия на сайта.");
             }
 
-            foreach (var image in input.Images)
+            if (images.Count > CreateSignalInputModel.MaxImages)
             {
-                // Image Validation
-                var validationResult = await this.fileValidationService.CheckAsync(image);
-                if (!validationResult)
+                this.ModelState.AddModelError(nameof(input.Images), $"Можете да прикачите до {CreateSignalInputModel.MaxImages} снимки.");
+            }
+
+            foreach (var image in images)
+            {
+                if (!await this.fileValidationService.CheckAsync(image))
                 {
-                    this.ModelState.AddModelError("Images", "Разрешени формат за изображение: .png, .jpg или .jpeg. Максимален размер до 5 MB.");
+                    this.ModelState.AddModelError(nameof(input.Images), "Снимките трябва да са JPG, PNG или WebP и до 5 MB всяка.");
                     break;
                 }
             }
 
-            // Model State Validation
             if (!this.ModelState.IsValid)
             {
+                // Browsers clear file inputs when the form comes back, so ask for the photos again.
+                if (images.Count > 0 && this.ModelState.GetFieldValidationState(nameof(input.Images)) != ModelValidationState.Invalid)
+                {
+                    this.ModelState.AddModelError(nameof(input.Images), "Моля, изберете снимките отново - браузърът не ги запазва след проверка.");
+                }
+
                 return this.View(input);
             }
 
-            // Save Data
+            List<string> uploadedLinks = new List<string>();
+
             try
             {
-                // Upload Images
-                var imagesResult = await this.storageService.UploadFilesAsync(input.Images);
+                uploadedLinks = (await this.storageService.UploadFilesAsync(images)).ToList();
 
-                input.Album = new Album();
-                input.Album.Links = (List<string>)imagesResult;
-
-                // TODO: Make mapping from input to signal
                 Signal signal = new Signal
                 {
                     Title = input.Title,
                     Description = input.Description,
                     TrashType = input.TrashType,
                     Location = input.Location,
-                    Album = input.Album,
+                    Album = new Album { Links = uploadedLinks },
                     Reporter = new Reporter()
                     {
                         Names = input.ReporterNames,
@@ -138,7 +141,7 @@
                     },
                     Result = new Result()
                     {
-                        Description = "Още няма добавени резултати!",
+                        Description = Result.NoResultsYet,
                         Album = new Album()
                         {
                             Links = new List<string>(),
@@ -146,13 +149,8 @@
                     },
                 };
 
-                if (input.TrashType.Contains(EKOLidl.Data.Models.Signals.TrashType.Other))
+                if (input.TrashType.Contains(TrashType.Other))
                 {
-                    input.TrashType = new List<EKOLidl.Data.Models.Signals.TrashType>
-                    {
-                        EKOLidl.Data.Models.Signals.TrashType.Other,
-                    };
-
                     signal.OtherTrashType = input.OtherTrashType;
                 }
 
@@ -160,19 +158,15 @@
             }
             catch
             {
-                this.ModelState.AddModelError("Images", "Възникна проблем при обработка на вашия сигнал. Моля, опитайте онтово!");
-            }
+                await this.storageService.DeleteFilesAsync(uploadedLinks);
+                this.ModelState.AddModelError("Images", "Възникна проблем при обработка на вашия сигнал. Моля, опитайте отново!");
 
-            // Model State Validation
-            if (!this.ModelState.IsValid)
-            {
-                // TODO: Да се изтрият снимките, ако съшествуват
                 return this.View(input);
             }
 
             this.TempData["message"] = "Благодарим Ви! Вашият сигнал е записан успешно и ще бъде видим на страницата възможно най-скоро.";
 
-            return this.RedirectToAction("Index", new { page = 1, isCreateSingalContext = true });
+            return this.RedirectToAction("Index");
         }
     }
 }

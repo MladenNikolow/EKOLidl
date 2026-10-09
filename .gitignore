@@ -453,3 +453,10 @@ $RECYCLE.BIN/
 !.vscode/launch.json
 !.vscode/extensions.json
 /Web/EKOLidl.Web/appsettings.json
+
+# Azurite local storage emulator data
+.azurite/
+
+# Tailwind CSS standalone CLI (downloaded by the build) and its generated output
+.tools/
+Web/EKOLidl.Web/wwwroot/css/app.css

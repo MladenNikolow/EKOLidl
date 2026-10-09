@@ -1,50 +1,182 @@
-﻿@{
+@{
     this.ViewData["Title"] = "За проекта";
-}
-<h1><b>@this.ViewData["Title"]</b></h1>
+    this.ViewData["Description"] = "„Накрая стигам до морето“ е проект на Морски клуб „Приятели на морето“ - Варна с кауза „Плажове и море свободни от пластмаса“.";
+    this.ViewData["HeaderOverlay"] = true;
 
-<section class="about-page-wrap">
-    <div class="container">
-        <div class="row gutters-60">
-            <div class="col-lg-8">
-                <div class="about-box">
-                    <div class="about-figure">
-                        <img src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/justin-hofman.m.jpg" alt="About">
-                    </div>
-                    <h2 class="about-title title-bar bar-center">Описание</h2>
-                    <p class="item-description">
-                        <b>„НАКРАЯ СТИГАМ ДО МОРЕТО“</b>
-                    <br> <b>проект на Морски клуб "Приятели на морето" - Варна</b>
-                    <br>    Проучванията в световен мащаб показват, че без значение къде се изхвърля боклука, близо 80 % от него накрая стига до морето. Заставайки зад каузата "Плажове и море свободни от пластмаса", Морски клуб "Приятели на морето" - Варна си постави за цел чрез атрактивни дейности да формираме активна позиция в деца и младежи по отношение на проблема, свързан със замърсяването на плажовете и морето с пластмасови отпадъци и въздействието им върху човека и морската флора и фауна.  Дейностите, заложени в проекта ще реализираме в рамките на 9 месеца по Северното българско черноморско крайбрежие. Планираме да обхванем над 600 деца и младежи на възраст от 12 до 18 г. в различни, интересни занимания, които да ги превърнат в убедени последователи на дейностите  за предотвратяване на замърсяването на околната среда, в частност морето и плажовете. Дейностите по проекта включват: 
-                    <br>- Изработване на информационни и образователни материали. Създаване на специална платформа за отразяване на дейностите и регистриране на сигнали за замърсени райони по крабрежието 
-                    <br>- Фото – лов – подаване на сигнали за замърсени крайбрежни райони и нерегламентирани сметища; 
-                    <br>-  Провеждане на 17 неформални обучения на деца и младежи от Варна, Каварна и Шабла на тема "Накрая стигам до морето"; 
-                    <br>- Провеждане на обучение по гмуркане на 20 участници в проекта за подводно почистване на определени райони, под ръководството на инструктори; 
-                    <br>- 8 кампании на неохраняеми плажове за почистване от пластмаса от Варна до Шабла; 
-                    <br>- заключително събитие по случай 31 октомври - Международен ден на Черно море. 
-                    <br>Чрез планираните дейности по проекта предвиждаме да постигнем: Формиране на активна позиция по отношение на замърсяването с пластмаса на поне 600 деца и младежи; Изграждане  на нов екип от 20 доброволци, които активно да работят по каузата плажове и море свободни от пластмаса; Активиране на местните общности и институции по отношение на опазване чистотата на българското крайбрежие. 
-                        
-                    </p>
-                </div>
-            </div>
-            <div class="col-lg-4 sidebar sidebar-break-md">
-                <div class="section-heading heading-dark">
-                    <h2 class="item-heading">Контакти</h2>
-                </div>
-                <form class="about-contact-form">
-                    <div class="col">
-                        <div class="row form-group">
-                            <p><i class="far fa-address-card"></i><b> Име : </b>Дарина Иванова</p>
-                        </div>
-                        <div class="row form-group">
-                            <p><i class="fas fa-mobile-alt"></i><b> Телефон за връзка : </b>+359889818727</p>
-                        </div>
-                        <div class="row form-group">
-                            <p><i class="far fa-envelope-open"></i><b> Имейл за връзка : </b>seaclub2@gmail.com</p>
-                        </div>
-                    </div>
-                </form>
+    var activities = new[]
+    {
+        (Icon: "file-text", Title: "Материали и платформа", Text: "Изработване на информационни и образователни материали и създаване на специална платформа за отразяване на дейностите и регистриране на сигнали за замърсени райони по крайбрежието."),
+        (Icon: "camera", Title: "Фото-лов", Text: "Подаване на сигнали за замърсени крайбрежни райони и нерегламентирани сметища."),
+        (Icon: "graduation-cap", Title: "17 неформални обучения", Text: "За деца и младежи от Варна, Каварна и Шабла на тема „Накрая стигам до морето“."),
+        (Icon: "anchor", Title: "Обучение по гмуркане", Text: "За 20 участници в проекта, за подводно почистване на определени райони под ръководството на инструктори."),
+        (Icon: "hand-heart", Title: "8 кампании за почистване", Text: "На неохраняеми плажове от пластмаса - от Варна до Шабла."),
+        (Icon: "flag", Title: "Заключително събитие", Text: "По случай 31 октомври - Международния ден на Черно море."),
+    };
+
+    var outcomes = new[]
+    {
+        (Icon: "users", Text: "Формиране на активна позиция по отношение на замърсяването с пластмаса на поне 600 деца и младежи."),
+        (Icon: "hand-heart", Text: "Изграждане на нов екип от 20 доброволци, които активно да работят по каузата „Плажове и море свободни от пластмаса“."),
+        (Icon: "megaphone", Text: "Активиране на местните общности и институции по отношение на опазване чистотата на българското крайбрежие."),
+    };
+}
+
+<page-hero eyebrow="За проекта" title="„Накрая стигам до морето“">
+    <p class="mt-6 max-w-2xl text-lead text-muted" data-reveal="2">
+        Проект на @SiteInfo.Organisation с кауза „Плажове и море свободни от пластмаса“.
+    </p>
+</page-hero>
+
+@* ── The problem ────────────────────────────────────────────────────── *@
+<section class="section pt-12 md:pt-16" aria-labelledby="problem-title">
+    <div class="container-page grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
+        <div class="lg:col-span-6" data-reveal>
+            <p class="eyebrow">Проблемът</p>
+            <h2 id="problem-title" class="mt-4 text-h2">Близо 80 % от боклука накрая стига до морето</h2>
+            <div class="prose-site mt-6 text-lg">
+                <p>Проучванията в световен мащаб показват, че без значение къде се изхвърля боклукът, близо 80 % от него накрая стига до морето.</p>
+                <p>Пластмасовите отпадъци замърсяват плажовете и морето и въздействат върху човека и върху морската флора и фауна.</p>
             </div>
         </div>
+        <figure class="lg:col-span-6" data-reveal="1">
+            <div class="media overflow-hidden rounded-xl shadow-lift">
+                <img src="/img/about/seahorse.webp" alt="Морско конче, хванало се с опашка за пластмасова клечка за уши в открито море." width="1024" height="683" class="aspect-[3/2]" loading="lazy" decoding="async" />
+            </div>
+            <figcaption class="mt-3 text-sm text-muted">Морско конче с клечка за уши. Снимка: Justin Hofman.</figcaption>
+        </figure>
+    </div>
+</section>
+
+@* ── The goal ───────────────────────────────────────────────────────── *@
+<section class="section bg-sunken" aria-labelledby="goal-title">
+    <div class="container-page grid gap-12 lg:grid-cols-12 lg:gap-16">
+        <div class="lg:col-span-7" data-reveal>
+            <p class="eyebrow">Целта</p>
+            <h2 id="goal-title" class="mt-4 text-h2">Деца и младежи, които пазят морето</h2>
+            <div class="prose-site mt-6 text-lg">
+                <p>
+                    Заставайки зад каузата „Плажове и море свободни от пластмаса“, клубът си постави за цел чрез атрактивни дейности
+                    да формира активна позиция у деца и младежи по отношение на замърсяването на плажовете и морето с пластмасови отпадъци.
+                </p>
+                <p>
+                    Дейностите по проекта се реализират в рамките на 9 месеца по Северното българско черноморско крайбрежие.
+                    Целта е да обхванат над 600 деца и младежи на възраст от 12 до 18 години в интересни занимания,
+                    които да ги превърнат в убедени последователи на опазването на морето и плажовете.
+                </p>
+            </div>
+        </div>
+        <dl class="grid content-start gap-4 sm:grid-cols-3 lg:col-span-5 lg:grid-cols-1" data-reveal="1">
+            <div class="card flex flex-col gap-1 p-6">
+                <dt class="text-muted">деца и младежи</dt>
+                <dd class="order-first font-display text-5xl font-semibold text-accent">600+</dd>
+            </div>
+            <div class="card flex flex-col gap-1 p-6">
+                <dt class="text-muted">години - възрастта на участниците</dt>
+                <dd class="order-first font-display text-5xl font-semibold text-accent">12-18</dd>
+            </div>
+            <div class="card flex flex-col gap-1 p-6">
+                <dt class="text-muted">месеца дейности по крайбрежието</dt>
+                <dd class="order-first font-display text-5xl font-semibold text-accent">9</dd>
+            </div>
+        </dl>
+    </div>
+</section>
+
+@* ── Activities ─────────────────────────────────────────────────────── *@
+<section class="section" aria-labelledby="activities-title">
+    <div class="container-page">
+        <div class="max-w-2xl" data-reveal>
+            <p class="eyebrow">Дейностите</p>
+            <h2 id="activities-title" class="mt-4 text-h2">Какво включва проектът</h2>
+        </div>
+        <ol class="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            @for (int i = 0; i < activities.Length; i++)
+            {
+                <li class="card flex flex-col gap-4 p-7" data-reveal="@(i % 3)">
+                    <div class="flex items-center justify-between">
+                        <span class="grid size-12 place-items-center rounded-xl bg-accent-soft text-accent-strong"><icon name="@activities[i].Icon" class="size-6" /></span>
+                        <span class="font-display text-sm font-semibold text-muted">0@(i + 1)</span>
+                    </div>
+                    <h3 class="text-h3">@activities[i].Title</h3>
+                    <p class="text-muted">@activities[i].Text</p>
+                </li>
+            }
+        </ol>
+    </div>
+</section>
+
+@* ── Expected outcomes ──────────────────────────────────────────────── *@
+<section class="section pt-0" aria-labelledby="outcomes-title">
+    <div class="container-page">
+        <div class="sea overflow-hidden rounded-xl px-6 py-12 sm:px-12 lg:px-16 lg:py-16" data-reveal>
+            <p class="eyebrow">Очаквани резултати</p>
+            <h2 id="outcomes-title" class="mt-4 max-w-2xl text-h2">Какво искаме да постигнем</h2>
+            <ul class="mt-10 grid gap-6 md:grid-cols-3">
+                @foreach (var outcome in outcomes)
+                {
+                    <li class="rounded-lg border border-white/12 bg-white/5 p-6">
+                        <icon name="@outcome.Icon" class="size-6 text-lagoon" />
+                        <p class="mt-4">@outcome.Text</p>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</section>
+
+@* ── Partners and contact ───────────────────────────────────────────── *@
+<section class="section bg-sunken" aria-labelledby="partners-title">
+    <div class="container-page grid gap-12 lg:grid-cols-12 lg:gap-16">
+        <div class="lg:col-span-7" data-reveal>
+            <p class="eyebrow">Организатор и партньори</p>
+            <h2 id="partners-title" class="mt-4 text-h2">Заедно да помогнем на морето</h2>
+            <p class="mt-6 max-w-2xl text-lg text-muted">@SiteInfo.FundingNotice</p>
+            <ul class="mt-10 grid grid-cols-2 gap-4">
+                @foreach (SiteInfo.Partner partner in SiteInfo.Partners)
+                {
+                    <li>
+                        <a class="grid h-32 place-items-center rounded-xl border border-border bg-white p-5 transition-transform duration-300 hover:-translate-y-1" href="@partner.Url" target="_blank" rel="noopener" title="@partner.Name">
+                            <img src="@partner.Logo" alt="@partner.Name" width="@partner.Width" height="@partner.Height" class="max-h-20 w-auto object-contain" loading="lazy" decoding="async" />
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+
+        <aside class="lg:col-span-5" aria-labelledby="contact-title" data-reveal="1">
+            <div class="card overflow-hidden lg:sticky lg:top-28">
+                <div class="p-6 sm:p-8">
+                    <p class="eyebrow">Контакти</p>
+                    <h2 id="contact-title" class="mt-4 text-h3">@SiteInfo.ContactName</h2>
+                    <p class="text-muted">@SiteInfo.Organisation</p>
+                    <ul class="mt-6 space-y-3">
+                        <li>
+                            <a class="flex items-center gap-3 rounded-lg border border-border p-4 no-underline transition-colors hover:border-accent" href="@SiteInfo.ContactPhoneHref">
+                                <icon name="phone" class="text-accent" />
+                                <span class="font-semibold">@SiteInfo.ContactPhone</span>
+                            </a>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <a class="flex min-w-0 flex-1 items-center gap-3 rounded-lg border border-border p-4 no-underline transition-colors hover:border-accent" href="mailto:@SiteInfo.ContactEmail">
+                                <icon name="mail" class="text-accent" />
+                                <span class="truncate font-semibold">@SiteInfo.ContactEmail</span>
+                            </a>
+                            <button type="button" class="grid size-14 shrink-0 place-items-center rounded-lg border border-border transition-colors hover:border-accent" data-copy="@SiteInfo.ContactEmail" data-copied-label="Копирано" aria-label="Копирай имейла">
+                                <icon name="copy" class="text-accent" />
+                                <span class="sr-only" data-copy-label aria-live="polite">Копирай</span>
+                            </button>
+                        </li>
+                        <li class="flex items-start gap-3 p-4 pt-2 text-muted">
+                            <icon name="map-pin" class="mt-0.5 text-accent" />
+                            @SiteInfo.Address
+                        </li>
+                    </ul>
+                    <a class="btn btn-outline mt-4 w-full" href="@SiteInfo.OrganisationUrl" target="_blank" rel="noopener">
+                        <icon name="external-link" class="size-4" />
+                        seafriends.bg
+                    </a>
+                </div>
+            </div>
+        </aside>
     </div>
 </section>

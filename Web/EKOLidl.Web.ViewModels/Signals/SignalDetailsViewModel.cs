@@ -1,14 +1,12 @@
 ﻿namespace EKOLidl.Web.ViewModels.Signals
 {
     using System.Collections.Generic;
-    using System.ComponentModel;
+    using System.Linq;
 
-    using AutoMapper;
     using EKOLidl.Data.Models;
     using EKOLidl.Data.Models.Signals;
-    using EKOLidl.Services.Mapping;
 
-    public class SignalDetailsViewModel : IMapFrom<Signal>, IHaveCustomMappings
+    public class SignalDetailsViewModel
     {
         /// <summary>
         /// Gets or sets title of the signal.
@@ -36,36 +34,41 @@
         public string OtherTrashType { get; set; }
 
         /// <summary>
-        /// Gets or sets location of the event in hours.
+        /// Gets or sets location of the signal.
         /// </summary>
         public string Location { get; set; }
 
         /// <summary>
-        /// Gets or sets album of the event's pictures.
+        /// Gets or sets album of the signal's pictures.
         /// </summary>
         public Album Album { get; set; }
 
         /// <summary>
-        /// Gets or sets result of the event.
+        /// Gets or sets result of the signal.
         /// </summary>
         public Result Result { get; set; }
 
-        public void CreateMappings(IProfileExpression configuration)
+        /// <summary>
+        /// Gets or sets when the signal was submitted.
+        /// </summary>
+        public System.DateTime CreatedOn { get; set; }
+
+        public static SignalDetailsViewModel FromEntity(Signal signal)
         {
-            configuration.CreateMap<Signal, SignalDetailsViewModel>()
-                .ForMember(dest => dest.TrashTypeDescriptions, opt => opt.MapFrom((src, dest) =>
-                    {
-                        List<string> descriptions = new List<string>();
+            List<TrashType> trashTypes = signal.TrashType ?? new List<TrashType>();
 
-                        foreach (var type in src.TrashType)
-                        {
-                            System.Reflection.FieldInfo fieldInfo = type.GetType().GetField(type.ToString());
-                            DescriptionAttribute[] attributes = (DescriptionAttribute[])fieldInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
-                            descriptions.Add(attributes[0].Description);
-                        }
-
-                        return descriptions;
-                    }));
+            return new SignalDetailsViewModel
+            {
+                Title = signal.Title,
+                Description = signal.Description,
+                TrashType = trashTypes,
+                TrashTypeDescriptions = trashTypes.Select(x => x.GetDescription()).ToList(),
+                OtherTrashType = signal.OtherTrashType,
+                Location = signal.Location,
+                Album = signal.Album,
+                Result = signal.Result,
+                CreatedOn = signal.CreatedOn,
+            };
         }
     }
 }

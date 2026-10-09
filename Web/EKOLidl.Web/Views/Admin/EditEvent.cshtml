@@ -1,36 +1,89 @@
-﻿@model EKOLidl.Web.ViewModels.Administration.EditEventInputModel
-
+@model EKOLidl.Web.ViewModels.Administration.EditEventInputModel
 @{
-    this.ViewData["Title"] = "Редакция на Събитие";
+    this.ViewData["Title"] = this.Model.Title;
+    var photos = this.Model.Album?.Links ?? new List<string>();
+    var resultPhotos = this.Model.ResultAlbum?.Links ?? new List<string>();
+    string fileClasses = "field-input file:mr-4 file:rounded-full file:border-0 file:bg-accent-soft file:px-4 file:py-2 file:font-semibold file:text-accent-strong";
 }
 
-<form method="post" enctype="multipart/form-data">
-    <h1>@this.ViewData["Title"]</h1>
-    <div asp-validation-summary="All" class="text-danger"></div>
-    <div class="form-group">
-        <label asp-for="Title"></label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
+<div class="container-page py-10">
+    <a class="inline-flex items-center gap-1.5 text-sm font-semibold text-accent no-underline" asp-controller="Admin" asp-action="Events">
+        <icon name="arrow-left" class="size-4" /> Към събитията
+    </a>
+
+    <div class="mt-4 flex flex-wrap items-start justify-between gap-4">
+        <h1 class="text-h2">Редакция на събитие</h1>
+        <a class="btn btn-outline btn-sm" asp-controller="Events" asp-action="Details" asp-route-id="@this.Model.Id" target="_blank">Виж на сайта <icon name="external-link" class="size-4" /></a>
     </div>
-    <div class="form-group">
-        <label asp-for="ShortDescription"></label>
-        <textarea asp-for="ShortDescription" class="form-control" rows="5"></textarea>
-        <span asp-validation-for="ShortDescription" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="LongDescription"></label>
-        <textarea asp-for="LongDescription" class="form-control" rows="5"></textarea>
-        <span asp-validation-for="LongDescription" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="EventDate"></label>
-        <input asp-for="EventDate" class="form-control" />
-        <span asp-validation-for="EventDate" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Duration"></label>
-        <input asp-for="Duration" class="form-control"/>
-        <span asp-validation-for="Duration" class="text-danger"></span>
-    </div>
-    <input type="submit" class="btn btn-primary" value="Запази промените" />
-</form>
+
+    <form class="mt-8 grid gap-8 lg:grid-cols-12" asp-controller="Admin" asp-action="EditEvent" asp-route-id="@this.Model.Id" method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="space-y-8 lg:col-span-8">
+            <section class="card space-y-6 p-6 sm:p-8" aria-labelledby="details-title">
+                <h2 id="details-title" class="text-h3">Описание</h2>
+                <div class="field">
+                    <label class="field-label" asp-for="Title"></label>
+                    <input class="field-input" asp-for="Title" maxlength="120" required />
+                    <span class="field-error" asp-validation-for="Title"></span>
+                </div>
+                <div class="field">
+                    <label class="field-label" asp-for="ShortDescription"></label>
+                    <textarea class="field-input" asp-for="ShortDescription" rows="2" maxlength="300" required></textarea>
+                    <span class="field-hint">Показва се в картите на събитията.</span>
+                    <span class="field-error" asp-validation-for="ShortDescription"></span>
+                </div>
+                <div class="field">
+                    <label class="field-label" asp-for="LongDescription"></label>
+                    <textarea class="field-input min-h-48" asp-for="LongDescription" rows="8" maxlength="5000" required></textarea>
+                    <span class="field-hint">Всеки нов ред става отделен абзац.</span>
+                    <span class="field-error" asp-validation-for="LongDescription"></span>
+                </div>
+            </section>
+
+            <section class="card space-y-5 p-6 sm:p-8" aria-labelledby="photos-title">
+                <h2 id="photos-title" class="text-h3">Снимки</h2>
+                <p class="text-sm text-muted">Първата снимка е корица на събитието.</p>
+                <partial name="_AdminPhotos" model='((IReadOnlyList<string>)photos, "RemovePhotos")' />
+                <div class="field">
+                    <label class="field-label" asp-for="NewPhotos">Добави снимки</label>
+                    <input class="@fileClasses" type="file" name="NewPhotos" id="NewPhotos" multiple accept="image/jpeg,image/png,image/webp" />
+                    <span class="field-error" asp-validation-for="NewPhotos"></span>
+                </div>
+            </section>
+
+            <section class="card space-y-5 p-6 sm:p-8" aria-labelledby="result-title">
+                <h2 id="result-title" class="text-h3">Резултати</h2>
+                <div class="field">
+                    <label class="field-label" asp-for="ResultDescription">Какво постигнахме</label>
+                    <textarea class="field-input min-h-32" asp-for="ResultDescription" rows="4" maxlength="2000"></textarea>
+                    <span class="field-hint">Оставете празно, ако все още няма резултати.</span>
+                    <span class="field-error" asp-validation-for="ResultDescription"></span>
+                </div>
+                <partial name="_AdminPhotos" model='((IReadOnlyList<string>)resultPhotos, "RemovePhotos")' />
+                <div class="field">
+                    <label class="field-label" asp-for="NewResultPhotos">Добави снимки на резултатите</label>
+                    <input class="@fileClasses" type="file" name="NewResultPhotos" id="NewResultPhotos" multiple accept="image/jpeg,image/png,image/webp" />
+                    <span class="field-error" asp-validation-for="NewResultPhotos"></span>
+                </div>
+            </section>
+        </div>
+
+        <aside class="lg:col-span-4">
+            <div class="card space-y-6 p-6 lg:sticky lg:top-24">
+                <div class="field">
+                    <label class="field-label" asp-for="EventDate"></label>
+                    <input class="field-input" asp-for="EventDate" type="datetime-local" required />
+                    <span class="field-error" asp-validation-for="EventDate"></span>
+                </div>
+                <div class="field">
+                    <label class="field-label" asp-for="Duration"></label>
+                    <input class="field-input" asp-for="Duration" type="number" min="0" max="72" />
+                    <span class="field-error" asp-validation-for="Duration"></span>
+                </div>
+                <button type="submit" class="btn btn-primary w-full">Запази промените</button>
+                <p class="text-xs text-muted">Снимки, отбелязани с „Премахни“, се изтриват при запазване. JPG, PNG или WebP, до 5 MB всяка.</p>
+            </div>
+        </aside>
+    </form>
+</div>

@@ -1,0 +1,42 @@
+@model EKOLidl.Web.ViewModels.Events.EventsViewModel
+@{
+    this.ViewData["Title"] = "Събития";
+}
+
+<div class="container-page py-10">
+    <h1 class="text-h2">Събития</h1>
+    <p class="mt-2 text-muted">Редактирайте описанията, датите, снимките и резултатите от дейностите.</p>
+
+    @if (this.Model.Events.Count == 0)
+    {
+        <div class="mt-8"><partial name="_EmptyState" model='new EmptyState("calendar-days", "Няма събития", "Все още няма въведени събития.")' /></div>
+    }
+    else
+    {
+        <ul class="mt-8 space-y-3">
+            @foreach (var ev in this.Model.Events)
+            {
+                string cover = ev.Album?.Links?.FirstOrDefault();
+                <li class="card flex flex-col gap-5 p-4 sm:flex-row sm:items-center sm:p-5">
+                    <div class="media aspect-[4/3] w-full shrink-0 overflow-hidden rounded-lg sm:w-36">
+                        @if (cover != null)
+                        {
+                            <img src="@cover" alt="" width="288" height="216" loading="lazy" decoding="async" />
+                        }
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <p class="text-sm text-muted">@SiteInfo.LongDate(ev.EventDate), @SiteInfo.Time(ev.EventDate)</p>
+                        <h2 class="mt-1 truncate font-display text-lg font-semibold">@ev.Title</h2>
+                        <p class="mt-1 line-clamp-2 text-sm text-muted">@ev.ShortDescription</p>
+                    </div>
+                    <div class="flex shrink-0 gap-2">
+                        <a class="btn btn-outline btn-sm" asp-controller="Events" asp-action="Details" asp-route-id="@ev.Id" target="_blank">Виж</a>
+                        <a class="btn btn-primary btn-sm" asp-controller="Admin" asp-action="EditEvent" asp-route-id="@ev.Id">Редактирай</a>
+                    </div>
+                </li>
+            }
+        </ul>
+
+        <partial name="_Pagination" model='new Pagination("Admin", "Events", this.Model.Page, this.Model.PagesCount)' />
+    }
+</div>

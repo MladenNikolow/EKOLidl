@@ -1,125 +1,228 @@
-﻿@model EKOLidl.Web.ViewModels.Home.HomeViewModel
-
-@using EKOLidl.Common
+@model EKOLidl.Web.ViewModels.Home.HomeViewModel
 @{
-    this.ViewData["Title"] = "Накрая стигам до морето";
+    this.ViewData["Title"] = EKOLidl.Common.GlobalConstants.SystemName;
+    this.ViewData["HeaderOverlay"] = true;
+
+    var stats = new[]
+    {
+        (Value: 600, Suffix: "+", Label: "деца и младежи на възраст от 12 до 18 години"),
+        (Value: 17, Suffix: "", Label: "неформални обучения във Варна, Каварна и Шабла"),
+        (Value: 8, Suffix: "", Label: "кампании за почистване на неохраняеми плажове"),
+        (Value: 20, Suffix: "", Label: "участници в обучение по гмуркане"),
+    };
 }
 
-<div class="continer">
-    <div class="row">
-        <div class="col-6">
-            <img class="img-responsive" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/front_background.jpg" alt="">
+@* ── Hero ─────────────────────────────────────────────────────────────── *@
+<section id="hero" class="sea overflow-hidden" aria-labelledby="hero-title">
+    <div class="container-page relative grid items-center gap-12 pb-28 pt-32 md:pb-36 lg:grid-cols-12 lg:pt-36">
+        <div class="lg:col-span-7">
+            <p class="eyebrow" data-reveal>Проект на МК „Приятели на морето“ - Варна</p>
+            <h1 id="hero-title" class="mt-6 text-display" data-reveal="1">
+                Накрая стигам<br />
+                до <span class="bg-linear-to-r from-lagoon via-foam to-lagoon bg-clip-text text-transparent">морето.</span>
+            </h1>
+            <p class="mt-7 max-w-xl text-lead text-muted" data-reveal="2">
+                Без значение къде се изхвърля боклукът, близо 80 % от него накрая стига до морето.
+                Заедно с деца и младежи от Варна до Шабла работим за плажове и море, свободни от пластмаса.
+            </p>
+            <div class="mt-10 flex flex-wrap gap-3" data-reveal="3">
+                <a class="btn btn-coral" asp-controller="Signals" asp-action="Create">
+                    <icon name="camera" />
+                    Подай сигнал
+                </a>
+                <a class="btn btn-ghost-light" asp-controller="Signals" asp-action="Index">
+                    Виж сигналите
+                    <icon name="arrow-right" class="size-4" />
+                </a>
+            </div>
         </div>
-        <div class="col-6">
-            <img class="img-responsive" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/background.jpg" alt="">
+
+        <div class="relative hidden justify-self-center md:block lg:col-span-5" data-reveal="2">
+            <div class="absolute -inset-10 rounded-full bg-lagoon/25 blur-3xl" aria-hidden="true"></div>
+            <figure class="relative w-[19rem] animate-float [--float-rotate:3deg] lg:w-[21rem]">
+                <img src="/img/posters/poster-sea.webp" alt="Плакатът на кампанията „Накрая стигам до морето“: пластмасови отпадъци под водата." width="614" height="910" class="rounded-xl shadow-lift ring-1 ring-white/20" fetchpriority="high" decoding="async" />
+                <figcaption class="absolute -bottom-5 -left-6 rounded-full bg-white px-4 py-2 text-sm font-semibold text-abyss shadow-lift">
+                    Плажове и море без пластмаса
+                </figcaption>
+            </figure>
         </div>
     </div>
-	@*Събития*@
-    <div class="section-heading heading-dark" style="margin-top: 30px;">
-        <h3 class="item-heading">СЪБИТИЯ</h3>
+
+    @* Two drifting wave layers; the front one matches the next section's surface. *@
+    <div class="pointer-events-none absolute inset-x-0 bottom-0 h-16 overflow-hidden md:h-24" aria-hidden="true">
+        <svg class="absolute bottom-2 h-full w-[200%] animate-wave text-lagoon/20 [animation-duration:26s]" viewBox="0 0 2880 120" preserveAspectRatio="none">
+            <path fill="currentColor" d="M0 60 Q180 0 360 60 T720 60 T1080 60 T1440 60 T1800 60 T2160 60 T2520 60 T2880 60 V120 H0 Z" />
+        </svg>
+        <svg class="absolute bottom-0 h-full w-[200%] animate-wave text-[var(--page-surface)]" viewBox="0 0 2880 120" preserveAspectRatio="none">
+            <path fill="currentColor" d="M0 70 Q180 20 360 70 T720 70 T1080 70 T1440 70 T1800 70 T2160 70 T2520 70 T2880 70 V120 H0 Z" />
+        </svg>
     </div>
-	<div class="row">
-		<div class="col-2">
-		</div>
-           <div id="events" class="carousel slide col-8" data-ride="carousel">
-				<ol class="carousel-indicators">
-					<li data-target="#events" data-slide-to="0" class="active"></li>
-					<li data-target="#events" data-slide-to="1"></li>
-					<li data-target="#events" data-slide-to="2"></li>
-				</ol>
-				<div id="events" class="carousel-inner">
-					<div class="carousel-item active">
-						<a href="@Url.Action("Details", "Events", new { id = Model.Events[0].Id })" class="links">
-							<img class="d-block w-100" src="@Model.Events[0].Album.Links[0]"/>
-						</a>
-						<div class="carousel-caption d-none d-md-block">
-							<h3 class="carousel-caption-title-style">@Model.Events[0].Title</h3>
-							<p class="carousel-caption-text-style">@Model.Events[0].ShortDescription</p>
-						</div>
-					</div>
-					<div class="carousel-item">
-						<a href="@Url.Action("Details", "Events", new { id = Model.Events[1].Id })" class="links">
-							<img class="d-block w-100" src="@Model.Events[1].Album.Links[0]"/>
-						</a>
-						<div class="carousel-caption d-none d-md-block carousel-caption-text-style">
-							<h3 class="carousel-caption-title-style">@Model.Events[1].Title</h3>
-							<p class="carousel-caption-text-style">@Model.Events[1].ShortDescription</p>
-						</div>
-					</div>
-					<div class="carousel-item">
-						<a href="@Url.Action("Details", "Events", new { id = Model.Events[2].Id })" class="links">
-							<img class="d-block w-100" src="@Model.Events[2].Album.Links[0]"/>
-						</a>
-						<div class="carousel-caption d-none d-md-block carousel-caption-text-style">
-							<h3 class="carousel-caption-title-style">@Model.Events[2].Title</h3>
-							<p class="carousel-caption-text-style">@Model.Events[2].ShortDescription</p>
-						</div>
-					</div>
-				</div>
-				<a class="carousel-control-prev" href="#events" role="button" data-slide="prev">
-					<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-					<span class="sr-only">Previous</span>
-				</a>
-				<a class="carousel-control-next" href="#events" role="button" data-slide="next">
-					<span class="carousel-control-next-icon" aria-hidden="true"></span>
-					<span class="sr-only">Next</span>
-				</a>
-		</div>
-		<div class="col-2">
-		</div>
-	</div>
-	@*Сигнали*@
-    <div class="section-heading heading-dark" style="margin-top: 30px;">
-        <h3 class="item-heading">СИГНАЛИ</h3>
+</section>
+
+<partial name="_FundingStrip" />
+
+@* ── Numbers ────────────────────────────────────────────────────────── *@
+<section id="impact" class="section" aria-labelledby="impact-title">
+    <div class="container-page">
+        <div class="max-w-2xl" data-reveal>
+            <p class="eyebrow">Проектът в числа</p>
+            <h2 id="impact-title" class="mt-4 text-h2">Девет месеца по северното крайбрежие - от Варна до Шабла</h2>
+        </div>
+        <dl class="mt-12 grid gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
+            @for (int i = 0; i < stats.Length; i++)
+            {
+                <div class="flex flex-col gap-3 bg-raised p-7 lg:p-8" data-reveal="@i">
+                    <dt class="order-2 text-muted">@stats[i].Label</dt>
+                    <dd class="order-1 font-display text-[clamp(2.75rem,2rem+2.5vw,4rem)] leading-none font-semibold tracking-tight text-accent">
+                        <span data-count-to="@stats[i].Value">@stats[i].Value</span>@stats[i].Suffix
+                    </dd>
+                </div>
+            }
+        </dl>
+        <p class="mt-4 text-sm text-muted">Заложени цели и дейности по проекта.</p>
     </div>
-	<div class="row">
-		<div class="col-2">
-		</div>
-           <div id="signals" class="carousel slide col-8" data-ride="carousel">
-				<ol class="carousel-indicators">
-					<li data-target="#signals" data-slide-to="0" class="active"></li>
-					<li data-target="#signals" data-slide-to="1"></li>
-					<li data-target="#signals" data-slide-to="2"></li>
-				</ol>
-				<div id="events" class="carousel-inner">
-					<div class="carousel-item active">
-						<a href="@Url.Action("Details", "Signals", new { id = Model.Signals[0].Id })" class="links">
-							<img class="d-block w-100" src="@Model.Signals[0].Album.Links[0]"/>
-						</a>
-						<div class="carousel-caption d-none d-md-block carousel-caption-text-style">
-							<h3 class="carousel-caption-title-style">@Model.Signals[0].Title</h3>
-							<p class="carousel-caption-text-style">@Model.Signals[0].Description</p>
-						</div>
-					</div>
-					<div class="carousel-item">
-						<a href="@Url.Action("Details", "Signals", new { id = Model.Signals[1].Id })" class="links">
-							<img class="d-block w-100" src="@Model.Signals[1].Album.Links[0]"/>
-						</a>
-						<div class="carousel-caption d-none d-md-block carousel-caption-text-style">
-							<h3 class="carousel-caption-title-style">@Model.Signals[1].Title</h3>
-							<p class="carousel-caption-text-style">@Model.Signals[1].Description</p>
-						</div>
-					</div>
-					<div class="carousel-item">
-						<a href="@Url.Action("Details", "Signals", new { id = Model.Signals[2].Id })" class="links">
-							<img class="d-block w-100" src="@Model.Signals[2].Album.Links[0]"/>
-						</a>
-						<div class="carousel-caption d-none d-md-block carousel-caption-text-style">
-							<h3 class="carousel-caption-title-style">@Model.Signals[2].Title</h3>
-							<p class="carousel-caption-text-style">@Model.Signals[2].Description</p>
-						</div>
-					</div>
-				</div>
-				<a class="carousel-control-prev" href="#signals" role="button" data-slide="prev">
-					<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-					<span class="sr-only">Previous</span>
-				</a>
-				<a class="carousel-control-next" href="#signals" role="button" data-slide="next">
-					<span class="carousel-control-next-icon" aria-hidden="true"></span>
-					<span class="sr-only">Next</span>
-				</a>
-		</div>
-		<div class="col-2">
-		</div>
-	</div>
-</div>
+</section>
+
+@* ── What the project does (bento) ──────────────────────────────────── *@
+<section id="pillars" class="section bg-sunken" aria-labelledby="pillars-title">
+    <div class="container-page">
+        <div class="max-w-2xl" data-reveal>
+            <p class="eyebrow">Какво правим</p>
+            <h2 id="pillars-title" class="mt-4 text-h2">Шест начина да спрем пластмасата, преди да стигне до морето</h2>
+        </div>
+
+        <div class="mt-12 grid auto-rows-[minmax(13rem,auto)] gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <article class="sea group relative flex flex-col justify-between overflow-hidden rounded-xl p-8 md:col-span-2 lg:row-span-2 lg:p-10" data-reveal>
+                <icon name="waves" class="absolute -right-10 -top-10 size-64 text-white/5" stroke="1" />
+                <span class="grid size-14 place-items-center rounded-2xl bg-coral text-abyss"><icon name="camera" class="size-7" /></span>
+                <div class="mt-16">
+                    <h3 class="text-h2">Фото-лов и сигнали</h3>
+                    <p class="mt-4 max-w-md text-lead text-muted">
+                        Снимайте замърсени крайбрежни райони и нерегламентирани сметища и ги подайте като сигнал.
+                        Всеки сигнал се преглежда от екипа на клуба.
+                    </p>
+                    <a class="btn btn-coral mt-8" asp-controller="Signals" asp-action="Create">
+                        Подай сигнал
+                        <icon name="arrow-right" class="size-4" />
+                    </a>
+                </div>
+            </article>
+
+            @{
+                var pillars = new[]
+                {
+                    (Icon: "graduation-cap", Title: "Неформални обучения", Text: "17 обучения за деца и младежи от Варна, Каварна и Шабла на тема „Накрая стигам до морето“."),
+                    (Icon: "hand-heart", Title: "Почистване на плажове", Text: "8 кампании за почистване на неохраняеми плажове от пластмаса - от Варна до Шабла."),
+                    (Icon: "anchor", Title: "Обучение по гмуркане", Text: "20 участници се обучават под ръководството на инструктори за подводно почистване."),
+                    (Icon: "file-text", Title: "Образователни материали", Text: "Информационни и образователни материали и тази платформа за дейностите и сигналите."),
+                };
+            }
+            @for (int i = 0; i < pillars.Length; i++)
+            {
+                <article class="card flex flex-col gap-4 p-7" data-reveal="@(i + 1)">
+                    <span class="grid size-12 place-items-center rounded-xl bg-accent-soft text-accent-strong"><icon name="@pillars[i].Icon" class="size-6" /></span>
+                    <h3 class="mt-auto text-h3">@pillars[i].Title</h3>
+                    <p class="text-muted">@pillars[i].Text</p>
+                </article>
+            }
+
+            <article class="relative flex flex-col justify-between gap-6 overflow-hidden rounded-xl bg-coral p-8 text-abyss md:col-span-2 lg:col-span-4 lg:flex-row lg:items-center lg:p-10" data-reveal="5">
+                <div class="flex items-center gap-5">
+                    <span class="grid size-14 shrink-0 place-items-center rounded-2xl bg-abyss text-coral"><icon name="flag" class="size-7" /></span>
+                    <div>
+                        <p class="font-display text-h3 font-semibold">31 октомври - Международен ден на Черно море</p>
+                        <p class="mt-1 text-abyss/80">Заключително събитие на проекта.</p>
+                    </div>
+                </div>
+                <a class="btn shrink-0 bg-abyss text-white hover:bg-deep" asp-controller="Events" asp-action="Events">
+                    Всички събития
+                    <icon name="arrow-right" class="size-4" />
+                </a>
+            </article>
+        </div>
+    </div>
+</section>
+
+@* ── Latest events ──────────────────────────────────────────────────── *@
+<section id="events" class="section" aria-labelledby="events-title">
+    <div class="container-page">
+        <div class="flex flex-wrap items-end justify-between gap-6" data-reveal>
+            <div class="max-w-2xl">
+                <p class="eyebrow">Събития</p>
+                <h2 id="events-title" class="mt-4 text-h2">Какво направихме</h2>
+            </div>
+            <a class="btn btn-outline" asp-controller="Events" asp-action="Events">Всички събития <icon name="arrow-right" class="size-4" /></a>
+        </div>
+
+        @if (this.Model.Events.Count == 0)
+        {
+            <div class="mt-12"><partial name="_EmptyState" model='new EmptyState("calendar-days", "Все още няма събития", "Тук ще се появят дейностите по проекта.")' /></div>
+        }
+        else
+        {
+            <ul class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                @for (int i = 0; i < this.Model.Events.Count; i++)
+                {
+                    <li><partial name="_EventCard" model="this.Model.Events[i]" view-data='new ViewDataDictionary(this.ViewData) { ["Index"] = i }' /></li>
+                }
+            </ul>
+        }
+    </div>
+</section>
+
+@* ── Latest signals ─────────────────────────────────────────────────── *@
+<section id="signals" class="section bg-sunken" aria-labelledby="signals-title">
+    <div class="container-page">
+        <div class="flex flex-wrap items-end justify-between gap-6" data-reveal>
+            <div class="max-w-2xl">
+                <p class="eyebrow">Сигнали</p>
+                <h2 id="signals-title" class="mt-4 text-h2">Сигнали от крайбрежието</h2>
+                <p class="mt-4 text-lead text-muted">Замърсени места, които хората са забелязали и подали. Публикуваме ги след преглед от екипа.</p>
+            </div>
+            <a class="btn btn-outline" asp-controller="Signals" asp-action="Index">Всички сигнали <icon name="arrow-right" class="size-4" /></a>
+        </div>
+
+        @if (this.Model.Signals.Count == 0)
+        {
+            <div class="mt-12"><partial name="_EmptyState" model='new EmptyState("camera", "Все още няма публикувани сигнали", "Бъдете първите, които ще подадат сигнал за замърсено място.")' /></div>
+        }
+        else
+        {
+            <ul class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                @for (int i = 0; i < this.Model.Signals.Count; i++)
+                {
+                    <li><partial name="_SignalCard" model="this.Model.Signals[i]" view-data='new ViewDataDictionary(this.ViewData) { ["Index"] = i }' /></li>
+                }
+            </ul>
+        }
+    </div>
+</section>
+
+@* ── Report CTA ─────────────────────────────────────────────────────── *@
+<section id="report" class="section pt-0 bg-sunken" aria-labelledby="report-title">
+    <div class="container-page">
+        <div class="sea overflow-hidden rounded-xl px-6 py-14 sm:px-12 lg:grid lg:grid-cols-12 lg:items-center lg:gap-12 lg:px-16 lg:py-20" data-reveal>
+            <div class="lg:col-span-6">
+                <h2 id="report-title" class="text-h1">Видяхте замърсено място?</h2>
+                <p class="mt-5 max-w-lg text-lead text-muted">Снимайте го, отбележете къде е и ни изпратете сигнал. Отнема около две минути.</p>
+                <a class="btn btn-coral mt-8" asp-controller="Signals" asp-action="Create">
+                    <icon name="camera" />
+                    Подай сигнал
+                </a>
+            </div>
+            <ol class="mt-12 grid gap-4 sm:grid-cols-3 lg:col-span-6 lg:mt-0">
+                @{
+                    var steps = new[] { (Icon: "camera", Text: "Снимайте мястото"), (Icon: "map-pin", Text: "Отбележете къде е"), (Icon: "megaphone", Text: "Изпратете сигнала") };
+                }
+                @for (int i = 0; i < steps.Length; i++)
+                {
+                    <li class="rounded-lg border border-white/12 bg-white/5 p-5">
+                        <span class="font-display text-sm font-semibold text-lagoon">0@(i + 1)</span>
+                        <icon name="@steps[i].Icon" class="mt-4 size-6 text-white" />
+                        <p class="mt-3 font-semibold">@steps[i].Text</p>
+                    </li>
+                }
+            </ol>
+        </div>
+    </div>
+</section>

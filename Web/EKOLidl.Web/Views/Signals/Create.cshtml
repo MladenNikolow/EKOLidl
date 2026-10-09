@@ -1,109 +1,219 @@
-﻿@using EKOLidl.Data.Models.Signals
-@model EKOLidl.Web.ViewModels.Signals.CreateSignalInputModel
-@using Microsoft.AspNetCore.Mvc.Localization
-
+@using EKOLidl.Data.Models.Signals
+@using EKOLidl.Web.ViewModels.Signals
+@model CreateSignalInputModel
 @{
-    this.ViewData["Title"] = "Добави сигнал за замърсяване";
+    this.ViewData["Title"] = "Подай сигнал";
+    this.ViewData["Description"] = "Видяхте замърсено място по крайбрежието? Снимайте го, отбележете къде е и подайте сигнал до МК „Приятели на морето“.";
+    this.ViewData["HeaderOverlay"] = true;
+
+    List<TrashType> selected = this.Model.TrashType ?? new List<TrashType>();
+    bool hasErrors = !this.ViewData.ModelState.IsValid;
 }
 
-<form method="post" enctype="multipart/form-data">
-    <h1>@this.ViewData["Title"]</h1>
-    <div asp-validation-summary="All" class="text-danger"></div>
-    <div class="form-group">
-        <label asp-for="Title"></label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Description"></label>
-        <textarea asp-for="Description" class="form-control" rows="5"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="TrashType"></label>
-        <div class="container-fluid">
-            @foreach (var item in Model.TrashTypeItems)
-            {
-                @if(item.Key == (int)TrashType.Other || item.Key == (int)TrashType.Unknown)
-                {
-                    continue;
-                }
+<page-hero eyebrow="Подай сигнал" title="Видяхте замърсено място?">
+    <p class="mt-6 max-w-2xl text-lead text-muted" data-reveal="2">
+        Опишете го, отбележете къде е и прикачете снимки. Отнема около две минути. Публикуваме сигнала след преглед от екипа на клуба.
+    </p>
+</page-hero>
 
-                <div>
-                      <input type="checkbox" id="check-@item.Key" name="TrashType" value="@item.Key"
-                      @if(Model.TrashType.Contains((TrashType)item.Key))
-                      {
-                        @:checked
-                      }
-                      >
-                      <label for="@item.Key">@item.Value</label>
+<section class="section pt-12 md:pt-16" aria-label="Формуляр за сигнал">
+    <div class="container-page grid gap-12 lg:grid-cols-12 lg:gap-16">
+        <form class="lg:col-span-8" asp-controller="Signals" asp-action="Create" method="post" enctype="multipart/form-data" data-report-form>
+            @if (hasErrors)
+            {
+                <div class="mb-8 flex items-start gap-3 rounded-xl border border-danger/40 bg-error-soft p-5 text-ink" role="alert" tabindex="-1" data-error-summary>
+                    <icon name="circle-alert" class="mt-0.5 size-5 text-error" />
+                    <p>Някои полета се нуждаят от поправка. Вижте съобщенията под тях.</p>
                 </div>
             }
-            <div>
-                  <input type="checkbox" id="check-6" name="TrashType" value="6" onclick="OtherCheckFunction()"
-                  @if(Model.TrashType.Contains(TrashType.Other))
-                  {
-                    @:checked
-                  }
-                  >
-                  <label for="other">Други</label>
-                  <input asp-for="OtherTrashType" class="form-control" id="otherTrashType" style="display:none;"/>
-            </div>
-        </div>
-    </div>
-    <div class="form-group">
-        <label asp-for="Location"></label>
-        <input asp-for="Location" class="form-control" />
-        <span asp-validation-for="Location" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Images"></label>
-        <input asp-for="Images" class="form-control"/>
-        <span asp-validation-for="Images" class="text-danger"></span>
-    </div>
 
-    <div class="section-heading heading-dark" style="margin-top: 30px;">
-        <h3 class="item-heading">ПОДАТЕЛ</h3>
+            <p class="mb-8 text-muted">Всички полета са задължителни.</p>
+
+            <ol class="space-y-6">
+                @* 1. What *@
+                <li class="card p-6 sm:p-8">
+                    <fieldset class="space-y-6">
+                        <legend class="flex items-center gap-3 font-display text-h3 font-semibold">
+                            <span class="grid size-9 place-items-center rounded-full bg-accent-soft text-base text-accent-strong">1</span>
+                            Какво видяхте
+                        </legend>
+
+                        <div class="field">
+                            <label class="field-label" asp-for="Title">Заглавие</label>
+                            <input class="field-input" asp-for="Title" required minlength="5" maxlength="40" autocomplete="off"
+                                   placeholder="Напр. Пластмаса на плажа край Кранево" aria-describedby="Title-error"
+                                   data-msg-required="Моля, добавете заглавие на сигнала." data-msg-length="Заглавието трябва да е между 5 и 40 символа." />
+                            <span class="field-error" asp-validation-for="Title" id="Title-error"></span>
+                        </div>
+
+                        <div class="field">
+                            <div class="flex items-baseline justify-between gap-4">
+                                <label class="field-label" asp-for="Description">Описание</label>
+                                <span class="text-sm text-muted" data-counter-for="Description" aria-hidden="true"></span>
+                            </div>
+                            <textarea class="field-input min-h-36 resize-y" asp-for="Description" required minlength="20" maxlength="300" rows="5"
+                                      placeholder="Какво има на мястото, колко е, откога е там…" aria-describedby="Description-hint Description-error"
+                                      data-msg-required="Моля, опишете какво видяхте." data-msg-length="Описанието трябва да е между 20 и 300 символа."></textarea>
+                            <span class="field-hint" id="Description-hint">Между 20 и 300 символа.</span>
+                            <span class="field-error" asp-validation-for="Description" id="Description-error"></span>
+                        </div>
+
+                        <fieldset class="field" aria-describedby="TrashType-error" data-choice-group data-msg-required="Моля, изберете поне един вид отпадъци.">
+                            <legend class="field-label mb-2">Вид отпадъци <span class="font-normal text-muted">(може повече от един)</span></legend>
+                            <div class="flex flex-wrap gap-2">
+                                @foreach (var item in this.Model.TrashTypeItems)
+                                {
+                                    bool isOther = item.Key == (int)TrashType.Other;
+                                    <label class="choice">
+                                        <input type="checkbox" name="TrashType" value="@item.Key" id="trash-@item.Key" class="sr-only"
+                                               checked="@(selected.Contains((TrashType)item.Key))" data-other="@(isOther ? "true" : null)" />
+                                        <span>@item.Value</span>
+                                    </label>
+                                }
+                            </div>
+                            <span class="field-error" asp-validation-for="TrashType" id="TrashType-error"></span>
+                        </fieldset>
+
+                        <div class="field when-other">
+                            <label class="field-label" asp-for="OtherTrashType">Какви други отпадъци</label>
+                            <input class="field-input" asp-for="OtherTrashType" maxlength="40" placeholder="Напр. строителни отпадъци, гуми" aria-describedby="OtherTrashType-error"
+                                   data-required-when-other data-msg-required="Моля, опишете какви са другите отпадъци." />
+                            <span class="field-error" asp-validation-for="OtherTrashType" id="OtherTrashType-error"></span>
+                        </div>
+                    </fieldset>
+                </li>
+
+                @* 2. Where *@
+                <li class="card p-6 sm:p-8">
+                    <fieldset class="space-y-6">
+                        <legend class="flex items-center gap-3 font-display text-h3 font-semibold">
+                            <span class="grid size-9 place-items-center rounded-full bg-accent-soft text-base text-accent-strong">2</span>
+                            Къде е
+                        </legend>
+                        <div class="field">
+                            <label class="field-label" asp-for="Location">Местоположение</label>
+                            <input class="field-input" asp-for="Location" required minlength="3" maxlength="120" autocomplete="off"
+                                   placeholder="Напр. Варна, Южен плаж, до спасителния пост" aria-describedby="Location-hint Location-error"
+                                   data-msg-required="Моля, опишете къде се намира мястото." data-msg-length="Местоположението трябва да е между 3 и 120 символа." />
+                            <span class="field-hint" id="Location-hint">Населено място и ориентир, за да можем да го открием.</span>
+                            <span class="field-error" asp-validation-for="Location" id="Location-error"></span>
+                        </div>
+                    </fieldset>
+                </li>
+
+                @* 3. Photos *@
+                <li class="card p-6 sm:p-8">
+                    <fieldset class="space-y-6">
+                        <legend class="flex items-center gap-3 font-display text-h3 font-semibold">
+                            <span class="grid size-9 place-items-center rounded-full bg-accent-soft text-base text-accent-strong">3</span>
+                            Снимки
+                        </legend>
+                        <div class="field">
+                            <label class="dropzone" for="Images" data-dropzone>
+                                <span class="grid size-14 place-items-center rounded-full bg-accent-soft text-accent-strong"><icon name="image-up" class="size-7" /></span>
+                                <span class="font-semibold">Изберете снимки <span class="font-normal text-muted max-sm:hidden">или ги пуснете тук</span></span>
+                                <span class="field-hint" id="Images-hint">JPG, PNG или WebP · до @CreateSignalInputModel.MaxImages снимки · до 5 MB всяка</span>
+                                <input id="Images" name="Images" type="file" multiple accept="image/jpeg,image/png,image/webp" required class="sr-only"
+                                       aria-describedby="Images-hint Images-error"
+                                       data-max-files="@CreateSignalInputModel.MaxImages" data-max-bytes="5242880"
+                                       data-msg-required="Моля, прикачете поне една снимка."
+                                       data-msg-count="Можете да прикачите до @CreateSignalInputModel.MaxImages снимки."
+                                       data-msg-file="Снимките трябва да са JPG, PNG или WebP и до 5 MB всяка." />
+                            </label>
+                            <ul class="grid grid-cols-3 gap-2 empty:hidden sm:grid-cols-5" data-previews aria-label="Избрани снимки"></ul>
+                            <span class="field-error" asp-validation-for="Images" id="Images-error"></span>
+                        </div>
+                    </fieldset>
+                </li>
+
+                @* 4. Reporter *@
+                <li class="card p-6 sm:p-8">
+                    <fieldset class="space-y-6">
+                        <legend class="flex items-center gap-3 font-display text-h3 font-semibold">
+                            <span class="grid size-9 place-items-center rounded-full bg-accent-soft text-base text-accent-strong">4</span>
+                            Вашите данни
+                        </legend>
+
+                        <p class="flex items-start gap-3 rounded-lg bg-sunken p-4 text-sm text-muted">
+                            <icon name="shield-check" class="mt-0.5 size-5 text-accent" />
+                            Данните ви не се публикуват и не се предоставят на трети лица. Използваме ги само ако трябва да уточним нещо по сигнала.
+                        </p>
+
+                        <div class="field">
+                            <label class="field-label" asp-for="ReporterNames">Име и фамилия</label>
+                            <input class="field-input" asp-for="ReporterNames" required maxlength="80" autocomplete="name"
+                                   pattern="@CreateSignalInputModel.NamePattern" aria-describedby="ReporterNames-error"
+                                   data-msg-required="Моля, въведете името си." data-msg-pattern="Името може да съдържа само букви, интервали и тире." />
+                            <span class="field-error" asp-validation-for="ReporterNames" id="ReporterNames-error"></span>
+                        </div>
+
+                        <div class="grid gap-6 sm:grid-cols-2">
+                            <div class="field">
+                                <label class="field-label" asp-for="ReporterGsm">Телефон</label>
+                                <input class="field-input" asp-for="ReporterGsm" type="tel" inputmode="tel" required autocomplete="tel"
+                                       pattern="@CreateSignalInputModel.PhonePattern" placeholder="0888 123 456" aria-describedby="ReporterGsm-error"
+                                       data-msg-required="Моля, въведете телефон за връзка." data-msg-pattern="Въведете мобилен номер, например 0888 123 456 или +359 888 123 456." />
+                                <span class="field-error" asp-validation-for="ReporterGsm" id="ReporterGsm-error"></span>
+                            </div>
+                            <div class="field">
+                                <label class="field-label" asp-for="ReporterEmail">Имейл</label>
+                                <input class="field-input" asp-for="ReporterEmail" type="email" required maxlength="120" autocomplete="email"
+                                       placeholder="ime@example.com" aria-describedby="ReporterEmail-error"
+                                       data-msg-required="Моля, въведете имейл за връзка." data-msg-type="Моля, въведете валиден имейл адрес." />
+                                <span class="field-error" asp-validation-for="ReporterEmail" id="ReporterEmail-error"></span>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label class="flex cursor-pointer items-start gap-3">
+                                <input type="checkbox" name="CheckedRules" value="true" class="mt-1 size-5 shrink-0 accent-tide" required
+                                       checked="@this.Model.CheckedRules" aria-describedby="CheckedRules-error"
+                                       data-msg-required="Моля, съгласете се с общите условия на сайта." />
+                                <span>Съгласен/на съм с <a class="font-semibold text-accent underline" asp-controller="Home" asp-action="Privacy" target="_blank">общите условия на сайта</a>.</span>
+                            </label>
+                            <input type="hidden" name="CheckedRules" value="false" />
+                            <span class="field-error" asp-validation-for="CheckedRules" id="CheckedRules-error"></span>
+                        </div>
+                    </fieldset>
+                </li>
+            </ol>
+
+            <div class="sticky bottom-0 z-10 -mx-4 mt-8 border-t border-border bg-surface/90 px-4 py-4 backdrop-blur sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:p-0 sm:backdrop-blur-none">
+                <button type="submit" class="btn btn-coral w-full sm:w-auto sm:px-10" data-submit>
+                    <icon name="megaphone" />
+                    <span data-submit-label>Изпрати сигнала</span>
+                </button>
+            </div>
+        </form>
+
+        <aside class="lg:col-span-4">
+            <div class="space-y-6 lg:sticky lg:top-28">
+                <div class="card p-6 lg:p-8">
+                    <h2 class="font-display text-h3">Какво става след това</h2>
+                    <ol class="mt-6 space-y-5">
+                        <li class="flex gap-4">
+                            <span class="grid size-9 shrink-0 place-items-center rounded-full bg-accent-soft font-semibold text-accent-strong">1</span>
+                            <p><span class="font-semibold">Преглед.</span> <span class="text-muted">Екипът на клуба проверява сигнала и при нужда се свързва с вас.</span></p>
+                        </li>
+                        <li class="flex gap-4">
+                            <span class="grid size-9 shrink-0 place-items-center rounded-full bg-accent-soft font-semibold text-accent-strong">2</span>
+                            <p><span class="font-semibold">Публикуване.</span> <span class="text-muted">Одобреният сигнал се появява в списъка със сигнали, без вашите лични данни.</span></p>
+                        </li>
+                        <li class="flex gap-4">
+                            <span class="grid size-9 shrink-0 place-items-center rounded-full bg-accent-soft font-semibold text-accent-strong">3</span>
+                            <p><span class="font-semibold">Резултат.</span> <span class="text-muted">Когато мястото бъде почистено, добавяме резултата към сигнала.</span></p>
+                        </li>
+                    </ol>
+                </div>
+                <div class="card p-6 lg:p-8">
+                    <h2 class="font-display text-h3">Въпроси?</h2>
+                    <p class="mt-3 text-muted">Пишете ни на <a class="font-semibold text-accent underline" href="mailto:@SiteInfo.ContactEmail">@SiteInfo.ContactEmail</a> или се обадете на <a class="font-semibold text-accent underline" href="@SiteInfo.ContactPhoneHref">@SiteInfo.ContactPhone</a>.</p>
+                </div>
+            </div>
+        </aside>
     </div>
-    <div class="p-3 mb-2 bg-primary text-white rounded-pill">
-        Данните за подателя ще бъдат използвани само при нужда от повече детайли за сигнала и няма да бъдат видими публично!
-    </div>
-    <div class="form-group">
-        <label asp-for="ReporterNames"></label>
-        <input asp-for="ReporterNames" class="form-control" />
-        <span asp-validation-for="ReporterNames" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="ReporterGsm"></label>
-        <input asp-for="ReporterGsm" class="form-control" />
-        <span asp-validation-for="ReporterGsm" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="ReporterEmail"></label>
-        <input asp-for="ReporterEmail" class="form-control" />
-        <span asp-validation-for="ReporterEmail" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        @Html.CheckBoxFor(model => model.CheckedRules) Съгласявам се с <a asp-controller="Home" asp-action="Privacy"> Общите условия на сйата</a>
-        <span asp-validation-for="CheckedRules" class="text-danger"></span>
-    </div>
-    <input type="submit" class="btn btn-primary" value="Добави" />
-</form>
+</section>
 
 @section Scripts {
-    <script>
-        function OtherCheckFunction() {
-            // Get the checkbox
-            var checkBox = document.getElementById("check-6");
-            // Get the output text
-            var text = document.getElementById("otherTrashType");
-
-            // If the checkbox is checked, display the output text
-            if (checkBox.checked == true) {
-              text.style.display = 'block';
-            } else {
-              text.style.display = 'none';
-            }
-        }
-    </script>
+    <script src="~/js/report.js" asp-append-version="true" defer></script>
 }

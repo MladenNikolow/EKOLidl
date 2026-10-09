@@ -1,0 +1,99 @@
+@using EKOLidl.Data.Models.Signals
+@model EKOLidl.Web.ViewModels.Administration.AdminSignalViewModel
+@{
+    var signal = this.Model.Signal;
+    this.ViewData["Title"] = signal.Title;
+    var photos = signal.Album?.Links ?? new List<string>();
+    var resultPhotos = signal.Result?.Album?.Links ?? new List<string>();
+    IEnumerable<string> trash = (signal.TrashType ?? new List<TrashType>())
+        .Select(t => t == TrashType.Other && !string.IsNullOrWhiteSpace(signal.OtherTrashType) ? signal.OtherTrashType : t.GetDescription());
+}
+
+<div class="container-page py-10">
+    <a class="inline-flex items-center gap-1.5 text-sm font-semibold text-accent no-underline" asp-controller="Admin" asp-action="Signals" asp-route-approved="@(signal.IsApproved ? "true" : "false")">
+        <icon name="arrow-left" class="size-4" /> Към сигналите
+    </a>
+
+    <div class="mt-4 flex flex-wrap items-start justify-between gap-4">
+        <div>
+            <h1 class="text-h2">@signal.Title</h1>
+            <p class="mt-2 flex items-center gap-1.5 text-muted"><icon name="map-pin" class="size-4" /> @signal.Location · подаден на @SiteInfo.LongDate(signal.CreatedOn), @SiteInfo.Time(signal.CreatedOn)</p>
+        </div>
+        @if (signal.IsApproved)
+        {
+            <a class="btn btn-outline btn-sm" asp-controller="Signals" asp-action="Details" asp-route-id="@signal.Id" target="_blank">Виж на сайта <icon name="external-link" class="size-4" /></a>
+        }
+    </div>
+
+    <form class="mt-8 grid gap-8 lg:grid-cols-12" asp-controller="Admin" asp-action="ModerateSignal" asp-route-id="@signal.Id" method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="Input.Id" />
+
+        <div class="space-y-8 lg:col-span-8">
+            <section class="card p-6 sm:p-8" aria-labelledby="report-title">
+                <h2 id="report-title" class="text-h3">Сигнал</h2>
+                <ul class="mt-4 flex flex-wrap gap-2" aria-label="Вид отпадъци">
+                    @foreach (string item in trash)
+                    {
+                        <li class="chip">@item</li>
+                    }
+                </ul>
+                <div class="prose-site mt-5"><partial name="_Paragraphs" model="signal.Description" /></div>
+                <h3 class="mt-8 font-semibold">Снимки от подателя</h3>
+                <div class="mt-3"><partial name="_AdminPhotos" model='((IReadOnlyList<string>)photos, "Input.RemovePhotos")' /></div>
+            </section>
+
+            <section class="card p-6 sm:p-8" aria-labelledby="result-title">
+                <h2 id="result-title" class="text-h3">Резултат</h2>
+                <p class="mt-1 text-sm text-muted">Показва се на страницата на сигнала, когато е попълнен.</p>
+                <div class="field mt-6">
+                    <label class="field-label" asp-for="Input.ResultDescription">Какво е направено</label>
+                    <textarea class="field-input min-h-32" asp-for="Input.ResultDescription" rows="4" maxlength="2000" placeholder="Напр. Мястото беше почистено от доброволци на 12 юни."></textarea>
+                    <span class="field-error" asp-validation-for="Input.ResultDescription"></span>
+                </div>
+                <h3 class="mt-6 font-semibold">Снимки на резултата</h3>
+                <div class="mt-3"><partial name="_AdminPhotos" model='((IReadOnlyList<string>)resultPhotos, "Input.RemovePhotos")' /></div>
+                <div class="field mt-5">
+                    <label class="field-label" asp-for="Input.NewResultPhotos">Добави снимки</label>
+                    <input class="field-input file:mr-4 file:rounded-full file:border-0 file:bg-accent-soft file:px-4 file:py-2 file:font-semibold file:text-accent-strong" type="file" name="Input.NewResultPhotos" id="Input_NewResultPhotos" multiple accept="image/jpeg,image/png,image/webp" />
+                    <span class="field-hint">JPG, PNG или WebP, до 5 MB всяка, до 10 наведнъж.</span>
+                    <span class="field-error" asp-validation-for="Input.NewResultPhotos"></span>
+                </div>
+            </section>
+        </div>
+
+        <aside class="space-y-6 lg:col-span-4">
+            <div class="card space-y-6 p-6 lg:sticky lg:top-24">
+                <label class="flex cursor-pointer items-center justify-between gap-4">
+                    <span>
+                        <span class="block font-semibold">Публикуван на сайта</span>
+                        <span class="text-sm text-muted">Видим в списъка със сигнали.</span>
+                    </span>
+                    <input type="checkbox" name="Input.IsApproved" value="true" class="peer sr-only" checked="@this.Model.Input.IsApproved" />
+                    <span class="relative h-7 w-12 shrink-0 rounded-full bg-border transition-colors after:absolute after:left-1 after:top-1 after:size-5 after:rounded-full after:bg-white after:shadow after:transition-transform peer-checked:bg-success peer-checked:after:translate-x-5 peer-focus-visible:outline-3 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-[var(--focus)]" aria-hidden="true"></span>
+                </label>
+                <input type="hidden" name="Input.IsApproved" value="false" />
+
+                <button type="submit" class="btn btn-primary w-full">Запази промените</button>
+
+                @if (signal.Reporter != null)
+                {
+                    <div class="border-t border-border pt-6">
+                        <h2 class="text-sm font-semibold text-muted">Подател (не се публикува)</h2>
+                        <p class="mt-2 font-semibold">@signal.Reporter.Names</p>
+                        <p class="mt-1 text-sm"><a class="text-accent" href="tel:@signal.Reporter.Gsm">@signal.Reporter.Gsm</a></p>
+                        <p class="mt-1 truncate text-sm"><a class="text-accent" href="mailto:@signal.Reporter.Email">@signal.Reporter.Email</a></p>
+                    </div>
+                }
+            </div>
+        </aside>
+    </form>
+
+    <form class="mt-10 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-danger/40 p-6" asp-controller="Admin" asp-action="DeleteSignal" asp-route-id="@signal.Id" method="post"
+          data-confirm="Сигурни ли сте, че искате да изтриете този сигнал и снимките му? Това не може да бъде отменено.">
+        <div>
+            <h2 class="font-semibold">Изтриване на сигнала</h2>
+            <p class="text-sm text-muted">Изтрива сигнала и всички негови снимки завинаги.</p>
+        </div>
+        <button type="submit" class="btn btn-sm border-[1.5px] border-danger text-danger hover:bg-error-soft">Изтрий</button>
+    </form>
+</div>

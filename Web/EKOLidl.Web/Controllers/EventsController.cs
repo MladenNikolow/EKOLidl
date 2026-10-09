@@ -5,7 +5,6 @@
 
     using EKOLidl.Data.Models;
     using EKOLidl.Data.Models.Events;
-    using EKOLidl.Services.Mapping;
     using EKOLidl.Web.ViewModels.Events;
     using Microsoft.AspNetCore.Mvc;
 
@@ -38,10 +37,14 @@
         [ActionName("Details")]
         public async Task<IActionResult> DetailsAsync(string id)
         {
-            var result = await this.eventRepository.GetItemAsync(id);
-            EventDetailsViewModel signalDetailsViewModel = AutoMapperConfig.MapperInstance.Map<EventDetailsViewModel>(result);
+            Event @event = await this.eventRepository.GetItemAsync(id);
 
-            return this.View(signalDetailsViewModel);
+            if (@event == null)
+            {
+                return this.NotFound();
+            }
+
+            return this.View(EventDetailsViewModel.FromEntity(@event));
         }
     }
 }

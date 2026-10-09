@@ -1,85 +1,50 @@
-﻿@using EKOLidl.Common
+@using EKOLidl.Common
+@{
+    string title = this.ViewData["Title"] as string;
+    string pageTitle = string.IsNullOrEmpty(title) || title == GlobalConstants.SystemName
+        ? $"{GlobalConstants.SystemName} · Плажове и море без пластмаса"
+        : $"{title} · {GlobalConstants.SystemName}";
+    string description = this.ViewData["Description"] as string
+        ?? "Проект на Морски клуб „Приятели на морето“ - Варна срещу замърсяването на плажовете и морето с пластмаса. Видяхте замърсено място? Подайте сигнал.";
+    string canonical = $"{this.Context.Request.Scheme}://{this.Context.Request.Host}{this.Context.Request.Path}";
+}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bg">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@this.ViewData["Title"] - @GlobalConstants.SystemName</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/lib/fontawesome/css/all.min.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@pageTitle</title>
+    <meta name="description" content="@description" />
+    <link rel="canonical" href="@canonical" />
+    <meta name="theme-color" content="#06223a" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="bg_BG" />
+    <meta property="og:site_name" content="@GlobalConstants.SystemName" />
+    <meta property="og:title" content="@pageTitle" />
+    <meta property="og:description" content="@description" />
+    <meta property="og:url" content="@canonical" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preload" href="/fonts/onest-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/geologica-cyrillic-shrp-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="~/css/app.css" asp-append-version="true" />
+    @* Allowed by the CSP via its hash; see SecurityHeaders.JsFlagScript. *@
+    <script>@Html.Raw(SecurityHeaders.JsFlagScript)</script>
+    @await this.RenderSectionAsync("Head", required: false)
 </head>
-<body>
-    <a href="#wrapper" data-type="section-switch" class="scrollup back-top">
-        <i class="fas fa-angle-double-up"></i>
-    </a>
-    <div id="wrapper" class="wrapper noselect">
-        <header>
-            <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-5 fixed-top">         
-                <div class="container">
-                    <div class="col-2">
-                        <a href="https://seafriends.bg/"><img class="img-fluid logos-sm" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/Logo-MK.png"></a>
-                        <a href="https://frgi.bg/"><img class="img-fluid logos-lg" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/2.WCIF.png"></a>
-                    </div>
-                    <div class="col-8 nav-form-left">
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                                aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <div class="navbar-collapse collapse align-content-center">
-                            <div class="row">
-                                <div class="col">
-                                    <ul class="navbar-nav" style="text-align: start;">
-                                       <li class="nav-item">
-                                           <a asp-area="" asp-controller="Home" asp-action="Index"><i class="fa-solid fa-house-chimney"></i> Начало</a>
-                                       </li>
-                                        <li class="nav-item">
-                                            <a asp-area="" asp-controller="Home" asp-action="About"><i class="fa-solid fa-list-check"></i> За проекта</a>
-                                        </li>
-                                        <li class="nav-item">
-                                             <a asp-area="" asp-controller="Events" asp-action="Events"><i class="fa-solid fa-calendar-days"></i> Събития</a>
-                                        </li>
-                                        <li class="nav-item">
-                                             <a asp-area="" asp-controller="Signals" asp-action="Index"><i class="fas fa-archive"></i> Сигнали</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="btn btn-danger" role="button" asp-area="" asp-controller="Signals" asp-action="Create"><i class="fas fa-hand-point-right"> Подай сигнал</i></a>    
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="text-center" style="font-size: 10px; padding-top:20px"><b>НАСТОЯЩИЯТ ПРОЕКТ СЕ ОСЪЩЕСТВИ БЛАГДАРЕНИЕ НА НАЙ-ГОЛЯМАТА СОЦИАЛНО ОТГОВОРНА ИНИЦИАТИВА НА ЛИДЛ БЪЛГАРИЯ 
-                        <br>"ТИ И LIDL ЗА ПО-ДОБЪР ЖИВОТ", В ПАРТНЬОРСТВО С ФОНДАЦИЯ "РАБОТИЛНИЦА ЗА ГРАЖДАНСКИ ИНИЦИАТИВИ" И БЪЛГАРСКИ ДАРИТЕЛСКИ ФОРУМ. ОТГОВОРНОСТТА ЗА СЪДЪРЖАНИЕТО Е НА МК „ПРИЯТЕЛИ НА МОРЕТО“ И ПО НИКАКЪВ НАЧИН НЕ ОТРАЗЯВА ОФИЦИАЛНИТЕ ПОЗИЦИИ НА ФИНАНСИРАЩИТЕ ОРГАНИЗАЦИИ.</b></p>
-                    </div>
-                    <div class="col-2 nav-form-right">
-                        <a href="https://corporate.lidl.bg/otgovornost/ti-i-lidl-za-po-dob-r-zhivot"><img class="img-fluid logos-sm" style="padding-bottom:5px" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/1.Ti&Lidl.png"></a>
-                        <a href="https://www.dfbulgaria.org/"><img class="img-fluid logos-lg" style="padding-top:5px" src="https://ekolidlstorage.blob.core.windows.net/ekolidlblobs/3.BDF.png"></a>
-                    </div>
-                </div>
-            </nav>
-        </header>
-    </div>
-    
-    <div class="container noselect">
-        <main role="main" class="pb-3">
-            @this.RenderBody()
-        </main>
-    </div>
-    
-    <footer class="ranna-bg-dark noselect">
-        <div class="container">
-            &copy; @DateTime.Now.Year - @GlobalConstants.SystemName - <a asp-area="" asp-controller="Home" asp-action="Privacy">Общи условия</a>
-        </div>
-    </footer>
+<body class="flex min-h-dvh flex-col">
+    <a href="#main" class="skip-link">Към съдържанието</a>
 
-    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js" asp-append-version="true"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js" asp-append-version="true"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js" asp-append-version="true"></script>
-    <script src="~/js/site.min.js" asp-append-version="true"></script>
-    <script src="https://kit.fontawesome.com/0bd2799d6d.js" crossorigin="anonymous" asp-append-version="true"></script>
+    <partial name="_Header" />
+
+    <main id="main" class="flex-1 outline-none" tabindex="-1">
+        @this.RenderBody()
+    </main>
+
+    <partial name="_Footer" />
+
+    <script src="~/js/site.js" asp-append-version="true" defer></script>
     @await this.RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -9,7 +9,7 @@
         public BaseEntity()
         {
             this.Id = Guid.NewGuid().ToString();
-            this.CreatedOn = DateTime.Now;
+            this.CreatedOn = DateTime.UtcNow;
         }
 
         [JsonProperty(PropertyName = "id")]

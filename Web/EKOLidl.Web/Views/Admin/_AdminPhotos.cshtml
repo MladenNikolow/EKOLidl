@@ -1,0 +1,22 @@
+@model (IReadOnlyList<string> Links, string FieldName)
+@* Existing photos with a "remove" tick box each; ticked URLs are posted as FieldName. *@
+@if (this.Model.Links == null || this.Model.Links.Count == 0)
+{
+    <p class="text-sm text-muted">Няма снимки.</p>
+    return;
+}
+
+<ul class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+    @foreach (string link in this.Model.Links)
+    {
+        <li class="overflow-hidden rounded-lg border border-border bg-raised">
+            <a class="media block aspect-[4/3]" href="@link" target="_blank" rel="noopener">
+                <img src="@link" alt="" width="320" height="240" loading="lazy" decoding="async" />
+            </a>
+            <label class="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm has-[:checked]:bg-error-soft has-[:checked]:text-error">
+                <input type="checkbox" name="@this.Model.FieldName" value="@link" class="size-4 accent-coral-600" />
+                Премахни
+            </label>
+        </li>
+    }
+</ul>

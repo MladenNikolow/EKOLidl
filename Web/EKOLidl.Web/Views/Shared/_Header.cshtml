@@ -1,0 +1,74 @@
+@{
+    string controller = this.ViewContext.RouteData.Values["controller"]?.ToString();
+    string action = this.ViewContext.RouteData.Values["action"]?.ToString();
+    bool overlay = this.ViewData["HeaderOverlay"] is true;
+
+    var items = new[]
+    {
+        (Label: "Начало", Controller: "Home", Action: "Index", Active: controller == "Home" && action == "Index"),
+        (Label: "За проекта", Controller: "Home", Action: "About", Active: controller == "Home" && action == "About"),
+        (Label: "Събития", Controller: "Events", Action: "Events", Active: controller == "Events"),
+        (Label: "Сигнали", Controller: "Signals", Action: "Index", Active: controller == "Signals" && action != "Create"),
+    };
+}
+
+<header class="site-header" data-header data-overlay="@(overlay ? string.Empty : null)">
+    <div class="container-page flex h-18 items-center justify-between gap-4">
+        <partial name="_Brand" />
+
+        <nav class="hidden lg:block" aria-label="Основна навигация">
+            <ul class="flex items-center">
+                @foreach (var item in items)
+                {
+                    <li>
+                        <a class="nav-link" asp-controller="@item.Controller" asp-action="@item.Action" aria-current="@(item.Active ? "page" : null)">@item.Label</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+
+        <div class="flex items-center gap-2">
+            <a class="btn btn-coral btn-sm max-[420px]:px-3" asp-controller="Signals" asp-action="Create">
+                <icon name="camera" class="size-[18px]" />
+                <span class="max-[420px]:sr-only">Подай сигнал</span>
+            </a>
+            <button type="button" class="grid size-11 place-items-center rounded-full lg:hidden" data-menu-open aria-controls="site-menu" aria-expanded="false" aria-label="Отвори менюто">
+                <icon name="menu" class="size-6" />
+            </button>
+        </div>
+    </div>
+
+    <dialog id="site-menu" class="menu-sheet lg:hidden" aria-label="Меню">
+        <div class="sea flex h-full flex-col overflow-y-auto">
+            <div class="container-page flex h-18 shrink-0 items-center justify-between">
+                <partial name="_Brand" />
+                <button type="button" class="grid size-11 place-items-center rounded-full" data-menu-close aria-label="Затвори менюто">
+                    <icon name="x" class="size-6" />
+                </button>
+            </div>
+
+            <nav class="container-page flex-1 pt-4" aria-label="Мобилна навигация">
+                <ul>
+                    @foreach (var item in items)
+                    {
+                        <li>
+                            <a class="flex items-center justify-between border-b border-white/10 py-5 font-display text-2xl font-semibold no-underline aria-[current=page]:text-lagoon" asp-controller="@item.Controller" asp-action="@item.Action" aria-current="@(item.Active ? "page" : null)">
+                                @item.Label
+                                <icon name="arrow-right" class="size-5 opacity-60" />
+                            </a>
+                        </li>
+                    }
+                </ul>
+                <a class="btn btn-coral mt-8 w-full" asp-controller="Signals" asp-action="Create">
+                    <icon name="camera" />
+                    Подай сигнал
+                </a>
+            </nav>
+
+            <div class="container-page shrink-0 space-y-1 py-8 text-sm text-muted">
+                <p>@SiteInfo.Organisation</p>
+                <p><a href="mailto:@SiteInfo.ContactEmail">@SiteInfo.ContactEmail</a> · <a href="@SiteInfo.ContactPhoneHref">@SiteInfo.ContactPhone</a></p>
+            </div>
+        </div>
+    </dialog>
+</header>
