@@ -72,6 +72,62 @@
     });
   }
 
+  // Gallery lightbox: links marked [data-gallery-item] inside a [data-gallery] list.
+  const galleries = document.querySelectorAll('[data-gallery]');
+  if (galleries.length && typeof HTMLDialogElement === 'function') {
+    const svg = (d) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+    const dialog = document.createElement('dialog');
+    dialog.className = 'lightbox';
+    dialog.setAttribute('aria-label', 'Преглед на снимка');
+    dialog.innerHTML = `
+      <figure class="lightbox-figure">
+        <img class="lightbox-img" alt="">
+        <figcaption class="lightbox-caption"></figcaption>
+      </figure>
+      <button type="button" class="lightbox-btn lightbox-close" data-lb="close" aria-label="Затвори">${svg('<path d="M18 6 6 18"/><path d="m6 6 12 12"/>')}</button>
+      <button type="button" class="lightbox-btn lightbox-prev" data-lb="prev" aria-label="Предишна снимка">${svg('<path d="m15 18-6-6 6-6"/>')}</button>
+      <button type="button" class="lightbox-btn lightbox-next" data-lb="next" aria-label="Следваща снимка">${svg('<path d="m9 18 6-6-6-6"/>')}</button>`;
+    document.body.append(dialog);
+
+    const image = dialog.querySelector('.lightbox-img');
+    const caption = dialog.querySelector('.lightbox-caption');
+    let items = [];
+    let index = 0;
+    let opener = null;
+
+    const show = (i) => {
+      index = (i + items.length) % items.length;
+      const link = items[index];
+      image.src = link.href;
+      image.alt = link.dataset.caption || '';
+      caption.textContent = link.dataset.caption || '';
+      dialog.toggleAttribute('data-single', items.length < 2);
+    };
+
+    galleries.forEach((gallery) => {
+      const links = [...gallery.querySelectorAll('[data-gallery-item]')];
+      links.forEach((link, i) => link.addEventListener('click', (event) => {
+        event.preventDefault();
+        items = links;
+        opener = link;
+        show(i);
+        dialog.showModal();
+      }));
+    });
+
+    dialog.addEventListener('click', (event) => {
+      const action = event.target.closest('[data-lb]')?.dataset.lb;
+      if (action === 'close' || event.target === dialog) dialog.close();
+      else if (action === 'prev') show(index - 1);
+      else if (action === 'next') show(index + 1);
+    });
+    dialog.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') show(index - 1);
+      if (event.key === 'ArrowRight') show(index + 1);
+    });
+    dialog.addEventListener('close', () => opener?.focus());
+  }
+
   // Copy buttons: <button data-copy="seaclub2@gmail.com" data-copied-label="Копирано">.
   document.querySelectorAll('[data-copy]').forEach((button) => {
     button.addEventListener('click', async () => {

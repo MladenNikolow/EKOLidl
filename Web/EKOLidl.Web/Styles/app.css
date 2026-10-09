@@ -211,6 +211,12 @@
     text-rendering: optimizeLegibility;
   }
 
+  /* Geologica switches to Bulgarian letterforms under lang="bg"; Onest (body) has none. Headings keep
+     the standard forms so the two typefaces read as one alphabet. */
+  h1, h2, h3, h4, .font-display {
+    font-feature-settings: "locl" 0;
+  }
+
   h1, h2, h3, h4 {
     font-family: var(--font-display);
     font-weight: 650;
@@ -367,6 +373,52 @@
 
   .logo-plate:hover { transform: translateY(-2px); }
   .logo-plate:hover img, .logo-plate:focus-visible img { filter: none; opacity: 1; }
+
+  /* Gallery lightbox (created by site.js) */
+  .lightbox {
+    width: 100%;
+    max-width: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+    padding: 1rem;
+    border: 0;
+    background: transparent;
+    color: var(--color-white);
+  }
+
+  .lightbox[open] { display: grid; place-items: center; }
+  .lightbox::backdrop { background: rgb(4 19 31 / 0.92); }
+
+  .lightbox-figure { display: grid; gap: 0.75rem; justify-items: center; margin: 0; }
+
+  .lightbox-img {
+    max-width: min(100%, 1200px);
+    max-height: calc(100dvh - 7rem);
+    border-radius: var(--radius-md);
+    object-fit: contain;
+  }
+
+  .lightbox-caption { font-size: 0.9375rem; color: #b5c6d3; text-align: center; }
+
+  .lightbox-btn {
+    position: fixed;
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.12);
+    color: var(--color-white);
+    transition: background-color 160ms;
+  }
+
+  .lightbox-btn:hover { background: rgb(255 255 255 / 0.22); }
+  .lightbox-btn svg { width: 1.5rem; height: 1.5rem; }
+  .lightbox-close { top: 1rem; right: 1rem; }
+  .lightbox-prev { left: 1rem; top: 50%; translate: 0 -50%; }
+  .lightbox-next { right: 1rem; top: 50%; translate: 0 -50%; }
+  .lightbox[data-single] .lightbox-prev, .lightbox[data-single] .lightbox-next { display: none; }
 
   /* Media frames with a graceful empty state */
   .media {
@@ -571,6 +623,56 @@
   }
 
   .field-validation-valid { display: none; }
+
+  /* Checkbox pills (trash types) */
+  .choice > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 2.75rem;
+    padding: 0.5rem 1.1rem;
+    border: 1.5px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface-raised);
+    font-weight: 500;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 160ms, border-color 160ms, color 160ms;
+  }
+
+  .choice > span:hover { border-color: var(--accent); }
+
+  .choice > input:checked + span {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+  }
+
+  .choice > input:checked + span::before { content: "✓"; font-weight: 700; }
+
+  .choice > input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+  /* "Other" trash type: its text field only shows when the box is ticked. */
+  .when-other { display: none; }
+  form:has([data-other]:checked) .when-other { display: grid; }
+
+  /* Photo drop zone */
+  .dropzone {
+    display: grid;
+    justify-items: center;
+    gap: 0.6rem;
+    padding: 2rem 1rem;
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface-sunken);
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 160ms, background-color 160ms;
+  }
+
+  .dropzone:hover, .dropzone[data-dragging] { border-color: var(--accent); background: var(--accent-soft); }
+  .dropzone:has(input:focus-visible) { outline: 3px solid var(--focus); outline-offset: 3px; }
+  .dropzone:has(input[aria-invalid="true"]) { border-color: var(--danger); }
 }
 
 /* ── Motion ───────────────────────────────────────────────────────────────── */

@@ -84,9 +84,11 @@
             output.Attributes.SetAttribute("stroke-linecap", "round");
             output.Attributes.SetAttribute("stroke-linejoin", "round");
 
-            if (!output.Attributes.ContainsName("class"))
+            // Default to 20px unless the caller sets a size; keep any other classes (colour, margins).
+            string classes = output.Attributes["class"]?.Value?.ToString() ?? string.Empty;
+            if (!classes.Contains("size-", System.StringComparison.Ordinal))
             {
-                output.Attributes.SetAttribute("class", "size-5 shrink-0");
+                output.Attributes.SetAttribute("class", $"size-5 shrink-0 {classes}".Trim());
             }
 
             if (string.IsNullOrWhiteSpace(this.Label))

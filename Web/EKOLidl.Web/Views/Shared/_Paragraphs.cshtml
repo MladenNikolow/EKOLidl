@@ -1,0 +1,6 @@
+@model string
+@* Renders plain text from the database as paragraphs, one per blank-line or line-break separated block. *@
+@foreach (string paragraph in (this.Model ?? string.Empty).Split('\n').Select(p => p.Trim()).Where(p => p.Length > 0))
+{
+    <p>@paragraph</p>
+}

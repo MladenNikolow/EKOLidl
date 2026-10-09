@@ -1,25 +1,28 @@
-﻿@model ErrorViewModel
+@model ErrorViewModel
 @{
-    this.ViewData["Title"] = "Error";
+    this.ViewData["Title"] = this.Model.IsNotFound ? "Страницата не е намерена" : "Възникна грешка";
+    this.ViewData["HeaderOverlay"] = true;
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
-
-@if (this.Model.ShowRequestId)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@this.Model.RequestId</code>
-    </p>
-}
-
-<h3>Development Mode</h3>
-<p>
-    Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
-</p>
-<p>
-    <strong>The Development environment shouldn't be enabled for deployed applications.</strong>
-    It can result in displaying sensitive information from exceptions to end users.
-    For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
-    and restarting the app.
-</p>
+<section class="sea flex min-h-[85svh] items-center overflow-hidden" aria-labelledby="error-title">
+    <div class="container-page relative py-36 text-center">
+        <icon name="waves" class="absolute left-1/2 top-1/2 -z-10 size-[36rem] -translate-x-1/2 -translate-y-1/2 text-white/[0.04]" stroke="1" />
+        <p class="font-display text-[clamp(5rem,3rem+10vw,10rem)] font-semibold leading-none text-lagoon">@(this.Model.StatusCode ?? 500)</p>
+        <h1 id="error-title" class="mx-auto mt-6 max-w-2xl text-h1">
+            @(this.Model.IsNotFound ? "Тази страница е отнесена от вълните" : "Нещо се обърка")
+        </h1>
+        <p class="mx-auto mt-5 max-w-xl text-lead text-muted">
+            @(this.Model.IsNotFound
+                ? "Страницата, която търсите, не съществува или е преместена."
+                : "Възникна грешка при обработката на заявката. Моля, опитайте отново след малко.")
+        </p>
+        <div class="mt-10 flex flex-wrap justify-center gap-3">
+            <a class="btn btn-coral" asp-controller="Home" asp-action="Index"><icon name="arrow-left" class="size-4" /> Към началото</a>
+            <a class="btn btn-ghost-light" asp-controller="Signals" asp-action="Index">Виж сигналите</a>
+        </div>
+        @if (this.Model.ShowRequestId && !this.Model.IsNotFound)
+        {
+            <p class="mt-10 text-sm text-muted">Код на заявката: <code>@this.Model.RequestId</code></p>
+        }
+    </div>
+</section>

@@ -84,6 +84,7 @@
                 app.UseHsts();
             }
 
+            app.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
             app.UseHttpsRedirection();
 
             // The site is Bulgarian only: dates and numbers always use bg-BG.

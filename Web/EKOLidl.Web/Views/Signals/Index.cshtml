@@ -1,58 +1,50 @@
-﻿@model EKOLidl.Web.ViewModels.Signals.SignalsViewModel
-
+@model EKOLidl.Web.ViewModels.Signals.SignalsViewModel
 @{
-    ViewData["Title"] = "Сигнали";
+    this.ViewData["Title"] = "Сигнали";
+    this.ViewData["Description"] = "Замърсени места по северното черноморско крайбрежие, подадени от хората и публикувани след преглед от екипа на МК „Приятели на морето“.";
+    this.ViewData["HeaderOverlay"] = true;
+
+    var signals = this.Model.Signals.ToList();
+    string message = this.TempData["message"] as string;
 }
-<h1>@ViewData["Title"]</h1>
-<hr/>
-@if (Model.IsCreateSignalContext)
-{
-    <div class="p-3 mb-2 bg-primary text-white rounded-pill">
-        @TempData["message"]
+
+<page-hero eyebrow="Сигнали" title="Сигнали от крайбрежието">
+    <p class="mt-6 max-w-2xl text-lead text-muted" data-reveal="2">
+        Замърсени места, които хората са забелязали и подали. Публикуваме ги след преглед от екипа на клуба.
+    </p>
+    <a class="btn btn-coral mt-8" asp-controller="Signals" asp-action="Create" data-reveal="3">
+        <icon name="camera" />
+        Подай сигнал
+    </a>
+</page-hero>
+
+<section class="section pt-12 md:pt-16" aria-label="Списък със сигнали">
+    <div class="container-page">
+        @if (!string.IsNullOrEmpty(message))
+        {
+            <div class="mb-10 flex items-start gap-4 rounded-xl border border-success/30 bg-success-soft p-5 text-ink sm:p-6" role="status">
+                <span class="grid size-10 shrink-0 place-items-center rounded-full bg-success text-white"><icon name="check" /></span>
+                <div>
+                    <p class="font-semibold">Сигналът е изпратен</p>
+                    <p class="mt-1 text-slate">@message</p>
+                </div>
+            </div>
+        }
+
+        @if (signals.Count == 0)
+        {
+            <partial name="_EmptyState" model='new EmptyState("camera", "Все още няма публикувани сигнали", "Бъдете първите, които ще подадат сигнал за замърсено място.")' />
+        }
+        else
+        {
+            <ul class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                @for (int i = 0; i < signals.Count; i++)
+                {
+                    <li><partial name="_SignalCard" model="signals[i]" view-data='new ViewDataDictionary(this.ViewData) { ["Index"] = i % 3 }' /></li>
+                }
+            </ul>
+
+            <partial name="_Pagination" model='new Pagination("Signals", "Index", this.Model.Page, this.Model.PagesCount)' />
+        }
     </div>
-    <hr/>
-}
-<div class="row">
-    @foreach (var signal in Model.Signals)
-    {
-        <div class="media col-md-3">
-          <img class="align-self-center" src="@signal.Album.Links[0]" width="100">
-          <div class="media-body">
-            <h5 class="mt-0">@signal.Title</h5>                                                                         
-            @Html.ActionLink("Детайли", "Details", new { id=signal.Id }, new { @class = "btn btn-primary btn-sm" })
-            <hr/>
-          </div>
-        </div>
-    }
-</div>
-<hr/>
-<nav aria-label="...">
-  <ul class="pagination justify-content-center">
-    <li class="page-item @if(!@Model.HasPreviousPage) { <text>disabled</text> }">
-      <a class="page-link" asp-action="Events" asp-route-page="@Model.PreviousPageNumber">Предишна</a>
-    </li>
-    @for(int pageNumber = Model.Page - 4; pageNumber < Model.Page; ++pageNumber)
-    {
-        if (pageNumber > 0)
-        {
-            <li class="page-item"><a class="page-link" asp-controller="Signals" asp-action="Index" asp-route-page="@pageNumber">@pageNumber</a></li>
-        }
-    }
-    <li class="page-item active" aria-current="page">
-      <span class="page-link">
-          @Model.Page
-          <span class="sr-only">(current)</span>
-      </span>
-    </li>
-    @for(int pageNumber = Model.Page + 1; pageNumber < Model.Page + 3; ++pageNumber)
-    {
-        if( pageNumber <= Model.PagesCount )
-        {
-            <li class="page-item"><a class="page-link" asp-controller="Signals" asp-action="Index" asp-route-page="@pageNumber">@pageNumber</a></li>
-        }
-    }     
-    <li class="page-item @if(!@Model.HasNextPage) { <text>disabled</text>}">
-      <a class="page-link" asp-action="Events" asp-route-page="@Model.NextPageNumber">Следваща</a>
-    </li>
-  </ul>
-</nav>
+</section>

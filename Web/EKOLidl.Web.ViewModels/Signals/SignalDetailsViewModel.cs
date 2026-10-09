@@ -48,6 +48,11 @@
         /// </summary>
         public Result Result { get; set; }
 
+        /// <summary>
+        /// Gets or sets when the signal was submitted.
+        /// </summary>
+        public System.DateTime CreatedOn { get; set; }
+
         public static SignalDetailsViewModel FromEntity(Signal signal)
         {
             List<TrashType> trashTypes = signal.TrashType ?? new List<TrashType>();
@@ -62,6 +67,7 @@
                 Location = signal.Location,
                 Album = signal.Album,
                 Result = signal.Result,
+                CreatedOn = signal.CreatedOn,
             };
         }
     }
