@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches-ignore: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Cache NuGet packages and the Tailwind CLI
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.nuget/packages
+            .tools
+          key: ${{ runner.os }}-build-${{ hashFiles('**/*.csproj', 'Directory.Build.props') }}
+
+      - name: Build (Release)
+        run: dotnet build EKOLidl.sln -c Release
+
+      - name: Publish
+        run: dotnet publish Web/EKOLidl.Web -c Release --no-build -o publish
+
+      - name: Check the published CSS is minified
+        run: |
+          test -s publish/wwwroot/css/app.css
+          lines=$(wc -l < publish/wwwroot/css/app.css)
+          echo "app.css: $(wc -c < publish/wwwroot/css/app.css) bytes, $lines line(s)"
+          test "$lines" -le 2

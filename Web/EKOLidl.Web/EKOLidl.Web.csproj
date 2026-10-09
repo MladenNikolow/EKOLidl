@@ -23,6 +23,8 @@
     <TailwindExe Condition="$([MSBuild]::IsOSPlatform('OSX'))">tailwindcss-macos-arm64</TailwindExe>
     <TailwindInput>Styles/app.css</TailwindInput>
     <TailwindOutput>wwwroot/css/app.css</TailwindOutput>
+    <!-- Compiled per configuration (Release is minified), then copied into wwwroot. -->
+    <TailwindIntermediate>$(BaseIntermediateOutputPath)$(Configuration)/tailwind/app.css</TailwindIntermediate>
     <TailwindArgs Condition="'$(Configuration)' == 'Release'">--minify</TailwindArgs>
   </PropertyGroup>
 
@@ -37,8 +39,12 @@
     <Exec Command="chmod +x &quot;$(TailwindDir)$(TailwindExe)&quot;" Condition="!$([MSBuild]::IsOSPlatform('Windows'))" />
   </Target>
 
-  <Target Name="TailwindBuild" BeforeTargets="BeforeBuild" DependsOnTargets="TailwindDownload" Inputs="@(TailwindSource);$(MSBuildProjectFullPath)" Outputs="$(TailwindOutput)">
-    <Exec Command="&quot;$(TailwindDir)$(TailwindExe)&quot; --input $(TailwindInput) --output $(TailwindOutput) $(TailwindArgs)" WorkingDirectory="$(MSBuildProjectDirectory)" />
+  <Target Name="TailwindCompile" DependsOnTargets="TailwindDownload" Inputs="@(TailwindSource);$(MSBuildProjectFullPath)" Outputs="$(TailwindIntermediate)">
+    <Exec Command="&quot;$(TailwindDir)$(TailwindExe)&quot; --input $(TailwindInput) --output $(TailwindIntermediate) $(TailwindArgs)" WorkingDirectory="$(MSBuildProjectDirectory)" />
+  </Target>
+
+  <Target Name="TailwindBuild" BeforeTargets="BeforeBuild" DependsOnTargets="TailwindCompile">
+    <Copy SourceFiles="$(TailwindIntermediate)" DestinationFiles="$(TailwindOutput)" SkipUnchangedFiles="true" />
 
     <!-- The output is generated, so on a clean clone it was not in the evaluation-time wwwroot glob. -->
     <ItemGroup>

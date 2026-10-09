@@ -98,6 +98,21 @@ dotnet user-secrets --project Web/EKOLidl.Web set "AzureConnections:CosmosDB:Pri
 - Смяната на `Admin__PasswordHash` излиза от всички отворени сесии.
 - След 5 неуспешни опита за вход от един IP адрес входът се блокира за 5 минути.
 
+### Публикуване в Azure
+
+Всяко `push` в `main` минава през [.github/workflows/deploy.yml](.github/workflows/deploy.yml). Workflow-ът компилира проекта (Release, CSS-ът се минифицира), публикува го в App Service „domoreto“ и проверява, че сайтът отговаря. Pull request-ите се компилират от [ci.yml](.github/workflows/ci.yml).
+
+Еднократна настройка:
+
+1. **App Service → Configuration → General settings**: Stack `.NET`, версия `.NET 10 (LTS)`. Направете го **преди** първото публикуване.
+2. **App Service → Configuration → Application settings**: проверете, че има всички `AzureConnections__*` настройки (вижте по-долу) и добавете `Admin__Username` и `Admin__PasswordHash`. Старият `appsettings.json` не е в репозиторито. Ако досега ключовете са идвали от него, без тези настройки сайтът няма да стартира.
+3. **Microsoft Entra ID → App registrations → New registration** (напр. `github-domoreto-deploy`):
+   - Certificates & secrets → Federated credentials → **GitHub Actions**: организация `MladenNikolow`, репозитори `EKOLidl`, тип **Environment**, име `production`.
+   - В App Service → Access control (IAM) дайте на регистрацията роля **Website Contributor**.
+4. **GitHub → Settings → Secrets and variables → Actions**:
+   - Secrets: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID`. Не се пазят пароли или publish profile.
+   - Variables (по желание): `AZURE_WEBAPP_NAME` (по подразбиране `domoreto`), `AZURE_WEBAPP_SLOT` (напр. `staging`, ако планът позволява слотове), `SITE_URL`.
+
 ### Конфигурация в Azure
 
 Продукционните настройки са в App Service → Configuration (`AzureConnections__CosmosDB__EndpointUrl`, `AzureConnections__CosmosDB__PrimaryKey`, `AzureConnections__CosmosDB__DatabaseName`, `AzureConnections__CosmosDB__Containers__0__Name` и т.н., `AzureConnections__BlobStorage__ConnectionString`, `AzureConnections__BlobStorage__Container`). Никога не commit-вайте ключове в репозиторито.
